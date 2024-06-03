@@ -1,5 +1,6 @@
 import 'package:fast_equatable/fast_equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:mysmax_playground/core/scenario_code_parser/variable.dart';
 import 'package:mysmax_playground/models/function_argument.dart';
 
 import '../../models/thing_function.dart';
@@ -88,7 +89,7 @@ abstract class Block with FastEquatable {
     for (Block block in blocks) {
       if (currentBlock != null && block.uid == currentBlock.uid) {
         if (includeCurrentBlock) {
-          if (block is FunctionServiceBlock) {
+          if (block is FunctionServiceBlock) { // FunctionServiceReturnType
             if (block.variableName != null) {
               variableNames.add(block.variableName!);
             }
@@ -117,6 +118,48 @@ abstract class Block with FastEquatable {
     }
 
     return variableNames;
+  }
+
+  List<Variable> getVariablesWithNameAndType(
+      {Block? currentBlock, bool includeCurrentBlock = false}) {
+    List<Variable> variables = [];
+
+    for (Block block in blocks) {
+      if (currentBlock != null && block.uid == currentBlock.uid) {
+        if (includeCurrentBlock) {
+          if (block is FunctionServiceBlock) { // FunctionServiceReturnType
+            if (block.variableName != null) {
+              variables.add(
+                Variable.fromFunctionService(block.variableName!, block.functionServiceReturnType),
+              );
+            }
+          } else if (block is ValueServiceBlock) {
+            if (block.variableName != null) {
+              variables.add(Variable.fromValueService(block.variableName!));
+            }
+          }
+        }
+        break;
+      }
+
+      if (block is FunctionServiceBlock) {
+        if (block.variableName != null) {
+          variables.add(
+            Variable.fromFunctionService(block.variableName!, block.functionServiceReturnType),
+          );
+        }
+      } else if (block is ValueServiceBlock) {
+        if (block.variableName != null) {
+          variables.add(Variable.fromValueService(block.variableName!));
+        }
+      }
+
+      variables.addAll(block.getVariablesWithNameAndType(
+          currentBlock: currentBlock,
+          includeCurrentBlock: includeCurrentBlock));
+    }
+
+    return variables;
   }
 
   String toScenarioCode();
@@ -1033,6 +1076,36 @@ class ConditionBlock extends Block {
     required this.waitUntilBlock,
     blocks,
   }) : super(BlockType.CONDITION, true, blocks: blocks);
+
+  factory ConditionBlock.ifBlock(IfBlock ifBlock) => ConditionBlock._(
+    state: ConditionBlockState.ifElse,
+    ifBlock: ifBlock,
+    waitUntilBlock: WaitUntilBlock(
+      PeriodExpression(
+          PeriodType.SEC,
+          LiteralExpression(1, literalType: LiteralType.INTEGER)
+      ),
+      ConditionExpression(
+        null,
+        null,
+        false,
+        Operator.EQUAL,
+      ),
+    ),
+  );
+
+  factory ConditionBlock.waitUntilBlock(WaitUntilBlock waitUntilBlock) => ConditionBlock._(
+    state: ConditionBlockState.waitUntil,
+    ifBlock: IfBlock(
+      ConditionExpression(
+        null,
+        null,
+        false,
+        Operator.EQUAL,
+      ),
+    ),
+    waitUntilBlock: waitUntilBlock,
+  );
 
   factory ConditionBlock.empty() => ConditionBlock._(
     state: ConditionBlockState.none,

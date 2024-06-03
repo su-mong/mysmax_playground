@@ -11,13 +11,13 @@ import 'package:mysmax_playground/scenario_editor/widgets/editor_number_text_fie
 import 'package:mysmax_playground/scenario_editor/widgets/editor_select_time_widget.dart';
 import 'package:mysmax_playground/widgets/custom_drop_down.dart';
 
-class ScenarioEditorDurationCardView extends StatefulWidget {
+class ScenarioEditorLoopCardView extends StatefulWidget {
   final LoopBlock item;
   final Function(LoopBlock) onChanged;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
 
-  const ScenarioEditorDurationCardView(
+  const ScenarioEditorLoopCardView(
     this.item, {
     super.key,
     this.startDateTime,
@@ -26,10 +26,10 @@ class ScenarioEditorDurationCardView extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _ScenarioEditorDurationCardViewState();
+  State<StatefulWidget> createState() => _ScenarioEditorLoopCardViewState();
 }
 
-class _ScenarioEditorDurationCardViewState extends State<ScenarioEditorDurationCardView> {
+class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView> {
   static final DateTime _lastDate = DateTime(2099, 12, 31);
 
   bool _isExpanded = true;
@@ -58,6 +58,7 @@ class _ScenarioEditorDurationCardViewState extends State<ScenarioEditorDurationC
   final TextEditingController _everydayEndMinuteController = TextEditingController();
 
   List<DateTime?> _timeBoundEveryWeek = [null, null];
+  DateTime? _timeEveryWeek;  /// '매주' 반복의 시간 설정 용도. date 부분은 임의로 설정해두고, 실제로 사용하진 않음.
   List<WeekDay> _weekdays = [];
   bool _enableStartDateEveryWeek = false;
   bool _enableEndDateEveryWeek = false;
@@ -728,21 +729,13 @@ class _ScenarioEditorDurationCardViewState extends State<ScenarioEditorDurationC
         ),
 
         const SizedBox(height: 16),
-        /// TODO: 확인 필요. 이거 뭐로 짜야함?
         EditorSelectTimeWidget(
           enabled: true,
-          selectedTimePrefix: _timeBoundEveryWeek[0]?.getAmPm ?? AmPm.am,
+          selectedTimePrefix: _timeEveryWeek?.getAmPm ?? AmPm.am,
           onChangedTimePrefix: (amPm) {
             if(amPm != null) {
               setState(() {
-                if(_timeBoundEveryWeek[0] == null) {
-                  _timeBoundEveryWeek[0] = DateTime.now().subtract(const Duration(days: 1));
-                }
-
-                _timeBoundEveryWeek[0] = _timeBoundEveryWeek[0]!.copyWithAmPm(amPm);
-                if(_timeBoundEveryWeek[1] != null) {
-                  _timeBoundEveryWeek[1] = _timeBoundEveryWeek[1]!.copyWithAmPm(amPm);
-                }
+                _timeEveryWeek = _timeEveryWeek?.copyWithAmPm(amPm) ?? DateTime.now();
               });
               setData();
             }
@@ -750,28 +743,14 @@ class _ScenarioEditorDurationCardViewState extends State<ScenarioEditorDurationC
           hourController: _everyWeekHourController,
           onChangedHour: (hour) {
             setState(() {
-              if(_timeBoundEveryWeek[0] == null) {
-                _timeBoundEveryWeek[0] = DateTime.now().subtract(const Duration(days: 1));
-              }
-
-              _timeBoundEveryWeek[0] = _timeBoundEveryWeek[0]!.copyWith(hour: hour);
-              if(_timeBoundEveryWeek[1] != null) {
-                _timeBoundEveryWeek[1] = _timeBoundEveryWeek[1]!.copyWith(hour: hour);
-              }
+              _timeEveryWeek = _timeEveryWeek?.copyWith(hour: hour) ?? DateTime.now();
             });
             setData();
           },
           minuteController: _everyWeekMinuteController,
           onChangedMinute: (minute) {
             setState(() {
-              if(_timeBoundEveryWeek[0] == null) {
-                _timeBoundEveryWeek[0] = DateTime.now().subtract(const Duration(days: 1));
-              }
-
-              _timeBoundEveryWeek[0] = _timeBoundEveryWeek[0]!.copyWith(minute: minute);
-              if(_timeBoundEveryWeek[1] != null) {
-                _timeBoundEveryWeek[1] = _timeBoundEveryWeek[1]!.copyWith(minute: minute);
-              }
+              _timeEveryWeek = _timeEveryWeek?.copyWith(minute: minute) ?? DateTime.now();
             });
             setData();
           },
@@ -909,8 +888,10 @@ class _ScenarioEditorDurationCardViewState extends State<ScenarioEditorDurationC
     );
   }
 
+  /// TODO: ConditionExpression 부분 나중에 실제 Clock 관련 태그로 바꿔야 하는지 확인 필요
   void setData() {
     late PeriodExpression periodExpression;
+    ConditionExpression? conditionExpression;
     final timeBound = <DateTime?>[];
     var weekdays = <WeekDay>[];
 
@@ -918,12 +899,40 @@ class _ScenarioEditorDurationCardViewState extends State<ScenarioEditorDurationC
       periodExpression = _period;
 
       if(_enableStartDateTimeCustom) {
+        if(_timeBoundCustom[0] != null) {
+          conditionExpression = ConditionExpression(
+            ValueServiceExpression('datetime', ['Clock'], RangeType.AUTO),
+            LiteralExpression(_timeBoundCustom[0]!.millisecondsSinceEpoch ~/ 1000, literalType: LiteralType.INTEGER),
+            false,
+            Operator.GREATER_THAN,
+          );
+        }
         timeBound.add(_timeBoundCustom[0]);
       } else {
         timeBound.add(null);
       }
 
       if(_enableEndDateTimeCustom) {
+        if(_timeBoundCustom[1] != null) {
+          final rightExpression = ConditionExpression(
+            ValueServiceExpression('datetime', ['Clock'], RangeType.AUTO),
+            LiteralExpression(_timeBoundCustom[1]!.millisecondsSinceEpoch ~/ 1000, literalType: LiteralType.INTEGER),
+            false,
+            Operator.LESS_THAN,
+          );
+
+          if(conditionExpression == null) {
+            conditionExpression = rightExpression;
+          } else {
+            conditionExpression = ConditionExpression(
+              conditionExpression,
+              rightExpression,
+              false,
+              Operator.AND,
+            );
+          }
+        }
+
         timeBound.add(_timeBoundCustom[1]);
       } else {
         timeBound.add(null);
@@ -937,12 +946,40 @@ class _ScenarioEditorDurationCardViewState extends State<ScenarioEditorDurationC
       );
 
       if(_enableStartDateTimeEveryDay) {
+        if(_timeBoundEveryDay[0] != null) {
+          conditionExpression = ConditionExpression(
+            ValueServiceExpression('datetime', ['Clock'], RangeType.AUTO),
+            LiteralExpression(_timeBoundEveryDay[0]!.millisecondsSinceEpoch ~/ 1000, literalType: LiteralType.INTEGER),
+            false,
+            Operator.GREATER_THAN,
+          );
+        }
         timeBound.add(_timeBoundEveryDay[0]);
       } else {
         timeBound.add(null);
       }
 
       if(_enableEndDateTimeEveryDay) {
+        if(_timeBoundEveryDay[1] != null) {
+          final rightExpression = ConditionExpression(
+            ValueServiceExpression('datetime', ['Clock'], RangeType.AUTO),
+            LiteralExpression(_timeBoundEveryDay[1]!.millisecondsSinceEpoch ~/ 1000, literalType: LiteralType.INTEGER),
+            false,
+            Operator.LESS_THAN,
+          );
+
+          if(conditionExpression == null) {
+            conditionExpression = rightExpression;
+          } else {
+            conditionExpression = ConditionExpression(
+              conditionExpression,
+              rightExpression,
+              false,
+              Operator.AND,
+            );
+          }
+        }
+
         timeBound.add(_timeBoundEveryDay[1]);
       } else {
         timeBound.add(null);
@@ -950,23 +987,118 @@ class _ScenarioEditorDurationCardViewState extends State<ScenarioEditorDurationC
     }
 
     else {
+      /// 요일을 고르게 되면 주기는 '1 DAY'가 되어야 한다.
       periodExpression = PeriodExpression(
         PeriodType.DAY,
-        /// TODO: 이거 맞아? 아닌거 같은데?
-        LiteralExpression(_weekdays.length, literalType: LiteralType.INTEGER),
+        LiteralExpression(1, literalType: LiteralType.INTEGER),
       );
       weekdays = _weekdays;
 
       if(_enableStartDateEveryWeek) {
+        if(_timeBoundEveryWeek[0] != null) {
+          conditionExpression = ConditionExpression(
+            ValueServiceExpression('datetime', ['Clock'], RangeType.AUTO),
+            LiteralExpression(_timeBoundEveryWeek[0]!.millisecondsSinceEpoch ~/ 1000, literalType: LiteralType.INTEGER),
+            false,
+            Operator.GREATER_THAN,
+          );
+        }
         timeBound.add(_timeBoundEveryWeek[0]);
       } else {
         timeBound.add(null);
       }
 
       if(_enableEndDateEveryWeek) {
+        if(_timeBoundEveryWeek[1] != null) {
+          final rightExpression = ConditionExpression(
+            ValueServiceExpression('datetime', ['Clock'], RangeType.AUTO),
+            LiteralExpression(_timeBoundEveryWeek[1]!.millisecondsSinceEpoch ~/ 1000, literalType: LiteralType.INTEGER),
+            false,
+            Operator.LESS_THAN,
+          );
+
+          if(conditionExpression == null) {
+            conditionExpression = rightExpression;
+          } else {
+            conditionExpression = ConditionExpression(
+              conditionExpression,
+              rightExpression,
+              false,
+              Operator.AND,
+            );
+          }
+        }
         timeBound.add(_timeBoundEveryWeek[1]);
       } else {
         timeBound.add(null);
+      }
+
+      ConditionExpression? weekDayExpression;
+      for(var weekday in weekdays) {
+        if(weekDayExpression == null) {
+          weekDayExpression = ConditionExpression(
+            ValueServiceExpression('weekday', ['Clock'], RangeType.AUTO),
+            LiteralExpression(weekday.value, literalType: LiteralType.STRING),
+            false,
+            Operator.EQUAL,
+          );
+        } else {
+          weekDayExpression = ConditionExpression(
+            weekDayExpression,
+            ConditionExpression(
+              ValueServiceExpression('weekday', ['Clock'], RangeType.AUTO),
+              LiteralExpression(weekday.value, literalType: LiteralType.STRING),
+              false,
+              Operator.EQUAL,
+            ),
+            false,
+            Operator.OR,
+          );
+        }
+      }
+      if(weekDayExpression != null) {
+        if(conditionExpression == null) {
+          conditionExpression = weekDayExpression;
+        } else {
+          conditionExpression = ConditionExpression(
+            conditionExpression,
+            weekDayExpression,
+            false,
+            Operator.AND,
+          );
+        }
+      }
+
+      if(_timeEveryWeek != null) {
+        final timeExpression1 = ConditionExpression(
+          ValueServiceExpression('time', ['Clock'], RangeType.AUTO),
+          LiteralExpression(_timeEveryWeek!.hour * 10000 + _timeEveryWeek!.minute * 100, literalType: LiteralType.INTEGER),
+          false,
+          Operator.GREATER_THAN,
+        );
+        final timeExpression2 = ConditionExpression(
+          ValueServiceExpression('time', ['Clock'], RangeType.AUTO),
+          LiteralExpression(_timeEveryWeek!.hour * 10000 + _timeEveryWeek!.minute * 100 + 100, literalType: LiteralType.INTEGER),
+          false,
+          Operator.LESS_THAN,
+        );
+        final timeExpression = ConditionExpression(
+          timeExpression1,
+          timeExpression2,
+          false,
+          Operator.AND,
+        );
+
+        if(conditionExpression == null) {
+          conditionExpression = timeExpression;
+        } else {
+          conditionExpression = ConditionExpression(
+            conditionExpression,
+            timeExpression,
+            false,
+            Operator.AND,
+          );
+        }
       }
     }
 
@@ -974,7 +1106,7 @@ class _ScenarioEditorDurationCardViewState extends State<ScenarioEditorDurationC
       widget.item.copyWith(
         LoopBlock(
           periodExpression,
-          null,
+          conditionExpression,
           _loopMode,
           timeBound,
           weekdays,

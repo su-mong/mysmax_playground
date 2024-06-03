@@ -10,8 +10,8 @@ import 'package:mysmax_playground/models/enums/scenario_item_type.dart';
 import 'package:mysmax_playground/models/scheduled_thing.dart';
 import 'package:mysmax_playground/models/tag.dart';
 import 'package:mysmax_playground/scenario_editor/cards/scenario_editor_conditions_card_view.dart';
-import 'package:mysmax_playground/scenario_editor/cards/scenario_editor_contents_card_view.dart';
-import 'package:mysmax_playground/scenario_editor/cards/scenario_editor_duration_card_view.dart';
+import 'package:mysmax_playground/scenario_editor/cards/scenario_editor_services_card_view.dart';
+import 'package:mysmax_playground/scenario_editor/cards/scenario_editor_loop_card_view.dart';
 import 'package:mysmax_playground/scenario_mixin.dart';
 import 'package:mysmax_playground/scenario_service_item.dart';
 import 'package:mysmax_playground/widgets/radio_toggle.dart';
@@ -72,6 +72,8 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
               } else if (widget.item is LoopBlock) {
                 return _buildScenarioLoop(widget.item as LoopBlock);
               } else if (widget.item is ConditionBlock) {
+                var viewModel = context.read<ScenarioMixin>();
+
                 return ScenarioEditorConditionsCardView(
                   (widget.item as ConditionBlock),
                   editMode: widget.editMode,
@@ -79,6 +81,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
                     var viewModel = context.read<ScenarioMixin>();
                     viewModel.updateScenarioItem(widget.item, widget.item.copyWith(block));
                   },
+                  variableListByType: viewModel.variableListByType,
                 );
               } else if (widget.item is IfBlock) {
                 return _buildScenarioCondition(widget.item as IfBlock);
@@ -145,7 +148,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
             ).copyWith(right: 12),
             child: Row(
               children: [
-                Expanded(child: Text.rich(item.condition.expressionString)),
+                Expanded(child: Text.rich(item.condition.expressionTextSpan)),
                 GestureDetector(
                   onTap: () {},
                   child: SvgPicture.asset(
@@ -187,11 +190,11 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
                     child: Text.rich(TextSpan(
                         style: AppTextStyles.size13Medium.singleLine,
                         children: [
-                      item.condition?.leftExpressionString ?? TextSpan(),
+                      item.condition?.leftExpressionTextSpan ?? TextSpan(),
                       TextSpan(
                         text: " ${item.condition?.operator.value} ",
                       ),
-                      item.condition?.rightExpressionString ?? TextSpan(),
+                      item.condition?.rightExpressionTextSpan ?? TextSpan(),
                     ]))),
                 GestureDetector(
                   onTap: () {},
@@ -337,7 +340,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
     final mqttViewModel = context.read<MqttViewModel>();
     var viewModel = context.read<ScenarioMixin>();
 
-    return ScenarioEditorContentsCardView(
+    return ScenarioEditorServicesCardView(
       item,
       tagList: const [Tag(name: 'test01')], // mqttViewModel.allTagsForServiceFunctionList,
       initialSelectedTag: const Tag(name: 'test01'), // mqttViewModel.tagForAllServices(serviceNames),
@@ -571,7 +574,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
   }
 
   Widget _buildScenarioLoop(LoopBlock item) {
-    return ScenarioEditorDurationCardView(
+    return ScenarioEditorLoopCardView(
       item,
       onChanged: (block) {
         var viewModel = context.read<ScenarioMixin>();

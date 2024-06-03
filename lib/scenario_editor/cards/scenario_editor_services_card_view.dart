@@ -5,6 +5,7 @@ import 'package:mysmax_playground/app_text_styles.dart';
 import 'package:mysmax_playground/argument_widget.dart';
 import 'package:mysmax_playground/core/scenario_code_parser/block.dart';
 import 'package:mysmax_playground/core/scenario_code_parser/enums.dart';
+import 'package:mysmax_playground/core/scenario_code_parser/variable.dart';
 import 'package:mysmax_playground/core/viewmodels/mqtt_view_model.dart';
 import 'package:mysmax_playground/helper/icon_helper.dart';
 import 'package:mysmax_playground/models/function_argument.dart';
@@ -25,7 +26,7 @@ enum _DirectionAddingNewBlockSet {
   const _DirectionAddingNewBlockSet(this.title);
 }
 
-class ScenarioEditorContentsCardView extends StatefulWidget {
+class ScenarioEditorServicesCardView extends StatefulWidget {
   /// tags : 디바이스에 해당하는 태그...이긴 한데 장소에 해당될수도 있다.
   /// arguments : 함수 파라미터.
   /// functionServiceReturnType : 함수 반환 타입인데 UNDEFINED로 많이 나온다?
@@ -44,14 +45,14 @@ class ScenarioEditorContentsCardView extends StatefulWidget {
   /// 선택한 기능([ThingFunction])에 해당하는 모든 디바이스([Thing])? 태그([Tag])? 목록을 찾는 함수(TODO: 이거 정확한 확인이 필요함. 현재는 디바이스 목록으로 구현해둠)
   final List<Thing> Function(String serviceName) getAllThingsByThingFunction;
   /// 현재 시나리오에 있는 모든 변수명
-  final List<String> variableList;
+  final List<Variable> variableList;
   /// 서비스명을 가지고 새로운 변수를 추가하는 함수
   final String Function(String serviceName) generateNewVariable;
 
   /// 임시 : ServicesBlock -> ThingFunction 변환 용도
   final ThingFunction? Function(String name) serviceFunctionByName;
 
-  const ScenarioEditorContentsCardView(
+  const ScenarioEditorServicesCardView(
     this.item, {
     super.key,
     required this.initialSelectedTag,
@@ -65,10 +66,10 @@ class ScenarioEditorContentsCardView extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _ScenarioEditorContentsCardViewState();
+  State<StatefulWidget> createState() => _ScenarioEditorServicesCardViewState();
 }
 
-class _ScenarioEditorContentsCardViewState extends State<ScenarioEditorContentsCardView> {
+class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesCardView> {
   bool _isExpanded = true;
 
   /// 중요) 현재 시나리오 상태를 표현할 UI용 객체
@@ -105,7 +106,7 @@ class _ScenarioEditorContentsCardViewState extends State<ScenarioEditorContentsC
   void initState() {
     super.initState();
 
-    _variableList = widget.variableList;
+    _variableList = widget.variableList.map((variable) => variable.name).toList();
 
     if(widget.item.children.isNotEmpty) {
       _currentFunctions.addAll(
@@ -795,6 +796,7 @@ class _ScenarioEditorContentsCardViewState extends State<ScenarioEditorContentsC
       ),
       children: [
         EditorVariableListWidget(
+          isVariableForLeftSide: true,
           variableList: _variableList,
           initialSelectedVariable: _variableNameList[index],
           addNewVariable: () {

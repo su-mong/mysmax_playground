@@ -1,21 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:mysmax_playground/app_text_styles.dart';
 
-/// NOTE| 현재 동작은 다음과 같다.
+/// NOTE| [ScenarioEditorContentsCardView]에서의 동작은 아래와 같다.
 /// NOTE| 1. 기존에 선택된 변수가 있다 : 해당 변수 선택된 상태, 변수명 변경 및 추가 불가능
 /// NOTE| 2. 기존에 선택된 변수가 없다 : 변수 미선택 상태, 변수명 추가 가능
 /// NOTE| 2-1. 선택된 변수가 없는 상태에서 새 변수 추가 : 추가된 변수 자동 선택.
 /// TODO: 현재는 한 번 선택된 변수는 해제가 불가능하다. 이거 변경이 필요하긴 함.
+///
+/// NOTE| [ScenarioEditorConditionsCardView]에서의 동작은 아래와 같다.
+/// NOTE| 1. variableList에는 좌변(firstValue)에 선택한 ThingValue의 type과 같은 variable만 들어온다.
+/// NOTE| 2. 이 중 하나를 유저가 선택하면, 해당 변수값이 우변(lastValue)에 적용된다.
 class EditorVariableListWidget extends StatefulWidget {
   final List<String> variableList;
   final String? initialSelectedVariable;
-  final VoidCallback addNewVariable;
+
+  /// 이 값이
+  /// true : [ScenarioEditorContentsCardView]에서 사용하기 위한 값으로, 새로운 변수 생성 및 기존 변수의 정의를 변경하기 위한 용도이다.
+  /// false : [ScenarioEditorConditionsCardView]에서 사용하기 위한 값으로, 조건문의 lastValue 값으로 쓰인다.
+  final bool isVariableForLeftSide;
+  final void Function(String)? onSelect;
+  final VoidCallback? addNewVariable;
 
   const EditorVariableListWidget({
     super.key,
+    required this.isVariableForLeftSide,
     required this.variableList,
     required this.initialSelectedVariable,
-    required this.addNewVariable,
+    this.onSelect,
+    this.addNewVariable,
   });
 
   @override
@@ -26,6 +38,7 @@ class _EditorVariableListWidgetState extends State<EditorVariableListWidget> {
   late final TextEditingController _searchController;
   late final FocusNode _searchFocusNode;
 
+  String? _selectedVariable;
   List<String> _variableList = [];
 
   @override
@@ -34,6 +47,7 @@ class _EditorVariableListWidgetState extends State<EditorVariableListWidget> {
 
     _searchController = TextEditingController();
     _searchFocusNode = FocusNode();
+    _selectedVariable = widget.initialSelectedVariable;
     _variableList = widget.variableList;
   }
 
@@ -43,6 +57,7 @@ class _EditorVariableListWidgetState extends State<EditorVariableListWidget> {
 
     if(oldWidget != widget) {
       _searchController.clear();
+      _selectedVariable = widget.initialSelectedVariable;
       _variableList = widget.variableList;
     }
   }
@@ -116,19 +131,28 @@ class _EditorVariableListWidgetState extends State<EditorVariableListWidget> {
         ListView.separated(
           shrinkWrap: true,
           itemCount: _variableList.length,
-          itemBuilder: (_, index) => Container(
-            height: 30,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-              color: _variableList[index] == widget.initialSelectedVariable
-                  ? const Color(0xFFEBEFF9)
-                  : null,
-              borderRadius: BorderRadius.circular(7),
-            ),
-            child: Text(
-              _variableList[index],
-              style: AppTextStyles.size13Medium.singleLine,
+          itemBuilder: (_, index) => GestureDetector(
+            onTap: widget.isVariableForLeftSide == false && widget.onSelect != null
+                ? () {
+              setState(() {
+                _selectedVariable = _variableList[index];
+              });
+              widget.onSelect!(_variableList[index]);
+            } : null,
+            child: Container(
+              height: 30,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                color: _variableList[index] == _selectedVariable
+                    ? const Color(0xFFEBEFF9)
+                    : null,
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: Text(
+                _variableList[index],
+                style: AppTextStyles.size13Medium.singleLine,
+              ),
             ),
           ),
           separatorBuilder: (_, __) => const Padding(
@@ -137,7 +161,9 @@ class _EditorVariableListWidgetState extends State<EditorVariableListWidget> {
           ),
         ),
 
-        if(widget.initialSelectedVariable == null) ...[
+        if(widget.isVariableForLeftSide
+            && widget.initialSelectedVariable == null
+            && widget.addNewVariable != null) ...[
           const SizedBox(height: 12),
           GestureDetector(
             onTap: widget.addNewVariable,

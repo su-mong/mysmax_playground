@@ -77,6 +77,7 @@ class _TestPageState extends State<TestPage> {
             title: Text('Variable'),
             children: [
               EditorVariableListWidget(
+                isVariableForLeftSide: true,
                 variableList: variableList,
                 initialSelectedVariable: initialSelectedVariable,
                 addNewVariable: () {

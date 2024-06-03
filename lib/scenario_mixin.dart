@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mysmax_playground/core/scenario_code_parser/scenario_code_parser.dart';
+import 'package:mysmax_playground/core/scenario_code_parser/variable.dart';
 
 mixin ScenarioMixin on ChangeNotifier {
   String? _scenarioName;
@@ -103,16 +104,21 @@ mixin ScenarioMixin on ChangeNotifier {
   }
 
   /// 변수명 관련 코드 1) 시나리오에서 쓰이고 있는 모든 변수명 리스트
-  List<String> get allVariableList => rootBlock.getVariableNames();
+  List<Variable> get allVariableList => rootBlock.getVariablesWithNameAndType();
 
   /// 변수명 관련 코드 2) 서비스명을 바탕으로 새로운 변수명을 생성함
   String generateNewVariable(String serviceName) {
     String variableName = '$serviceName결과값${Random().nextInt(1000)}';
 
-    while(searchVariableList.contains(variableName)) {
+    while(allVariableList.where((variable) => variable.name == variableName).isNotEmpty) {
       variableName = '$serviceName결과값${Random().nextInt(1000)}';
     }
 
     return variableName;
   }
+
+  /// 변수명 관련 코드 3) 특정 타입에 해당하는 모든 변수명 리스트
+  List<Variable> variableListByType(String type) => rootBlock.getVariablesWithNameAndType()
+      .where((variable) => variable.type == type)
+      .toList();
 }

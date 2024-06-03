@@ -582,11 +582,11 @@ extension TimeServiceTypeExtension on TimeServiceType {
 
   static TimeServiceType fromString(String value) {
     switch (value.toLowerCase()) {
-      case 'datetime_double':
+      case 'datetime_double' || 'datetime':
         return TimeServiceType.DATETIME;
-      case 'date_double':
+      case 'date_double' || 'date':
         return TimeServiceType.DATE;
-      case 'time_double':
+      case 'time_double' || 'time':
         return TimeServiceType.TIME;
       case 'weekday':
         return TimeServiceType.WEEKDAY;

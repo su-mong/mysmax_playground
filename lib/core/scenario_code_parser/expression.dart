@@ -52,7 +52,7 @@ class LiteralExpression extends Expression {
     }
   }
 
-  TextSpan get expressionString {
+  TextSpan get expressionTextSpan {
     return TextSpan(children: [
       TextSpan(
         text: "${literalType.toDisplayName} ",
@@ -62,12 +62,18 @@ class LiteralExpression extends Expression {
     ]);
   }
 
-  TextSpan get leftExpressionString {
-    return expressionString;
+  TextSpan get leftExpressionTextSpan {
+    return expressionTextSpan;
+  }
+  String get leftExpressionString {
+    return "${literalType.toDisplayName} $valueString";
   }
 
-  TextSpan get rightExpressionString {
-    return expressionString;
+  TextSpan get rightExpressionTextSpan {
+    return expressionTextSpan;
+  }
+  String get rightExpressionString {
+    return "${literalType.toDisplayName} $valueString";
   }
 
   static LiteralExpression parse(String line) {
@@ -205,17 +211,20 @@ class ConditionExpression extends Expression {
     return conditions;
   }
 
-  TextSpan get expressionString {
+  TextSpan get expressionTextSpan {
     return TextSpan(children: [
-      leftExpression.leftExpressionString,
+      leftExpression.leftExpressionTextSpan,
       TextSpan(
           text: " ${operator.value} ",
           style: const TextStyle(color: AppColors.blue)),
-      rightExpression.rightExpressionString,
+      rightExpression.rightExpressionTextSpan,
     ]);
   }
+  String get expressionString {
+    return '${leftExpression.leftExpressionString} ${operator.value} ${rightExpression.rightExpressionString}';
+  }
 
-  TextSpan get leftExpressionString {
+  TextSpan get leftExpressionTextSpan {
     if (leftExpression is LiteralExpression) {
       return TextSpan(children: [
         TextSpan(
@@ -234,27 +243,27 @@ class ConditionExpression extends Expression {
       ]);
     } else if (leftExpression is ConditionExpression) {
       var condition = leftExpression as ConditionExpression;
-      return condition.expressionString;
+      return condition.expressionTextSpan;
     } else {
       throw Exception('Invalid left expression type');
     }
   }
 
-  String get leftExpressionOnlyString {
+  String get leftExpressionString {
     if (leftExpression is LiteralExpression) {
       return '${(leftExpression as LiteralExpression).literalType.toDisplayName}'
           ' ${(leftExpression as LiteralExpression).valueString}';
     } else if (leftExpression is ValueServiceExpression) {
       return '${(leftExpression as ValueServiceExpression).serviceName} ';
     } else if (leftExpression is ConditionExpression) {
-      return '${leftExpression.leftExpressionOnlyString}'
-          ' ${operator.value} ${rightExpression.rightExpressionOnlyString}';
+      return '${leftExpression.leftExpressionString}'
+          ' ${operator.value} ${rightExpression.rightExpressionString}';
     } else {
       throw Exception('Invalid left expression type');
     }
   }
 
-  TextSpan get rightExpressionString {
+  TextSpan get rightExpressionTextSpan {
     if (rightExpression is LiteralExpression) {
       return TextSpan(children: [
         TextSpan(
@@ -273,21 +282,21 @@ class ConditionExpression extends Expression {
       ]);
     } else if (rightExpression is ConditionExpression) {
       var condition = rightExpression as ConditionExpression;
-      return condition.expressionString;
+      return condition.expressionTextSpan;
     } else {
       throw Exception('Invalid right expression type');
     }
   }
 
-  String get rightExpressionOnlyString {
+  String get rightExpressionString {
     if (rightExpression is LiteralExpression) {
       return "${(rightExpression as LiteralExpression).literalType.toDisplayName}"
           " ${(rightExpression as LiteralExpression).valueString}";
     } else if (rightExpression is ValueServiceExpression) {
       return "${(rightExpression as ValueServiceExpression).serviceName} ";
     } else if (rightExpression is ConditionExpression) {
-      return '${leftExpression.leftExpressionOnlyString}'
-          ' ${operator.value} ${rightExpression.rightExpressionOnlyString}';
+      return '${leftExpression.leftExpressionString}'
+          ' ${operator.value} ${rightExpression.rightExpressionString}';
     } else {
       throw Exception('Invalid right expression type');
     }
@@ -556,7 +565,7 @@ class ValueServiceExpression extends Expression {
   ValueServiceExpression(this.serviceName, this.tags, this.rangeType)
       : super(ExpressionType.VALUE_SERVICE);
 
-  TextSpan get expressionString {
+  TextSpan get expressionTextSpan {
     return TextSpan(children: [
       TextSpan(
         text: "$serviceName ",
@@ -564,12 +573,18 @@ class ValueServiceExpression extends Expression {
     ]);
   }
 
-  TextSpan get leftExpressionString {
-    return expressionString;
+  TextSpan get leftExpressionTextSpan {
+    return expressionTextSpan;
+  }
+  String get leftExpressionString {
+    return "$serviceName ";
   }
 
-  TextSpan get rightExpressionString {
-    return expressionString;
+  TextSpan get rightExpressionTextSpan {
+    return expressionTextSpan;
+  }
+  String get rightExpressionString {
+    return "$serviceName ";
   }
 
   static ValueServiceExpression parse(String line) {

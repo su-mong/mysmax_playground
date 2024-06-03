@@ -134,7 +134,7 @@ class _ScenarioItemWidgetState<T extends Block>
             ).copyWith(right: 12),
             child: Row(
               children: [
-                Expanded(child: Text.rich(item.condition.expressionString)),
+                Expanded(child: Text.rich(item.condition.expressionTextSpan)),
                 GestureDetector(
                   onTap: () {},
                   child: SvgPicture.asset(
@@ -176,11 +176,11 @@ class _ScenarioItemWidgetState<T extends Block>
                     child: Text.rich(TextSpan(
                         style: AppTextStyles.size13Medium.singleLine,
                         children: [
-                      item.condition?.leftExpressionString ?? TextSpan(),
+                      item.condition?.leftExpressionTextSpan ?? TextSpan(),
                       TextSpan(
                         text: " ${item.condition?.operator.value} ",
                       ),
-                      item.condition?.rightExpressionString ?? TextSpan(),
+                      item.condition?.rightExpressionTextSpan ?? TextSpan(),
                     ]))),
                 GestureDetector(
                   onTap: () {},

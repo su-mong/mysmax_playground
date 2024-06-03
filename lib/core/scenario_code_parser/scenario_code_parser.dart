@@ -38,13 +38,17 @@ class ScenarioCodeParser {
           generatedBlock = LoopBlock.parse(line);
           break;
         case BlockType.IF:
-          generatedBlock = IfBlock.parse(line);
+          generatedBlock = ConditionBlock.ifBlock(
+            IfBlock.parse(line),
+          );
           break;
         case BlockType.ELSE:
           generatedBlock = ElseBlock.parse(line);
           break;
         case BlockType.WAIT_UNTIL:
-          generatedBlock = WaitUntilBlock.parse(line);
+          generatedBlock = ConditionBlock.waitUntilBlock(
+            WaitUntilBlock.parse(line),
+          );
           break;
         case BlockType.VALUE_SERVICE:
           generatedBlock = ValueServiceBlock.parse(line);
@@ -60,22 +64,7 @@ class ScenarioCodeParser {
       }
 
       /// 작성자: 우수몽
-      /// 연속된 FunctionServiceBlock이나 ValueServiceBlock는 ServicesBlock에 합쳐서 넣는다.
-
-      /*
-      if(generatedBlock is FunctionServiceBlock || generatedBlock is ValueServiceBlock) {
-        // 케이스 1: 직전에 ServicesBlock이 있었음 -> ServicesBlock 지우고 현재 block을 추가한 새로운 ServicesBlock를 넣음
-        if(currentBlockCursor.blocks.isNotEmpty && currentBlockCursor.blocks.last is ServicesBlock) {
-          final newChildren = (currentBlockCursor.blocks.last as ServicesBlock).children;
-          newChildren.add(generatedBlock);
-          generatedBlock = (currentBlockCursor.blocks.removeLast() as ServicesBlock).copyWith(ServicesBlock(newChildren));
-        }
-        // 케이스 2: 첫 FunctionServiceBlock | ValueServiceBlock인 경우 -> ServicesBlock 생성하고 children으로 현재 block만 넣음
-        else {
-          generatedBlock = ServicesBlock([generatedBlock]);
-        }
-      }
-      */
+      /// 연속된 FunctionServiceBlock은 ServicesBlock에 합쳐서 넣는다.
       if(generatedBlock is FunctionServiceBlock) {
         // 케이스 1: 직전에 ServicesBlock이 있었음 -> ServicesBlock 지우고 현재 block을 추가한 새로운 ServicesBlock를 넣음
         if(currentBlockCursor.blocks.isNotEmpty && currentBlockCursor.blocks.last is FunctionServiceListBlock) {
