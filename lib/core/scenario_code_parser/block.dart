@@ -573,11 +573,14 @@ class LoopBlock extends Block {
     /// DAILY : period.periodType == PeriodType.DAY && period.period.value == 1
     /// MANUAL : else
 
-    if (period.periodType == PeriodType.DAY && period.period.value == 1 && weekdays.isNotEmpty) {
+    if (period.periodType == PeriodType.DAY &&
+        period.period.value == 1 &&
+        weekdays.isNotEmpty) {
       return LoopMode.WEEKDAYSELECT;
-    } else if (period.periodType == PeriodType.DAY && period.period.value == 1) {
+    } else if (period.periodType == PeriodType.DAY &&
+        period.period.value == 1) {
       return LoopMode.DAILY;
-    }  else {
+    } else {
       return LoopMode.MANUAL;
     }
   }
@@ -839,10 +842,6 @@ class WaitUntilBlock extends Block {
     }
 
     if (period != null && period!.periodType == PeriodType.UNDEFINED) {
-      return false;
-    }
-
-    if (condition != null && !condition!.isHaveTimeCondition()) {
       return false;
     }
 
