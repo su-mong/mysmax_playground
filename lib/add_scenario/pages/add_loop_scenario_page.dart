@@ -93,12 +93,12 @@ class _AddLoopScenarioPageState extends State<AddLoopScenarioPage> {
                 isSelected: viewModel.loopType == LoopMode.DAILY,
               ),
               const SizedBox(width: 8),
-              _buildChip(
+              /*_buildChip(
                 text: '매주',
                 onPressed: () => viewModel.loopType = LoopMode.WEEKLY,
                 isSelected: viewModel.loopType == LoopMode.WEEKLY,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 8),*/
               _buildChip(
                 text: '요일 선택',
                 onPressed: () => viewModel.loopType = LoopMode.WEEKDAYSELECT,
@@ -151,10 +151,10 @@ class _AddLoopScenarioPageState extends State<AddLoopScenarioPage> {
             Row(
               children: [
                 const Spacer(),
-                if (viewModel.loopType == LoopMode.WEEKLY) ...[
+                /*if (viewModel.loopType == LoopMode.WEEKLY) ...[
                   _buildWeekDayWheel(),
                   const SizedBox(width: 8),
-                ],
+                ],*/
                 Container(
                   height: 126,
                   width: 218,

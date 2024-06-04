@@ -101,7 +101,6 @@ enum LoopMode {
   UNDEFINED,
   MANUAL,
   DAILY,
-  WEEKLY,
   WEEKDAYSELECT,
 }
 
@@ -627,10 +626,10 @@ extension LoopModeExtension on LoopMode {
         return '사용자 설정';
       case LoopMode.DAILY:
         return '매일';
-      case LoopMode.WEEKLY:
-        return '매주';
+      /*case LoopMode.WEEKLY:
+        return '매주';*/
       case LoopMode.WEEKDAYSELECT:
-        return '요일 선택';
+        return '매주';
       default:
         return '';
     }
@@ -642,10 +641,10 @@ extension LoopModeExtension on LoopMode {
         return '사용자 설정';
       case LoopMode.DAILY:
         return '매일';
-      case LoopMode.WEEKLY:
-        return '매주';
+      /*case LoopMode.WEEKLY:
+        return '매주';*/
       case LoopMode.WEEKDAYSELECT:
-        return '평일';
+        return '매주';
       default:
         return '';
     }

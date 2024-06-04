@@ -693,7 +693,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
             TextSpan(text: ' 까지'),
           ],
         ];
-      case LoopMode.WEEKLY:
+      /*case LoopMode.WEEKLY:
         return [
           TextSpan(
               text:
@@ -718,7 +718,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
                 )),
             TextSpan(text: ' 까지'),
           ],
-        ];
+        ];*/
       case LoopMode.WEEKDAYSELECT:
         return [
           if (item.timeBound[0] != null) ...[

@@ -125,7 +125,7 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
           : '';
     }
 
-    else if(_loopMode == LoopMode.WEEKLY || _loopMode == LoopMode.WEEKDAYSELECT) {
+    else if(_loopMode == LoopMode.WEEKDAYSELECT) {
       _weekdays = widget.item.weekdays;
 
       _timeBoundEveryWeek = widget.item.timeBound.isEmpty
@@ -237,10 +237,10 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
                 _textButton(
                   '매주',
                   width: 51,
-                  isSelected: _loopMode == LoopMode.WEEKLY || _loopMode == LoopMode.WEEKDAYSELECT,
+                  isSelected: _loopMode == LoopMode.WEEKDAYSELECT,
                   onClick: () {
                     setState(() {
-                      _loopMode = LoopMode.WEEKLY;
+                      _loopMode = LoopMode.WEEKDAYSELECT;
                     });
                     setData();
                   },

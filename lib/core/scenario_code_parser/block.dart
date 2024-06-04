@@ -516,15 +516,15 @@ class LoopBlock extends Block {
   }
 
   static LoopMode getLoopMode(List<WeekDay> weekdays, PeriodExpression period) {
-    if (period.periodType == PeriodType.DAY && period.period.value == 7) {
-      return LoopMode.WEEKLY;
-    } else if (period.periodType == PeriodType.DAY &&
-        period.period.value == 1) {
-      return LoopMode.DAILY;
-    } else if (period.periodType == PeriodType.DAY &&
-        (period.period.value > 0 && period.period.value < 7)) {
+    /// WEEKDAYSELECT : period.periodType == PeriodType.DAY && period.period.value == 1 && weekdays.isNotEmpty
+    /// DAILY : period.periodType == PeriodType.DAY && period.period.value == 1
+    /// MANUAL : else
+
+    if (period.periodType == PeriodType.DAY && period.period.value == 1 && weekdays.isNotEmpty) {
       return LoopMode.WEEKDAYSELECT;
-    } else {
+    } else if (period.periodType == PeriodType.DAY && period.period.value == 1) {
+      return LoopMode.DAILY;
+    }  else {
       return LoopMode.MANUAL;
     }
   }
