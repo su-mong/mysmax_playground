@@ -144,6 +144,19 @@ class MqttViewModel extends ChangeNotifier {
         .where((value) => value.tags?.contains(tag) ?? false)
         .toList();
   }
+  List<ThingFunction> serviceFunctionListByTagForTest() {
+    int additionalCount = 0;
+    return serviceFunctionList
+    .where((element) {
+      if(additionalCount < 8) {
+        if(Random().nextBool()) {
+          additionalCount++;
+          return true;
+        }
+      }
+      return false;
+    }).toList();
+  }
   /// DES | 추가 : name에 해당하는 ThingFunction을 찾아냄
   ThingFunction? serviceFunctionByName(String name) {
     return serviceFunctionList.firstWhereOrNull(

@@ -3,6 +3,8 @@ import 'package:mysmax_playground/core/scenario_code_parser/block.dart';
 import 'package:mysmax_playground/models/scenario.dart';
 import 'package:mysmax_playground/scenario_mixin.dart';
 
+// Creator와 Editor가 나눠져야 함
+// 지금은 ScenarioEditor가 Creator 역할을 하고 있음
 class ScenarioEditorViewModel extends ChangeNotifier with ScenarioMixin {
   final Scenario? originScenario;
   ScenarioEditorViewModel({

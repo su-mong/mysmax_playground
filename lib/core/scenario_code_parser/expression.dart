@@ -65,6 +65,7 @@ class LiteralExpression extends Expression {
   TextSpan get leftExpressionTextSpan {
     return expressionTextSpan;
   }
+
   String get leftExpressionString {
     return "${literalType.toDisplayName} $valueString";
   }
@@ -72,6 +73,7 @@ class LiteralExpression extends Expression {
   TextSpan get rightExpressionTextSpan {
     return expressionTextSpan;
   }
+
   String get rightExpressionString {
     return "${literalType.toDisplayName} $valueString";
   }
@@ -133,6 +135,30 @@ class LiteralExpression extends Expression {
     }
 
     return code;
+  }
+
+  bool isValid() {
+    if (literalType == LiteralType.UNDEFINED) {
+      return false;
+    }
+
+    if (literalType == LiteralType.STRING && value is! String) {
+      return false;
+    }
+
+    if (literalType == LiteralType.BOOL && value is! bool) {
+      return false;
+    }
+
+    if (literalType == LiteralType.INTEGER && value is! int) {
+      return false;
+    }
+
+    if (literalType == LiteralType.DOUBLE && value is! double) {
+      return false;
+    }
+
+    return true;
   }
 }
 
@@ -220,6 +246,7 @@ class ConditionExpression extends Expression {
       rightExpression.rightExpressionTextSpan,
     ]);
   }
+
   String get expressionString {
     return '${leftExpression.leftExpressionString} ${operator.value} ${rightExpression.rightExpressionString}';
   }
@@ -514,7 +541,8 @@ class ConditionExpression extends Expression {
             ? leftExpression
             : rightExpression;
     // LiteralExpression literalExpression = leftExpression is LiteralExpression ? leftExpression : rightExpression;
-    if (!((valueServiceExpression.tags.contains('clock') || valueServiceExpression.tags.contains('Clock')) &&
+    if (!((valueServiceExpression.tags.contains('clock') ||
+            valueServiceExpression.tags.contains('Clock')) &&
         (TimeServiceTypeExtension.fromString(
                 valueServiceExpression.serviceName) !=
             TimeServiceType.UNDEFINED))) {
@@ -576,6 +604,7 @@ class ValueServiceExpression extends Expression {
   TextSpan get leftExpressionTextSpan {
     return expressionTextSpan;
   }
+
   String get leftExpressionString {
     return "$serviceName ";
   }
@@ -583,6 +612,7 @@ class ValueServiceExpression extends Expression {
   TextSpan get rightExpressionTextSpan {
     return expressionTextSpan;
   }
+
   String get rightExpressionString {
     return "$serviceName ";
   }

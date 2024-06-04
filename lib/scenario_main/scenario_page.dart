@@ -10,6 +10,7 @@ import 'package:mysmax_playground/models/scenario.dart';
 import 'package:mysmax_playground/models/scheduled_thing.dart';
 import 'package:mysmax_playground/models/service.dart';
 import 'package:mysmax_playground/models/tag.dart';
+import 'package:mysmax_playground/scenario_creator/scenario_creator_screen.dart';
 import 'package:mysmax_playground/scenario_detail/scenario_detail_screen.dart';
 import 'package:mysmax_playground/scenario_editor/scenario_editor_screen.dart';
 import 'package:mysmax_playground/scenario_main/widgets/scenario_main_list_view.dart';
@@ -22,7 +23,9 @@ import '../colors.dart';
 class ScenarioPage extends StatefulWidget {
   static final List<Scenario> allScenario = [
     const Scenario(
-      id: 0, name: '시나리오 0', contents: '시나리오 0 내용',
+      id: 0,
+      name: '시나리오 0',
+      contents: '시나리오 0 내용',
       state: ScenarioState.created,
       scheduled_things: [
         ScheduledThing(
@@ -32,7 +35,9 @@ class ScenarioPage extends StatefulWidget {
       ],
     ),
     const Scenario(
-      id: 1, name: '시나리오 1', contents: '시나리오 1 내용',
+      id: 1,
+      name: '시나리오 1',
+      contents: '시나리오 1 내용',
       state: ScenarioState.created,
       scheduled_things: [
         ScheduledThing(
@@ -64,7 +69,8 @@ class _ScenarioPageState extends State<ScenarioPage> {
     viewModel.initialize();
 
     setState(() {
-      _isExpandedList.addAll(ScenarioPage.allScenario.map((_) => false).toList());
+      _isExpandedList
+          .addAll(ScenarioPage.allScenario.map((_) => false).toList());
     });
   }
 
@@ -96,7 +102,7 @@ class _ScenarioPageState extends State<ScenarioPage> {
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
-                    const ScenarioEditorScreen().push(context);
+                    const ScenarioCreatorScreen().push(context);
 
                     // const AddScenarioExamplePage().push(context);
 
@@ -135,7 +141,6 @@ class _ScenarioPageState extends State<ScenarioPage> {
                 const SizedBox(width: 2),
               ],
             ),
-
             const SizedBox(height: 9),
             ScenarioMainListView(
               ScenarioPage.allScenario,
@@ -152,13 +157,11 @@ class _ScenarioPageState extends State<ScenarioPage> {
               copy: (String contents) => print('copy $contents'),
               delete: (String name) => print('delete $name'),
             ),
-
             const SizedBox(height: 18),
             Padding(
               padding: const EdgeInsets.only(left: 12),
               child: Text("최근 실행", style: AppTextStyles.size16Bold.singleLine),
             ),
-
             const SizedBox(height: 12),
             _tmpScenarioDetailPage(),
           ],
@@ -192,7 +195,8 @@ class _ScenarioPageState extends State<ScenarioPage> {
         itemCount: viewModel.scenarioList.length,
         itemBuilder: (_, index) => GestureDetector(
           onTap: () {
-            ScenarioEditorScreen(scenario: viewModel.scenarioList[index]).push(context);
+            ScenarioEditorScreen(scenario: viewModel.scenarioList[index])
+                .push(context);
           },
           child: Container(
             padding: const EdgeInsets.all(4),
