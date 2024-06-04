@@ -89,7 +89,8 @@ abstract class Block with FastEquatable {
     for (Block block in blocks) {
       if (currentBlock != null && block.uid == currentBlock.uid) {
         if (includeCurrentBlock) {
-          if (block is FunctionServiceBlock) { // FunctionServiceReturnType
+          if (block is FunctionServiceBlock) {
+            // FunctionServiceReturnType
             if (block.variableName != null) {
               variableNames.add(block.variableName!);
             }
@@ -127,10 +128,12 @@ abstract class Block with FastEquatable {
     for (Block block in blocks) {
       if (currentBlock != null && block.uid == currentBlock.uid) {
         if (includeCurrentBlock) {
-          if (block is FunctionServiceBlock) { // FunctionServiceReturnType
+          if (block is FunctionServiceBlock) {
+            // FunctionServiceReturnType
             if (block.variableName != null) {
               variables.add(
-                Variable.fromFunctionService(block.variableName!, block.functionServiceReturnType),
+                Variable.fromFunctionService(
+                    block.variableName!, block.functionServiceReturnType),
               );
             }
           } else if (block is ValueServiceBlock) {
@@ -145,7 +148,8 @@ abstract class Block with FastEquatable {
       if (block is FunctionServiceBlock) {
         if (block.variableName != null) {
           variables.add(
-            Variable.fromFunctionService(block.variableName!, block.functionServiceReturnType),
+            Variable.fromFunctionService(
+                block.variableName!, block.functionServiceReturnType),
           );
         }
       } else if (block is ValueServiceBlock) {
@@ -163,6 +167,7 @@ abstract class Block with FastEquatable {
   }
 
   String toScenarioCode();
+  bool isValid();
   bool updateBlock(Block currentBlock, Block changedBlock);
   Block copyWith(Block block);
 
@@ -174,16 +179,17 @@ abstract class Block with FastEquatable {
 }
 
 extension BlockExtension on Block {
-  Color getColor() => const Color(0xFF5D7CFF); // colorDepth[(level - 1) % colorDepth.length];
+  Color getColor() =>
+      const Color(0xFF5D7CFF); // colorDepth[(level - 1) % colorDepth.length];
   int getLeftPadding() => level < 1 ? 0 : 2 + 4 * (level - 1);
   Border? get blockBorder => level < 2
       ? null
       : Border(
-    left: BorderSide(
-      width: 2 + 4 * (level - 2),
-      color: const Color(0xFF5D7CFF),
-    ),
-  );
+          left: BorderSide(
+            width: 2 + 4 * (level - 2),
+            color: const Color(0xFF5D7CFF),
+          ),
+        );
 }
 
 class RootBlock extends Block {
@@ -198,6 +204,18 @@ class RootBlock extends Block {
     }
 
     return indent(code, level).trim();
+  }
+
+  @override
+  bool isValid() {
+    // recursively check is valid
+    for (Block block in blocks) {
+      if (!block.isValid()) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   @override
@@ -245,6 +263,11 @@ class DummyBlock extends Block {
   }
 
   @override
+  bool isValid() {
+    return false;
+  }
+
+  @override
   bool updateBlock(Block currentBlock, Block changedBlock) {
     return false;
   }
@@ -277,15 +300,13 @@ class LoopBlock extends Block {
       {blocks})
       : super(BlockType.LOOP, true, blocks: blocks);
   factory LoopBlock.empty() => LoopBlock(
-    PeriodExpression(
-      PeriodType.DAY,
-      LiteralExpression(1, literalType: LiteralType.INTEGER)
-    ),
-    null,
-    LoopMode.MANUAL,
-    [],
-    [],
-  );
+        PeriodExpression(PeriodType.DAY,
+            LiteralExpression(1, literalType: LiteralType.INTEGER)),
+        null,
+        LoopMode.MANUAL,
+        [],
+        [],
+      );
 
   static LoopBlock parse(String line) {
     PeriodExpression period;
@@ -354,6 +375,38 @@ class LoopBlock extends Block {
     code += '}\n';
 
     return indent(code, level - 1);
+  }
+
+  @override
+  bool isValid() {
+    if (period == null && condition == null) {
+      return false;
+    }
+
+    if (loopMode == LoopMode.UNDEFINED) {
+      return false;
+    }
+
+    if (loopMode == LoopMode.WEEKDAYSELECT && weekdays.isEmpty) {
+      return false;
+    }
+
+    if (condition != null && !condition!.isHaveTimeCondition()) {
+      return false;
+    }
+
+    if (period != null && period!.periodType == PeriodType.UNDEFINED) {
+      return false;
+    }
+
+    // recursively check is valid
+    for (Block block in blocks) {
+      if (!block.isValid()) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   @override
@@ -571,6 +624,37 @@ class IfBlock extends Block {
     return indent(code, level - 1);
   }
 
+  @override
+  bool isValid() {
+    // left and right expressions should be ConditionExpression, LiteralExpression, ValueService
+    if (condition.leftExpression is! ConditionExpression &&
+        condition.leftExpression is! LiteralExpression &&
+        condition.leftExpression is! ValueServiceExpression) {
+      return false;
+    }
+
+    if (condition.rightExpression is! ConditionExpression &&
+        condition.rightExpression is! LiteralExpression &&
+        condition.rightExpression is! ValueServiceExpression) {
+      return false;
+    }
+
+    if (condition.leftExpression is ConditionExpression &&
+        condition.rightExpression is ConditionExpression &&
+        condition.operator == Operator.UNDEFINED) {
+      return false;
+    }
+
+    // recursively check is valid
+    for (Block block in blocks) {
+      if (!block.isValid()) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   List<Operator> getOperators() {
     List<Operator> operators = [];
     var expression = condition;
@@ -589,9 +673,10 @@ class IfBlock extends Block {
   /// (중요 : UI상 표현식에는 AND만 들어가거나 OR만 들어갈 수 있기 때문에, 리스트가 아닌 맨 첫 번째 Operator만 리턴한다.)
   Operator? getAndOrOperator() {
     List<Operator> operators = getOperators();
-    return operators.where(
-      (operator) => operator == Operator.AND || operator == Operator.OR
-    ).firstOrNull;
+    return operators
+        .where(
+            (operator) => operator == Operator.AND || operator == Operator.OR)
+        .firstOrNull;
   }
 
   @override
@@ -651,6 +736,17 @@ class ElseBlock extends Block {
     code += '}';
 
     return indent(code, level - 1);
+  }
+
+  bool isValid() {
+    // recursively check is valid
+    for (Block block in blocks) {
+      if (!block.isValid()) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   @override
@@ -737,6 +833,23 @@ class WaitUntilBlock extends Block {
   }
 
   @override
+  bool isValid() {
+    if (period == null && condition == null) {
+      return false;
+    }
+
+    if (period != null && period!.periodType == PeriodType.UNDEFINED) {
+      return false;
+    }
+
+    if (condition != null && !condition!.isHaveTimeCondition()) {
+      return false;
+    }
+
+    return true;
+  }
+
+  @override
   bool updateBlock(Block currentBlock, Block changedBlock) {
     if (uid == currentBlock.uid) {
       period = (changedBlock as WaitUntilBlock).period;
@@ -812,6 +925,19 @@ class ValueServiceBlock extends Block {
     code += valueServiceExpression.toScenarioCode();
 
     return indent(code, level - 1);
+  }
+
+  @override
+  bool isValid() {
+    if (valueServiceExpression.serviceName.isEmpty) {
+      return false;
+    }
+
+    if (valueServiceExpression.tags.isEmpty) {
+      return false;
+    }
+
+    return true;
   }
 
   @override
@@ -940,6 +1066,23 @@ class FunctionServiceBlock extends Block {
   }
 
   @override
+  bool isValid() {
+    if (serviceName.isEmpty) {
+      return false;
+    }
+
+    if (tags.isEmpty) {
+      return false;
+    }
+
+    if (arguments.any((arg) => !arg.isValid())) {
+      return false;
+    }
+
+    return true;
+  }
+
+  @override
   bool updateBlock(Block currentBlock, Block changedBlock) {
     if (uid == currentBlock.uid) {
       serviceName = (changedBlock as FunctionServiceBlock).serviceName;
@@ -1011,10 +1154,10 @@ class FunctionServiceListBlock extends Block {
   String toScenarioCode() {
     String code = '';
 
-    for(int i = 0; i < children.length; i++) {
+    for (int i = 0; i < children.length; i++) {
       code += children[i].toScenarioCode();
 
-      if(i != children.length - 1) {
+      if (i != children.length - 1) {
         code += '\n';
       }
     }
@@ -1023,8 +1166,21 @@ class FunctionServiceListBlock extends Block {
   }
 
   @override
+  bool isValid() {
+    if (children.isEmpty) {
+      return false;
+    }
+    for (FunctionServiceBlock child in children) {
+      if (!child.isValid()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @override
   bool updateBlock(Block currentBlock, Block changedBlock) {
-    if(uid == currentBlock.uid) {
+    if (uid == currentBlock.uid) {
       children = (changedBlock as FunctionServiceListBlock).children;
       return true;
     }
@@ -1065,85 +1221,86 @@ class FunctionServiceListBlock extends Block {
 ///        (즉, ConditionBlock의 blocks 값이 바뀐다면 ifBlock의 blocks와 waitUntilBlock의 blocks도 바뀌어야 한다.)
 /// NOTE : 사실 WaitUntilBlock의 blocks는 따로 해석용으로 쓰이진 않고 있다. 다만 상태유지를 위해선 blocks도 같이 관리하는 게 맞아 보인다.
 enum ConditionBlockState { none, ifElse, waitUntil }
+
 class ConditionBlock extends Block {
   ConditionBlockState state;
   IfBlock ifBlock;
   WaitUntilBlock waitUntilBlock;
+
   /// private constructor를 쓴 이유 : blocks 상태 관리를 위해서. factory 패턴으로 연 생성자에서는 blocks 관련 처리 로직이 따로 들어가 있다.
-  ConditionBlock._({
+  ConditionBlock({
     required this.state,
     required this.ifBlock,
     required this.waitUntilBlock,
     blocks,
   }) : super(BlockType.CONDITION, true, blocks: blocks);
 
-  factory ConditionBlock.ifBlock(IfBlock ifBlock) => ConditionBlock._(
-    state: ConditionBlockState.ifElse,
-    ifBlock: ifBlock,
-    waitUntilBlock: WaitUntilBlock(
-      PeriodExpression(
-          PeriodType.SEC,
-          LiteralExpression(1, literalType: LiteralType.INTEGER)
-      ),
-      ConditionExpression(
-        null,
-        null,
-        false,
-        Operator.EQUAL,
-      ),
-    ),
-  );
+  factory ConditionBlock.ifBlock(IfBlock ifBlock) => ConditionBlock(
+        state: ConditionBlockState.ifElse,
+        ifBlock: ifBlock,
+        waitUntilBlock: WaitUntilBlock(
+          PeriodExpression(PeriodType.SEC,
+              LiteralExpression(1, literalType: LiteralType.INTEGER)),
+          ConditionExpression(
+            null,
+            null,
+            false,
+            Operator.EQUAL,
+          ),
+        ),
+      );
 
-  factory ConditionBlock.waitUntilBlock(WaitUntilBlock waitUntilBlock) => ConditionBlock._(
-    state: ConditionBlockState.waitUntil,
-    ifBlock: IfBlock(
-      ConditionExpression(
-        null,
-        null,
-        false,
-        Operator.EQUAL,
-      ),
-    ),
-    waitUntilBlock: waitUntilBlock,
-  );
+  factory ConditionBlock.waitUntilBlock(WaitUntilBlock waitUntilBlock) =>
+      ConditionBlock(
+        state: ConditionBlockState.waitUntil,
+        ifBlock: IfBlock(
+          ConditionExpression(
+            null,
+            null,
+            false,
+            Operator.EQUAL,
+          ),
+        ),
+        waitUntilBlock: waitUntilBlock,
+      );
 
-  factory ConditionBlock.empty() => ConditionBlock._(
-    state: ConditionBlockState.none,
-    ifBlock: IfBlock(
-      ConditionExpression(
-        null,
-        null,
-        false,
-        Operator.EQUAL,
-      ),
-    ),
-    waitUntilBlock: WaitUntilBlock(
-      PeriodExpression(
-        PeriodType.SEC,
-        LiteralExpression(1, literalType: LiteralType.INTEGER)
-      ),
-      ConditionExpression(
-        null,
-        null,
-        false,
-        Operator.EQUAL,
-      ),
-    ),
-  );
+  factory ConditionBlock.empty() => ConditionBlock(
+        state: ConditionBlockState.none,
+        ifBlock: IfBlock(
+          ConditionExpression(
+            null,
+            null,
+            false,
+            Operator.EQUAL,
+          ),
+        ),
+        waitUntilBlock: WaitUntilBlock(
+          PeriodExpression(PeriodType.SEC,
+              LiteralExpression(1, literalType: LiteralType.INTEGER)),
+          ConditionExpression(
+            null,
+            null,
+            false,
+            Operator.EQUAL,
+          ),
+        ),
+      );
+
   /// 아래의 [copyWith] 메서드의 param을 위한 factory.
   factory ConditionBlock.forCopy({
     required ConditionBlockState state,
     required IfBlock ifBlock,
     required WaitUntilBlock waitUntilBlock,
-  }) => ConditionBlock._(
-    state: state,
-    ifBlock: ifBlock,
-    waitUntilBlock: waitUntilBlock,
-  );
+  }) =>
+      ConditionBlock(
+        state: state,
+        ifBlock: ifBlock,
+        waitUntilBlock: waitUntilBlock,
+      );
 
   @override
   String toScenarioCode() {
-    switch(state) {
+    switch (state) {
       case ConditionBlockState.none:
         return '';
       case ConditionBlockState.ifElse:
@@ -1169,7 +1326,7 @@ class ConditionBlock extends Block {
           code = 'wait until(${waitUntilBlock.condition!.toScenarioCode()})';
         }
 
-        if(blocks.isNotEmpty) {
+        if (blocks.isNotEmpty) {
           code += '\n';
         }
         for (Block block in blocks) {
@@ -1181,8 +1338,20 @@ class ConditionBlock extends Block {
   }
 
   @override
+  bool isValid() {
+    switch (state) {
+      case ConditionBlockState.none:
+        return true;
+      case ConditionBlockState.ifElse:
+        return ifBlock.isValid();
+      case ConditionBlockState.waitUntil:
+        return waitUntilBlock.isValid();
+    }
+  }
+
+  @override
   bool updateBlock(Block currentBlock, Block changedBlock) {
-    if(uid == currentBlock.uid) {
+    if (uid == currentBlock.uid) {
       state = (changedBlock as ConditionBlock).state;
       ifBlock = changedBlock.ifBlock;
       waitUntilBlock = changedBlock.waitUntilBlock;
@@ -1205,7 +1374,7 @@ class ConditionBlock extends Block {
   @override
   ConditionBlock copyWith(Block block) {
     final newBlock = block as ConditionBlock;
-    return ConditionBlock._(
+    return ConditionBlock(
       state: newBlock.state,
       ifBlock: newBlock.ifBlock,
       waitUntilBlock: newBlock.waitUntilBlock,
