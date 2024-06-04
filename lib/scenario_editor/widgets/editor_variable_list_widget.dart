@@ -55,7 +55,7 @@ class _EditorVariableListWidgetState extends State<EditorVariableListWidget> {
   void didUpdateWidget(covariant EditorVariableListWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if(oldWidget != widget) {
+    if (oldWidget != widget) {
       _searchController.clear();
       _selectedVariable = widget.initialSelectedVariable;
       _variableList = widget.variableList;
@@ -70,9 +70,9 @@ class _EditorVariableListWidgetState extends State<EditorVariableListWidget> {
       children: [
         Text(
           '변수값 저장',
-          style: AppTextStyles.size11Medium.copyWith(color: const Color(0xFF8F94A4)),
+          style: AppTextStyles.size11Medium
+              .copyWith(color: const Color(0xFF8F94A4)),
         ),
-
         const SizedBox(height: 12),
         TextFormField(
           controller: _searchController,
@@ -126,19 +126,20 @@ class _EditorVariableListWidgetState extends State<EditorVariableListWidget> {
             */
           ),
         ),
-
         const SizedBox(height: 4),
         ListView.separated(
           shrinkWrap: true,
           itemCount: _variableList.length,
           itemBuilder: (_, index) => GestureDetector(
-            onTap: widget.isVariableForLeftSide == false && widget.onSelect != null
-                ? () {
-              setState(() {
-                _selectedVariable = _variableList[index];
-              });
-              widget.onSelect!(_variableList[index]);
-            } : null,
+            onTap:
+                widget.isVariableForLeftSide == false && widget.onSelect != null
+                    ? () {
+                        setState(() {
+                          _selectedVariable = _variableList[index];
+                        });
+                        widget.onSelect!(_variableList[index]);
+                      }
+                    : null,
             child: Container(
               height: 30,
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -160,10 +161,9 @@ class _EditorVariableListWidgetState extends State<EditorVariableListWidget> {
             child: Divider(height: 1, color: Color(0xFFF0F2F9)),
           ),
         ),
-
-        if(widget.isVariableForLeftSide
-            && widget.initialSelectedVariable == null
-            && widget.addNewVariable != null) ...[
+        if (widget.isVariableForLeftSide &&
+            widget.initialSelectedVariable == null &&
+            widget.addNewVariable != null) ...[
           const SizedBox(height: 12),
           GestureDetector(
             onTap: widget.addNewVariable,
@@ -182,15 +182,13 @@ class _EditorVariableListWidgetState extends State<EditorVariableListWidget> {
 
   void onChangedSearchTerm(String term) {
     setState(() {
-      _variableList = widget.variableList.where(
-        (element) {
-          if(term.isEmpty) {
-            return true;
-          } else {
-            return element.contains(term);
-          }
+      _variableList = widget.variableList.where((element) {
+        if (term.isEmpty) {
+          return true;
+        } else {
+          return element.contains(term);
         }
-      ).toList();
+      }).toList();
     });
   }
 }

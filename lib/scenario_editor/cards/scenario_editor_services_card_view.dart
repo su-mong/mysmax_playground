@@ -34,18 +34,23 @@ class ScenarioEditorServicesCardView extends StatefulWidget {
   /// serviceName : 서비스 이름(함수명)
   /// variableName : 대입에 쓸 변수명.
   final FunctionServiceListBlock item;
+
   /// [item]의 모든 blocks에 해당하는 초기 태그. 없을 수도 있다.
   final Tag? initialSelectedTag;
   final void Function(FunctionServiceListBlock) onChanged;
 
   /// 내가 등록한 모든 태그([Tag]) 리스트(TODO: 아마 장소태그인듯?)
   final List<Tag> tagList;
+
   /// 선택한 태그에 해당하는 기능([ThingFunction]) 목록을 찾는 함수
   final List<ThingFunction> Function(Tag tag) getThingFunctionListByTag;
+
   /// 선택한 기능([ThingFunction])에 해당하는 모든 디바이스([Thing])? 태그([Tag])? 목록을 찾는 함수(TODO: 이거 정확한 확인이 필요함. 현재는 디바이스 목록으로 구현해둠)
   final List<Thing> Function(String serviceName) getAllThingsByThingFunction;
+
   /// 현재 시나리오에 있는 모든 변수명
   final List<Variable> variableList;
+
   /// 서비스명을 가지고 새로운 변수를 추가하는 함수
   final String Function(String serviceName) generateNewVariable;
 
@@ -69,16 +74,20 @@ class ScenarioEditorServicesCardView extends StatefulWidget {
   State<StatefulWidget> createState() => _ScenarioEditorServicesCardViewState();
 }
 
-class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesCardView> {
+class _ScenarioEditorServicesCardViewState
+    extends State<ScenarioEditorServicesCardView> {
   bool _isExpanded = true;
 
   /// 중요) 현재 시나리오 상태를 표현할 UI용 객체
   ///      나중에 시나리오 블록으로 변환하기 위한 용도이다.
   final List<ThingFunction> _currentFunctions = [];
+
   /// _currentFunctions의 각 ThingFunction에 적용할 RangeType
   final List<RangeType> _rangeTypesForCurrentFunctions = [];
+
   /// _currentFunctions의 각 ThingFunction에 적용할 Device Tags
   final List<List<String>> _deviceTagsForCurrentFunctions = [];
+
   /// _currentFunctions의 각 ThingFunction에 적용할 variableName 저장하는 객체들
   final List<String?> _variableNameList = [];
 
@@ -90,6 +99,7 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
 
   /// 선택된 태그에 맞춰 보여줄 Thing List
   List<ThingFunction> _thingFunctionListForTag = [];
+
   /// 위 _thingFunctionListForTag 중 현재 선택된 ThingFunction의 인덱스
   int? _selectedThingFunctionIndex;
 
@@ -106,19 +116,23 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
   void initState() {
     super.initState();
 
-    _variableList = widget.variableList.map((variable) => variable.name).toList();
+    _variableList =
+        widget.variableList.map((variable) => variable.name).toList();
 
-    if(widget.item.children.isNotEmpty) {
+    if (widget.item.children.isNotEmpty) {
       _currentFunctions.addAll(
         widget.item.children.map(
           (block) {
             /// 원본 block에서 각 arguments의 value는 긁어와야 한다.
-            final originFunction = widget.serviceFunctionByName(block.serviceName)!;
-            final argumentsWithValue = originFunction.arguments == null ? null : <FunctionArgument>[];
-            if(argumentsWithValue != null) {
-              for(var i=0; i<originFunction.arguments!.length; i++) {
+            final originFunction =
+                widget.serviceFunctionByName(block.serviceName)!;
+            final argumentsWithValue =
+                originFunction.arguments == null ? null : <FunctionArgument>[];
+            if (argumentsWithValue != null) {
+              for (var i = 0; i < originFunction.arguments!.length; i++) {
                 argumentsWithValue.add(
-                  originFunction.arguments![i].copyWith(value: block.arguments[i].value),
+                  originFunction.arguments![i]
+                      .copyWith(value: block.arguments[i].value),
                 );
               }
             }
@@ -129,18 +143,27 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
           },
         ),
       );
-      _rangeTypesForCurrentFunctions.addAll(widget.item.children.map((block) => block.rangeType));
-      _deviceTagsForCurrentFunctions.addAll(widget.item.children.map((block) => block.tags));
+      _rangeTypesForCurrentFunctions
+          .addAll(widget.item.children.map((block) => block.rangeType));
+      _deviceTagsForCurrentFunctions
+          .addAll(widget.item.children.map((block) => block.tags));
       _variableNameList.addAll(
         widget.item.children.map((e) => e.variableName),
       );
 
-      _selectedTagIndex = widget.tagList.indexWhere((element) => element == widget.initialSelectedTag!);
-      _thingFunctionListForTag = widget.getThingFunctionListByTag(widget.tagList[_selectedTagIndex!]);
+      _selectedTagIndex = widget.tagList
+          .indexWhere((element) => element == widget.initialSelectedTag!);
+      _thingFunctionListForTag =
+          widget.getThingFunctionListByTag(widget.tagList[_selectedTagIndex!]);
 
       _selectedThingFunctionIndex = 0;
-      _argumentsSettingExpansionTileOpened = _currentFunctions[_selectedThingFunctionIndex!].arguments?.isNotEmpty ?? false;
-      _variableSettingExpansionTileOpened = _variableNameList[_selectedThingFunctionIndex!] != null;
+      _argumentsSettingExpansionTileOpened =
+          _currentFunctions[_selectedThingFunctionIndex!]
+                  .arguments
+                  ?.isNotEmpty ??
+              false;
+      _variableSettingExpansionTileOpened =
+          _variableNameList[_selectedThingFunctionIndex!] != null;
       /*
       if(widget.scheduledThings != null) {
         for(var scheduledThing in widget.scheduledThings!) {
@@ -219,82 +242,85 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
           ),
           subtitle: _isExpanded == false
               ? Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: 3),
-                    Text(
-                      '내가 등록한 태그로 기능을 실행합니다. ',
-                      style: AppTextStyles.size11Medium.singleLine.copyWith(
-                        color: const Color(0xFF8D929A),
-                        height: 15 / 11,
-                        letterSpacing: -0.22,
-                      ),
-                    ),
-                  ],
-                ),
-
-                if(_selectedTagName != null)
-                  ...[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 36),
-                      child: _textTagButton(
-                        isFixedSize: false,
-                        tag: _selectedTagName!,
-                        isSelected: true,
-                        onClick: () {},
-                      ),
-                    ),
-                    const SizedBox(height: 34),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const SizedBox(width: 7),
-                        Text.rich(
-                          TextSpan(
-                            text: _selectedTagName!,
-                            style: AppTextStyles.size16Bold.singleLine.copyWith(
-                              color: const Color(0xFF5D7CFF),
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(width: 3),
+                          Text(
+                            '내가 등록한 태그로 기능을 실행합니다. ',
+                            style:
+                                AppTextStyles.size11Medium.singleLine.copyWith(
+                              color: const Color(0xFF8D929A),
+                              height: 15 / 11,
+                              letterSpacing: -0.22,
                             ),
-                            children: [
-                              TextSpan(
-                                text: '의 어떤 기능을 실행할까요?',
-                                style: AppTextStyles.size16Bold.singleLine,
-                              ),
-                            ],
                           ),
-                        )
-                      ],
-                    ),
-
-                    const SizedBox(height: 23),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _thingFunctionListForTag.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 16,
-                          childAspectRatio: 123 / 35,
-                        ),
-                        itemBuilder: (context, index) => _functionButton(
-                          icon: IconHelper.getServiceIcon(_thingFunctionListForTag[index].category),
-                          name: _thingFunctionListForTag[index].name,
-                          isSelected: _isThingFunctionSelected(_thingFunctionListForTag[index].name),
-                          onClick: () {},
-                        ),
+                        ],
                       ),
-                    ),
-                  ]
-              ],
-            ),
-          ) : const SizedBox.shrink(),
+                      if (_selectedTagName != null) ...[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 36),
+                          child: _textTagButton(
+                            isFixedSize: false,
+                            tag: _selectedTagName!,
+                            isSelected: true,
+                            onClick: () {},
+                          ),
+                        ),
+                        const SizedBox(height: 34),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const SizedBox(width: 7),
+                            Text.rich(
+                              TextSpan(
+                                text: _selectedTagName!,
+                                style: AppTextStyles.size16Bold.singleLine
+                                    .copyWith(
+                                  color: const Color(0xFF5D7CFF),
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: '의 어떤 기능을 실행할까요?',
+                                    style: AppTextStyles.size16Bold.singleLine,
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 23),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: _thingFunctionListForTag.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 16,
+                              childAspectRatio: 123 / 35,
+                            ),
+                            itemBuilder: (context, index) => _functionButton(
+                              icon: IconHelper.getServiceIcon(
+                                  _thingFunctionListForTag[index].category),
+                              name: _thingFunctionListForTag[index].name,
+                              isSelected: _isThingFunctionSelected(
+                                  _thingFunctionListForTag[index].name),
+                              onClick: () {},
+                            ),
+                          ),
+                        ),
+                      ]
+                    ],
+                  ),
+                )
+              : const SizedBox.shrink(),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -304,9 +330,7 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
                   borderRadius: BorderRadius.circular(10),
                 ),
                 padding: EdgeInsets.zero,
-                onSelected: (direction) {
-
-                },
+                onSelected: (direction) {},
                 itemBuilder: (_) => [
                   for (final direction in _DirectionAddingNewBlockSet.values)
                     PopupMenuItem(
@@ -345,7 +369,6 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
                 ),
               ],
             ),
-
             const SizedBox(height: 36),
             SizedBox(
               width: double.infinity,
@@ -360,10 +383,11 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
                     tag: widget.tagList[index].name,
                     isSelected: _selectedTagIndex == index,
                     onClick: () {
-                      if(_selectedTagIndex != index) {
+                      if (_selectedTagIndex != index) {
                         setState(() {
                           _selectedTagIndex = index;
-                          _thingFunctionListForTag = widget.getThingFunctionListByTag(widget.tagList[index]);
+                          _thingFunctionListForTag = widget
+                              .getThingFunctionListByTag(widget.tagList[index]);
                           _selectedThingFunctionIndex = null;
 
                           /// 현재까지 선택된 ThingFunction 목록 초기화하고 시나리오에 반영.
@@ -379,83 +403,91 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
                 ),
               ),
             ),
-
-            if(_selectedTagName != null)
-              ...[
-                const SizedBox(height: 34),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: 7),
-                    Text.rich(
-                      TextSpan(
-                        text: _selectedTagName!,
-                        style: AppTextStyles.size16Bold.singleLine.copyWith(
-                          color: const Color(0xFF5D7CFF),
-                        ),
-                        children: [
-                          TextSpan(
-                            text: '의 어떤 기능을 실행할까요?',
-                            style: AppTextStyles.size16Bold.singleLine,
-                          ),
-                        ],
+            if (_selectedTagName != null) ...[
+              const SizedBox(height: 34),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 7),
+                  Text.rich(
+                    TextSpan(
+                      text: _selectedTagName!,
+                      style: AppTextStyles.size16Bold.singleLine.copyWith(
+                        color: const Color(0xFF5D7CFF),
                       ),
+                      children: [
+                        TextSpan(
+                          text: '의 어떤 기능을 실행할까요?',
+                          style: AppTextStyles.size16Bold.singleLine,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 23),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _thingFunctionListForTag.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 123 / 35,
+                  ),
+                  itemBuilder: (context, index) {
+                    return _functionButton(
+                      icon: IconHelper.getServiceIcon(
+                          _thingFunctionListForTag[index].category),
+                      name: _thingFunctionListForTag[index].name,
+                      isSelected: _isThingFunctionSelected(
+                          _thingFunctionListForTag[index].name),
+                      onClick: () {
+                        setState(() {
+                          final blockIndex =
+                              _getSelectedThingFunctionIndexByName(
+                                  _thingFunctionListForTag[index].name);
 
-                const SizedBox(height: 23),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _thingFunctionListForTag.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 16,
-                      childAspectRatio: 123 / 35,
-                    ),
-                    itemBuilder: (context, index) {
-                      return _functionButton(
-                        icon: IconHelper.getServiceIcon(_thingFunctionListForTag[index].category),
-                        name: _thingFunctionListForTag[index].name,
-                        isSelected: _isThingFunctionSelected(_thingFunctionListForTag[index].name),
-                        onClick: () {
-                          setState(() {
-                            final blockIndex = _getSelectedThingFunctionIndexByName(_thingFunctionListForTag[index].name);
+                          /// 선택된 서비스인 경우: _currentBlocks에서 해당 서비스 제거
+                          if (blockIndex != null) {
+                            _currentFunctions.removeAt(blockIndex);
+                            _rangeTypesForCurrentFunctions.removeAt(blockIndex);
+                            _deviceTagsForCurrentFunctions.removeAt(blockIndex);
+                            _variableNameList.removeAt(blockIndex);
 
-                            /// 선택된 서비스인 경우: _currentBlocks에서 해당 서비스 제거
-                            if(blockIndex != null) {
-                              _currentFunctions.removeAt(blockIndex);
-                              _rangeTypesForCurrentFunctions.removeAt(blockIndex);
-                              _deviceTagsForCurrentFunctions.removeAt(blockIndex);
-                              _variableNameList.removeAt(blockIndex);
-
-                              // 만약 서비스 선택 Dropdown이 삭제하고자 하는 서비스를 가리키고 있다면 : 맨 첫번째 서비스를 가리키도록 변경.
-                              // 단, 아예 리스트가 빈 경우 null로 변경
-                              if(_selectedThingFunctionIndex == blockIndex) {
-                                _selectedThingFunctionIndex = _currentFunctions.isEmpty ? null : 0;
-                              } else if(_selectedThingFunctionIndex != null && _selectedThingFunctionIndex! >= _currentFunctions.length) {
-                                _selectedThingFunctionIndex = _currentFunctions.isEmpty ? null : 0;
-                              }
+                            // 만약 서비스 선택 Dropdown이 삭제하고자 하는 서비스를 가리키고 있다면 : 맨 첫번째 서비스를 가리키도록 변경.
+                            // 단, 아예 리스트가 빈 경우 null로 변경
+                            if (_selectedThingFunctionIndex == blockIndex) {
+                              _selectedThingFunctionIndex =
+                                  _currentFunctions.isEmpty ? null : 0;
+                            } else if (_selectedThingFunctionIndex != null &&
+                                _selectedThingFunctionIndex! >=
+                                    _currentFunctions.length) {
+                              _selectedThingFunctionIndex =
+                                  _currentFunctions.isEmpty ? null : 0;
                             }
-                            /// 선택되지 않은 서비스인 경우 : _currentBlocks에 해당 서비스 추가
-                            else {
-                              _currentFunctions.add(_thingFunctionListForTag[index]);
-                              _rangeTypesForCurrentFunctions.add(RangeType.AUTO);
-                              _deviceTagsForCurrentFunctions.add([]);
-                              _variableNameList.add(null);
+                          }
 
-                              // 서비스 선택 Dropdown이 방금 추가한 서비스를 가리키도록 한다.
-                              _selectedThingFunctionIndex = _currentFunctions.length - 1;
-                            }
+                          /// 선택되지 않은 서비스인 경우 : _currentBlocks에 해당 서비스 추가
+                          else {
+                            _currentFunctions
+                                .add(_thingFunctionListForTag[index]);
+                            _rangeTypesForCurrentFunctions.add(RangeType.AUTO);
+                            _deviceTagsForCurrentFunctions.add([]);
+                            _variableNameList.add(null);
 
-                            setData();
-                          });
+                            // 서비스 선택 Dropdown이 방금 추가한 서비스를 가리키도록 한다.
+                            _selectedThingFunctionIndex =
+                                _currentFunctions.length - 1;
+                          }
 
-                          /*setState(() {
+                          setData();
+                        });
+
+                        /*setState(() {
                       _serviceSelectedList[index] = !_serviceSelectedList[index];
 
                       if(_serviceSelectedList[index]) {
@@ -488,138 +520,162 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
 
                     }
                     */
-                        },
-                      );
-                    },
-                  ),
+                      },
+                    );
+                  },
+                ),
+              ),
+              if (_selectedThingFunctionIndex != null) ...[
+                const SizedBox(height: 38),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(width: 6),
+                    Text(
+                      '어떤 디바이스로 실행할까요?',
+                      style: AppTextStyles.size16Bold.singleLine,
+                    )
+                  ],
                 ),
 
-                if(_selectedThingFunctionIndex != null)
-                  ...[
-                    const SizedBox(height: 38),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const SizedBox(width: 6),
-                        Text(
-                          '어떤 디바이스로 실행할까요?',
-                          style: AppTextStyles.size16Bold.singleLine,
-                        )
-                      ],
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    CustomDropDown(
+                      disabledHint: '기능을 선택해주세요.',
+                      fixWidth: false,
+                      selectedValue: _selectedThingFunctionName!,
+                      onChanged: (selectedServiceName) {
+                        setState(() {
+                          if (selectedServiceName != null) {
+                            _selectedThingFunctionIndex =
+                                _getSelectedThingFunctionIndexByName(
+                                    selectedServiceName);
+                          }
+                        });
+                      },
+                      items: _currentFunctions
+                          .map((function) => function.name)
+                          .toList(),
                     ),
+                    const SizedBox(width: 16),
+                    RadioTextButton<RangeType>(
+                      value: RangeType.ALL,
+                      groupValue: _rangeTypesForCurrentFunctions[
+                          _selectedThingFunctionIndex!],
+                      onChanged: _setNewRangeTypeForCurrentFunction,
+                      title: '모두 선택',
+                    ),
+                    const SizedBox(width: 16),
+                    RadioTextButton<RangeType>(
+                      value: RangeType.AUTO,
+                      groupValue: _rangeTypesForCurrentFunctions[
+                          _selectedThingFunctionIndex!],
+                      onChanged: _setNewRangeTypeForCurrentFunction,
+                      title: '자동 선택',
+                    ),
+                  ],
+                ),
 
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        CustomDropDown(
-                          disabledHint: '기능을 선택해주세요.',
-                          fixWidth: false,
-                          selectedValue: _selectedThingFunctionName!,
-                          onChanged: (selectedServiceName) {
-                            setState(() {
-                              if(selectedServiceName != null) {
-                                _selectedThingFunctionIndex = _getSelectedThingFunctionIndexByName(selectedServiceName);
-                              }
-                            });
+                const SizedBox(height: 32),
+                if (_currentFunctions[_selectedThingFunctionIndex!].tags !=
+                    null)
+                  SizedBox(
+                    width: double.infinity,
+                    child: Wrap(
+                      alignment: WrapAlignment.start,
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: List.generate(
+                        _currentFunctions[_selectedThingFunctionIndex!]
+                            .tags!
+                            .length,
+                        (index) => _textTagButton(
+                          isFixedSize: false,
+                          tag: _currentFunctions[_selectedThingFunctionIndex!]
+                              .tags![index]
+                              .name,
+                          isSelected: _deviceTagsForCurrentFunctions[
+                                  _selectedThingFunctionIndex!]
+                              .contains(_currentFunctions[
+                                      _selectedThingFunctionIndex!]
+                                  .tags![index]
+                                  .name),
+                          onClick: () {
+                            _toggleTagSelectionForCurrentFunction(
+                                _currentFunctions[_selectedThingFunctionIndex!]
+                                    .tags![index]
+                                    .name);
                           },
-                          items: _currentFunctions.map((function) => function.name).toList(),
                         ),
-
-                        const SizedBox(width: 16),
-                        RadioTextButton<RangeType>(
-                          value: RangeType.AUTO,
-                          groupValue: _rangeTypesForCurrentFunctions[_selectedThingFunctionIndex!],
-                          onChanged: _setNewRangeTypeForCurrentFunction,
-                          title: '자동',
-                        ),
-                        const SizedBox(width: 16),
-                        RadioTextButton<RangeType>(
-                          value: RangeType.ALL,
-                          groupValue: _rangeTypesForCurrentFunctions[_selectedThingFunctionIndex!],
-                          onChanged: _setNewRangeTypeForCurrentFunction,
-                          title: '모두',
-                        ),
-                        const SizedBox(width: 16),
-                        RadioTextButton<RangeType>(
-                          value: RangeType.UNDEFINED,
-                          groupValue: _rangeTypesForCurrentFunctions[_selectedThingFunctionIndex!],
-                          onChanged: _setNewRangeTypeForCurrentFunction,
-                          title: '선택',
-                        ),
-                      ],
+                      ),
                     ),
+                  ),
 
-                    const SizedBox(height: 32),
-                    if(_currentFunctions[_selectedThingFunctionIndex!].tags != null)
-                      SizedBox(
-                      width: double.infinity,
-                      child: Wrap(
-                        alignment: WrapAlignment.start,
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: List.generate(
-                          _currentFunctions[_selectedThingFunctionIndex!].tags!.length,
-                              (index) => _textTagButton(
-                            isFixedSize: false,
-                            tag: _currentFunctions[_selectedThingFunctionIndex!].tags![index].name,
-                            isSelected: _deviceTagsForCurrentFunctions[_selectedThingFunctionIndex!].contains(_currentFunctions[_selectedThingFunctionIndex!].tags![index].name),
-                            onClick: () {
-                              _toggleTagSelectionForCurrentFunction(_currentFunctions[_selectedThingFunctionIndex!].tags![index].name);
-                            },
+                const SizedBox(height: 21),
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _selectedDevicesForTags.length,
+                  itemBuilder: (_, index) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: IconHelper.getDeviceIcon(
+                              _selectedDevicesForTags[index].category ??
+                                  'undefined'),
+                          errorWidget: (_, __, ___) => CachedNetworkImage(
+                            imageUrl: IconHelper.getDeviceIcon('undefined'),
+                            height: 29,
+                          ),
+                          height: 29,
+                        ),
+                        const SizedBox(width: 3),
+                        Expanded(
+                          child: Text(
+                            _selectedDevicesForTags[index].name,
+                            style: AppTextStyles.size16Medium.singleLine,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                      ),
+                      ],
                     ),
+                  ),
+                  separatorBuilder: (_, __) =>
+                      const Divider(height: 1, color: Color(0xFFF0F2F9)),
+                ),
 
-                    const SizedBox(height: 21),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _selectedDevicesForTags.length,
-                      itemBuilder: (_, index) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          children: [
-                            CachedNetworkImage(
-                              imageUrl: IconHelper.getDeviceIcon(_selectedDevicesForTags[index].category ?? 'undefined'),
-                              errorWidget: (_, __, ___) => CachedNetworkImage(
-                                imageUrl: IconHelper.getDeviceIcon('undefined'),
-                                height: 29,
-                              ),
-                              height: 29,
-                            ),
-                            const SizedBox(width: 3),
-                            Expanded(
-                              child: Text(
-                                _selectedDevicesForTags[index].name,
-                                style: AppTextStyles.size16Medium.singleLine,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      separatorBuilder: (_, __) => const Divider(height: 1, color: Color(0xFFF0F2F9)),
-                    ),
+                /// 세부 옵션 설정
+                if (_selectedThingFunctionIndex != null &&
+                    (_currentFunctions[_selectedThingFunctionIndex!]
+                            .arguments
+                            ?.isNotEmpty ??
+                        false))
+                  Padding(
+                    padding: const EdgeInsets.only(top: 32),
+                    child: _argumentsSettingExpansionTile(
+                        _selectedThingFunctionIndex!),
+                  ),
 
-                    /// 세부 옵션 설정
-                    if(_selectedThingFunctionIndex != null && (_currentFunctions[_selectedThingFunctionIndex!].arguments?.isNotEmpty ?? false))
-                      Padding(
-                        padding: const EdgeInsets.only(top: 32),
-                        child: _argumentsSettingExpansionTile(_selectedThingFunctionIndex!),
-                      ),
-
-                    /// 값 저장
-                    if(_selectedThingFunctionIndex != null
-                        && (_currentFunctions[_selectedThingFunctionIndex!].return_type.toFunctionServiceReturnType != FunctionServiceReturnType.VOID
-                            && _currentFunctions[_selectedThingFunctionIndex!].return_type.toFunctionServiceReturnType != FunctionServiceReturnType.UNDEFINED))
-                      Padding(
-                        padding: const EdgeInsets.only(top: 32),
-                        child: _variableSettingExpansionTile(_selectedThingFunctionIndex!),
-                      ),
-                  ]
-              ],
+                /// 값 저장
+                if (_selectedThingFunctionIndex != null &&
+                    (_currentFunctions[_selectedThingFunctionIndex!]
+                                .return_type
+                                .toFunctionServiceReturnType !=
+                            FunctionServiceReturnType.VOID &&
+                        _currentFunctions[_selectedThingFunctionIndex!]
+                                .return_type
+                                .toFunctionServiceReturnType !=
+                            FunctionServiceReturnType.UNDEFINED))
+                  Padding(
+                    padding: const EdgeInsets.only(top: 32),
+                    child: _variableSettingExpansionTile(
+                        _selectedThingFunctionIndex!),
+                  ),
+              ]
+            ],
           ],
         ),
       ),
@@ -629,7 +685,8 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
   Widget _argumentsSettingExpansionTile(int serviceIndex) {
     return Builder(
       builder: (context) {
-        var orderedArguments = List<FunctionArgument>.from(_currentFunctions[serviceIndex].arguments ?? []);
+        var orderedArguments = List<FunctionArgument>.from(
+            _currentFunctions[serviceIndex].arguments ?? []);
         orderedArguments.sort((a, b) => a.order.compareTo(b.order));
 
         return ExpansionTile(
@@ -652,39 +709,38 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
                 ? 'assets/icons/expansion_up.svg'
                 : 'assets/icons/expansion_down.svg',
           ),
-          children: List.generate(
-              orderedArguments.length,
-                  (index) {
-                return ArgumentWidget(
-                  orderedArguments[index],
-                  onChanged: (value) async {
-                    setState(() {
-                      final newFunction = _currentFunctions[serviceIndex].copyWith(
-                        arguments: _currentFunctions[serviceIndex].arguments?.map((e) {
-                          if (e.name == orderedArguments[index].name) {
-                            return e.copyWith(value: value);
-                          } else {
-                            return e;
-                          }
-                        }).toList(),
-                      );
-
-                      final newList = <ThingFunction>[];
-                      for(var i=0; i<_currentFunctions.length; i++) {
-                        if(i == serviceIndex) {
-                          newList.add(newFunction);
-                        } else {
-                          newList.add(_currentFunctions[i]);
-                        }
+          children: List.generate(orderedArguments.length, (index) {
+            return ArgumentWidget(
+              orderedArguments[index],
+              onChanged: (value) async {
+                setState(() {
+                  final newFunction = _currentFunctions[serviceIndex].copyWith(
+                    arguments:
+                        _currentFunctions[serviceIndex].arguments?.map((e) {
+                      if (e.name == orderedArguments[index].name) {
+                        return e.copyWith(value: value);
+                      } else {
+                        return e;
                       }
+                    }).toList(),
+                  );
 
-                      _currentFunctions.clear();
-                      _currentFunctions.addAll(newList);
-                    });
-                    await setData();
-                  },
-                );
-                /*var argument = widget.item.arguments[index];
+                  final newList = <ThingFunction>[];
+                  for (var i = 0; i < _currentFunctions.length; i++) {
+                    if (i == serviceIndex) {
+                      newList.add(newFunction);
+                    } else {
+                      newList.add(_currentFunctions[i]);
+                    }
+                  }
+
+                  _currentFunctions.clear();
+                  _currentFunctions.addAll(newList);
+                });
+                await setData();
+              },
+            );
+            /*var argument = widget.item.arguments[index];
           var loadedArgument = orderedArguments[index].copyWith(
             value: argument.value,
           );
@@ -706,7 +762,7 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
             },
           );*/
 
-                /*return Padding(
+            /*return Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Row(
               children: [
@@ -747,7 +803,7 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
                       border: const OutlineInputBorder(
                         borderSide: BorderSide(width: 1, color: Color(0xFFE9ECF5)),
                       ),
-                      *//*
+                      */ /*
                   suffixIconConstraints: const BoxConstraints(minHeight: 38, maxHeight: 38),
                   suffixIcon: GestureDetector(
                     onTap: () => onSearch(searchController.text),
@@ -759,15 +815,14 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
                       ),
                     ),
                   ),
-                  *//*
+                  */ /*
                     ),
                   ),
                 ),
               ],
             ),
           );*/
-              }
-          ),
+          }),
         );
       },
     );
@@ -800,7 +855,8 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
           variableList: _variableList,
           initialSelectedVariable: _variableNameList[index],
           addNewVariable: () {
-            final newVariable = widget.generateNewVariable(_selectedThingFunctionName!);
+            final newVariable =
+                widget.generateNewVariable(_selectedThingFunctionName!);
             setState(() {
               _variableList.add(newVariable);
               _variableNameList[index] = newVariable;
@@ -874,13 +930,13 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
     return GestureDetector(
       onTap: onClick,
       child: Container(
-        padding: isFixedSize ? null : const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: isFixedSize
+            ? null
+            : const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         width: isFixedSize ? 61 : null,
         height: isFixedSize ? 35 : null,
         decoration: BoxDecoration(
-          color: isSelected
-              ? const Color(0xFF5D7CFF)
-              : const Color(0xFFFFFFFF),
+          color: isSelected ? const Color(0xFF5D7CFF) : const Color(0xFFFFFFFF),
           border: Border.all(
             width: 1,
             color: const Color(0xFFE9ECF5),
@@ -891,9 +947,8 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
         child: Text(
           tag,
           style: AppTextStyles.size14Medium.copyWith(
-            color: isSelected
-                ? const Color(0xFFFFFFFF)
-                : const Color(0xFF8F94A4),
+            color:
+                isSelected ? const Color(0xFFFFFFFF) : const Color(0xFF8F94A4),
           ),
         ),
       ),
@@ -913,9 +968,7 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
         height: 35,
         padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-          color: isSelected
-              ? const Color(0xFF5D7CFF)
-              : const Color(0xFFFFFFFF),
+          color: isSelected ? const Color(0xFF5D7CFF) : const Color(0xFFFFFFFF),
           borderRadius: BorderRadius.circular(13),
           boxShadow: [
             BoxShadow(
@@ -937,15 +990,16 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
               child: Text(
                 name,
                 style: AppTextStyles.size11Bold.singleLine.copyWith(
-                  color: isSelected ? const Color(0xFFFFFFFF) : const Color(0xFF3F424B),
+                  color: isSelected
+                      ? const Color(0xFFFFFFFF)
+                      : const Color(0xFF3F424B),
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(width: 9),
-
-            if(isSelected)
+            if (isSelected)
               SvgPicture.asset(
                 'assets/icons/tmp_check_white.svg',
                 width: 16,
@@ -969,15 +1023,16 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
 
   /// 아래는 전부 UI를 그리는 데 사용되는 함수들이다.
   int? _getSelectedThingFunctionIndexByName(String thingFunctionName) {
-    final index = _currentFunctions.indexWhere((thingFunction) => thingFunction.name == thingFunctionName);
-    return index == -1
-        ? null
-        : index;
+    final index = _currentFunctions
+        .indexWhere((thingFunction) => thingFunction.name == thingFunctionName);
+    return index == -1 ? null : index;
   }
-  bool _isThingFunctionSelected(String serviceName) => _getSelectedThingFunctionIndexByName(serviceName) != null;
+
+  bool _isThingFunctionSelected(String serviceName) =>
+      _getSelectedThingFunctionIndexByName(serviceName) != null;
 
   String? get _selectedThingFunctionName {
-    if(_selectedThingFunctionIndex != null) {
+    if (_selectedThingFunctionIndex != null) {
       return _currentFunctions[_selectedThingFunctionIndex!].name;
     }
 
@@ -986,23 +1041,27 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
 
   void _setNewRangeTypeForCurrentFunction(RangeType newRangeType) {
     setState(() {
-      if(_selectedThingFunctionIndex != null) {
-        _rangeTypesForCurrentFunctions[_selectedThingFunctionIndex!] = newRangeType;
+      if (_selectedThingFunctionIndex != null) {
+        _rangeTypesForCurrentFunctions[_selectedThingFunctionIndex!] =
+            newRangeType;
         setData();
       }
     });
   }
 
   void _toggleTagSelectionForCurrentFunction(String tagName) {
-    if(_selectedThingFunctionIndex == null) {
+    if (_selectedThingFunctionIndex == null) {
       return;
     }
 
     setState(() {
-      if(_deviceTagsForCurrentFunctions[_selectedThingFunctionIndex!].contains(tagName)) {
-        _deviceTagsForCurrentFunctions[_selectedThingFunctionIndex!].remove(tagName);
+      if (_deviceTagsForCurrentFunctions[_selectedThingFunctionIndex!]
+          .contains(tagName)) {
+        _deviceTagsForCurrentFunctions[_selectedThingFunctionIndex!]
+            .remove(tagName);
       } else {
-        _deviceTagsForCurrentFunctions[_selectedThingFunctionIndex!].add(tagName);
+        _deviceTagsForCurrentFunctions[_selectedThingFunctionIndex!]
+            .add(tagName);
       }
 
       setData();
@@ -1011,30 +1070,31 @@ class _ScenarioEditorServicesCardViewState extends State<ScenarioEditorServicesC
 
   /// TODO: 맞게 동작하는건지 체크 필요.
   List<Thing> get _selectedDevicesForTags {
-    if(_selectedThingFunctionIndex == null) {
+    if (_selectedThingFunctionIndex == null) {
       return [];
     }
 
     final mqttViewModel = context.watch<MqttViewModel>();
 
-    return mqttViewModel.thingList
-        .where((thing) {
-          if (_deviceTagsForCurrentFunctions[_selectedThingFunctionIndex!].isEmpty) {
-            return false;
-          }
-          return thing.functions.any((function) {
-            return _deviceTagsForCurrentFunctions[_selectedThingFunctionIndex!].any(
-              (tag) => (function.tags?.map((e) => e.name).contains(tag) ?? false)
-                  && tag == _currentFunctions[_selectedThingFunctionIndex!].name,
-            );
-          });
-        }).toList();
+    return mqttViewModel.thingList.where((thing) {
+      if (_deviceTagsForCurrentFunctions[_selectedThingFunctionIndex!]
+          .isEmpty) {
+        return false;
+      }
+      return thing.functions.any((function) {
+        return _deviceTagsForCurrentFunctions[_selectedThingFunctionIndex!].any(
+          (tag) =>
+              (function.tags?.map((e) => e.name).contains(tag) ?? false) &&
+              tag == _currentFunctions[_selectedThingFunctionIndex!].name,
+        );
+      });
+    }).toList();
   }
 
   Future setData() async {
     final changedChildren = <FunctionServiceBlock>[];
 
-    for(var i=0; i<_currentFunctions.length; i++) {
+    for (var i = 0; i < _currentFunctions.length; i++) {
       changedChildren.add(
         _currentFunctions[i].toBlockV2(
           rangeType: _rangeTypesForCurrentFunctions[i],

@@ -6,268 +6,321 @@
             "contents": "loop(60 MIN) {  if ((#AirQualityDetector).temperature <= 18) {    (#Speaker).speak(\"온도가 너무 낮습니다.\");  }  if ((#AirQualityDetector).temperature >= 26) {    (#Speaker).speak(\"온도가 너무 높습니다.\");  }  if ((#AirQualityDetector).humidity > 80) {    (#Speaker).speak(\"습도가 너무 높습니다.\");  }  if ((#AirQualityDetector).humidity < 20) {    (#Speaker).speak(\"너무 건조합니다.\");  }}",
             "is_opened": 0,
             "priority": -1,
-            "state": "initialized",
+            "state": "running",
             "scheduled_things": [
                 {
                     "service": "_(#AirQualityDetector).temperature",
-                    "things": []
+                    "things": [{ "name": "AirQualityDetector__2CAB3307FA07" }]
                 },
-                {
-                    "service": "_(#Speaker).speak",
-                    "things": []
-                },
+                { "service": "_(#Speaker).speak", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] },
                 {
                     "service": "_(#AirQualityDetector).humidity",
-                    "things": []
+                    "things": [{ "name": "AirQualityDetector__2CAB3307FA07" }]
                 },
-                {
-                    "service": "_(#Clock).isHoliday",
-                    "things": []
-                }
+                { "service": "_(#Clock).isHoliday", "things": [{ "name": "Clock_builtin" }] }
             ]
         },
         {
             "id": 2,
-            "name": "leaving_work_scene",
-            "contents": "loop(1 SEC) {  wait until((#Button #button2).pressed == true);  (#Light #Hue_lightstrip_plus_1).setColor(\"255|255|0\");  (#Light #Hue_lightstrip_plus_1).on();  detected_face_image = (#FaceRecognizer).detectFace();  person = (#FaceRecognizer).recognizeFaceFromFile(detected_face_image);  if (person == \"unknown\") {    (#Light #Hue_lightstrip_plus_1).setColor(\"255|0|0\");    (#Speaker).speak(\"신원을 확인할 수 없습니다.\");    (#Light #Hue_lightstrip_plus_1).blink(5, 1);  } else {    (#Light #Hue_lightstrip_plus_1).setColor(\"0|255|0\");    (#FaceRecognizer).checkOut(person);    tts_string = (#Calculator).concat(person, \"님 퇴근 확인되었습니다.\");    (#Speaker).speak(tts_string);  }  wait until((#Button #button2).pressed == false);  (#Light #Hue_lightstrip_plus_1).off();}",
+            "name": "streching_scene",
+            "contents": "start_time = (#Clock).timestamp;loop(10 MIN, (#Clock).isHoliday == false and ((#Clock).time >= 0750 and (#Clock).time <= 2000) and ((#Clock).weekday == \"Monday\" or (#Clock).weekday == \"Tuesday\" or (#Clock).weekday == \"Wednesday\" or (#Clock).weekday == \"Thursday\" or (#Clock).weekday == \"Friday\")) {  cur_time = (#Clock).timestamp;  gap_time = (#Calculator).sub(cur_time, start_time);  if (any(#MotionSensor).occupancy == \"occupied\" or any(#Hue #MotionSensor).motion == true) {    start_time = (#Clock).timestamp;  } else {    if (gap_time > 3600) {      (#Speaker).speak(\"한 시간이 지났습니다. 일어나서 스트레칭을 해주세요.\");    }  }}",
             "is_opened": 0,
             "priority": -1,
-            "state": "initialized",
+            "state": "running",
             "scheduled_things": [
+                { "service": "_(#Clock).weekday", "things": [{ "name": "Clock_builtin" }] },
+                { "service": "_(#Calculator).sub", "things": [{ "name": "Calculator_builtin" }] },
                 {
-                    "service": "_(#Hue_lightstrip_plus_1#Light).blink",
-                    "things": []
+                    "service": "+(#MotionSensor#Hue).motion",
+                    "things": [
+                        { "name": "MotionSensor__6205485f_d3f1_4b04_8bdb_3ce2f5c02296" },
+                        { "name": "MotionSensor__7a84a2ba_9847_4cb3_982d_e949bb653c81" }
+                    ]
                 },
+                { "service": "_(#Clock).time", "things": [{ "name": "Clock_builtin" }] },
+                { "service": "_(#Speaker).speak", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] },
+                { "service": "_(#Clock).timestamp", "things": [{ "name": "Clock_builtin" }] },
                 {
-                    "service": "_(#FaceRecognizer).checkOut",
-                    "things": []
+                    "service": "+(#MotionSensor).occupancy",
+                    "things": [{ "name": "MotionSensor_0013A20041BEEBC8" }, { "name": "MotionSensor_0013A20041C53DC7" }]
                 },
-                {
-                    "service": "_(#Hue_lightstrip_plus_1#Light).on",
-                    "things": []
-                },
-                {
-                    "service": "_(#FaceRecognizer).recognizeFaceFromFile",
-                    "things": []
-                },
-                {
-                    "service": "_(#Calculator).concat",
-                    "things": []
-                },
-                {
-                    "service": "_(#button2#Button).pressed",
-                    "things": []
-                },
-                {
-                    "service": "_(#Hue_lightstrip_plus_1#Light).off",
-                    "things": []
-                },
-                {
-                    "service": "_(#Speaker).speak",
-                    "things": []
-                },
-                {
-                    "service": "_(#Hue_lightstrip_plus_1#Light).setColor",
-                    "things": []
-                },
-                {
-                    "service": "_(#FaceRecognizer).detectFace",
-                    "things": []
-                }
+                { "service": "_(#Clock).isHoliday", "things": [{ "name": "Clock_builtin" }] }
             ]
         },
         {
             "id": 3,
             "name": "idle_scene1",
-            "contents": "loop(1 SEC, ((#Clock).weekday == \"Monday\" or (#Clock).weekday == \"Tuesday\" or (#Clock).weekday == \"Wednesday\" or (#Clock).weekday == \"Thursday\" or (#Clock).weekday == \"Friday\")) {  if ((#Clock).time == 0750 and (#AirQualityDetector).temperature <= 16) {    if ((#AirConditioner).switch == false) {      (#AirConditioner).on();    }    (#AirConditioner).setTemperature(21);  }}",
+            "contents": "loop(1 SEC, (#Clock).isHoliday == false and ((#Clock).weekday == \"Monday\" or (#Clock).weekday == \"Tuesday\" or (#Clock).weekday == \"Wednesday\" or (#Clock).weekday == \"Thursday\" or (#Clock).weekday == \"Friday\")) {  if ((#Clock).time == 0750 and (#AirQualityDetector).temperature <= 16) {    if ((#AirConditioner).switch == false) {      (#AirConditioner).on();    }    (#AirConditioner).setTemperature(21);  }}",
             "is_opened": 0,
             "priority": -1,
             "state": "stucked",
             "scheduled_things": [
                 {
                     "service": "_(#AirQualityDetector).temperature",
-                    "things": [
-                        {
-                            "name": "AirQualityDetector__2CAB3307FA07"
-                        }
-                    ]
+                    "things": [{ "name": "AirQualityDetector__2CAB3307FA07" }]
                 },
-                {
-                    "service": "_(#AirConditioner).setTemperature",
-                    "things": []
-                },
-                {
-                    "service": "_(#Clock).weekday",
-                    "things": [
-                        {
-                            "name": "Clock_builtin"
-                        }
-                    ]
-                },
-                {
-                    "service": "_(#Clock).time",
-                    "things": [
-                        {
-                            "name": "Clock_builtin"
-                        }
-                    ]
-                },
+                { "service": "_(#AirConditioner).setTemperature", "things": [] },
+                { "service": "_(#Clock).weekday", "things": [{ "name": "Clock_builtin" }] },
+                { "service": "_(#Clock).time", "things": [{ "name": "Clock_builtin" }] },
                 {
                     "service": "_(#AirConditioner).switch",
-                    "things": [
-                        {
-                            "name": "AirConditioner__eb3a3ff9913360d8a4sydw"
-                        }
-                    ]
+                    "things": [{ "name": "AirConditioner__eb3a3ff9913360d8a4sydw" }]
                 },
                 {
                     "service": "_(#AirConditioner).on",
-                    "things": [
-                        {
-                            "name": "AirConditioner__eb3a3ff9913360d8a4sydw"
-                        }
-                    ]
+                    "things": [{ "name": "AirConditioner__eb3a3ff9913360d8a4sydw" }]
                 },
-                {
-                    "service": "_(#Clock).isHoliday",
-                    "things": [
-                        {
-                            "name": "Clock_builtin"
-                        }
-                    ]
-                }
+                { "service": "_(#Clock).isHoliday", "things": [{ "name": "Clock_builtin" }] }
             ]
         },
         {
             "id": 4,
-            "name": "lunch_scene",
-            "contents": "loop(1 SEC) {  wait until((#Clock).time == 1130);  today_menu = (#MenuProvider).todayMenu();  (#Speaker).speak(today_menu);  (#EmailProvider).send(\"thsxogud1123@gmail.com\", \"오늘의 메뉴\", today_menu);  wait until(1 MIN);}",
+            "name": "idle_scene2",
+            "contents": "start_time = (#Clock).timestamp;loop(1 SEC) {  cur_time = (#Clock).timestamp;  gap_time = (#Calculator).sub(cur_time, start_time);  if (any(#MotionSensor).occupancy == \"occupied\" or any(#Hue #MotionSensor).motion == true) {    if (any(#Switch).switch == false) {      all(#Switch).on();    }    start_time = (#Clock).timestamp;  } else {    if (gap_time > 600) {      if (any(#Switch).switch == true) {        all(#Switch).off();      }    }  }}",
             "is_opened": 0,
             "priority": -1,
-            "state": "initialized",
+            "state": "running",
             "scheduled_things": [
+                { "service": "_(#Calculator).sub", "things": [{ "name": "Calculator_builtin" }] },
                 {
-                    "service": "_(#EmailProvider).send",
-                    "things": []
+                    "service": "+(#MotionSensor#Hue).motion",
+                    "things": [
+                        { "name": "MotionSensor__6205485f_d3f1_4b04_8bdb_3ce2f5c02296" },
+                        { "name": "MotionSensor__7a84a2ba_9847_4cb3_982d_e949bb653c81" }
+                    ]
+                },
+                { "service": "_(#Clock).timestamp", "things": [{ "name": "Clock_builtin" }] },
+                {
+                    "service": "+(#MotionSensor).occupancy",
+                    "things": [{ "name": "MotionSensor_0013A20041BEEBC8" }, { "name": "MotionSensor_0013A20041C53DC7" }]
                 },
                 {
-                    "service": "_(#Clock).time",
-                    "things": []
+                    "service": "+(#Switch).switch",
+                    "things": [
+                        { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" },
+                        { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                    ]
                 },
                 {
-                    "service": "_(#Speaker).speak",
-                    "things": []
+                    "service": "*(#Switch).off",
+                    "things": [
+                        { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" },
+                        { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                    ]
                 },
                 {
-                    "service": "_(#MenuProvider).todayMenu",
-                    "things": []
+                    "service": "*(#Switch).on",
+                    "things": [
+                        { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" },
+                        { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                    ]
                 }
             ]
         },
         {
             "id": 5,
-            "name": "music_stop_scene",
-            "contents": "(#Speaker).stop();",
+            "name": "idle_scene3",
+            "contents": "start_time = (#Clock).timestamp;loop(1 SEC) {  cur_time = (#Clock).timestamp;  gap_time = (#Calculator).sub(cur_time, start_time);  if (any(#MotionSensor).occupancy == \"occupied\" or any(#Hue #MotionSensor).motion == true) {    if (any(#SmartPlug).switch == false) {      all(#SmartPlug).on();    }    if ((#AirQualityDetector).temperature <= 18) {      if ((#AirConditioner).switch == false) {        (#AirConditioner).on();      }      (#AirConditioner).setTemperature(21);    }    if ((#AirQualityDetector).temperature >= 26) {      if ((#AirConditioner).switch == false) {        (#AirConditioner).on();      }      (#AirConditioner).setTemperature(24);    }    start_time = (#Clock).timestamp;  } else {    if (gap_time > 1800) {      if (any(#Switch).switch == true) {        all(#Switch).off();      }      if (any(#SmartPlug).switch == true) {        all(#SmartPlug).off();      }      if ((#AirConditioner).switch == true) {        (#AirConditioner).off();      }    }  } }",
             "is_opened": 0,
             "priority": -1,
-            "state": "initialized",
+            "state": "stucked",
             "scheduled_things": [
                 {
-                    "service": "_(#Speaker).stop",
+                    "service": "_(#AirQualityDetector).temperature",
+                    "things": [{ "name": "AirQualityDetector__2CAB3307FA07" }]
+                },
+                { "service": "_(#AirConditioner).setTemperature", "things": [] },
+                {
+                    "service": "_(#AirConditioner).off",
+                    "things": [{ "name": "AirConditioner__eb3a3ff9913360d8a4sydw" }]
+                },
+                { "service": "_(#Calculator).sub", "things": [{ "name": "Calculator_builtin" }] },
+                {
+                    "service": "*(#SmartPlug).on",
                     "things": [
-                        {
-                            "name": "Speaker_D83ADD4B4A4A"
-                        }
+                        { "name": "SmartPlug__eb3377e5ffd045b5f3qdur" },
+                        { "name": "SmartPlug__2fbd6d0c_369e_4dab_b397_115672442ab9" },
+                        { "name": "SmartPlug__a26ad08c_f427_45c6_b783_16997acb191a" },
+                        { "name": "SmartPlug__e29dc1b2_f577_4bfa_a11b_3bfe8b1d2fd9" },
+                        { "name": "SmartPlug__b5a555ff_1707_4474_9481_ce4800346fde" }
                     ]
-                }
-            ]
-        },
-        {
-            "id": 9,
-            "name": "add_face_scene",
-            "contents": "(#FaceRecognizer).addFace(\"thsvkd\");",
-            "is_opened": 0,
-            "priority": -1,
-            "state": "initialized",
-            "scheduled_things": [
+                },
                 {
-                    "service": "_(#FaceRecognizer).addFace",
+                    "service": "+(#MotionSensor#Hue).motion",
                     "things": [
-                        {
-                            "name": "FaceRecognizer_D83ADD4B4A4A"
-                        }
+                        { "name": "MotionSensor__6205485f_d3f1_4b04_8bdb_3ce2f5c02296" },
+                        { "name": "MotionSensor__7a84a2ba_9847_4cb3_982d_e949bb653c81" }
+                    ]
+                },
+                {
+                    "service": "_(#AirConditioner).switch",
+                    "things": [{ "name": "AirConditioner__eb3a3ff9913360d8a4sydw" }]
+                },
+                {
+                    "service": "_(#AirConditioner).on",
+                    "things": [{ "name": "AirConditioner__eb3a3ff9913360d8a4sydw" }]
+                },
+                { "service": "_(#Clock).timestamp", "things": [{ "name": "Clock_builtin" }] },
+                {
+                    "service": "+(#MotionSensor).occupancy",
+                    "things": [{ "name": "MotionSensor_0013A20041BEEBC8" }, { "name": "MotionSensor_0013A20041C53DC7" }]
+                },
+                {
+                    "service": "+(#SmartPlug).switch",
+                    "things": [
+                        { "name": "SmartPlug__eb3377e5ffd045b5f3qdur" },
+                        { "name": "SmartPlug__2fbd6d0c_369e_4dab_b397_115672442ab9" },
+                        { "name": "SmartPlug__a26ad08c_f427_45c6_b783_16997acb191a" },
+                        { "name": "SmartPlug__e29dc1b2_f577_4bfa_a11b_3bfe8b1d2fd9" },
+                        { "name": "SmartPlug__b5a555ff_1707_4474_9481_ce4800346fde" }
+                    ]
+                },
+                {
+                    "service": "+(#Switch).switch",
+                    "things": [
+                        { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" },
+                        { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                    ]
+                },
+                {
+                    "service": "*(#Switch).off",
+                    "things": [
+                        { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" },
+                        { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                    ]
+                },
+                {
+                    "service": "*(#SmartPlug).off",
+                    "things": [
+                        { "name": "SmartPlug__eb3377e5ffd045b5f3qdur" },
+                        { "name": "SmartPlug__2fbd6d0c_369e_4dab_b397_115672442ab9" },
+                        { "name": "SmartPlug__a26ad08c_f427_45c6_b783_16997acb191a" },
+                        { "name": "SmartPlug__e29dc1b2_f577_4bfa_a11b_3bfe8b1d2fd9" },
+                        { "name": "SmartPlug__b5a555ff_1707_4474_9481_ce4800346fde" }
                     ]
                 }
             ]
         },
         {
             "id": 6,
+            "name": "lunch_scene",
+            "contents": "loop(1 SEC) {  wait until((#Clock).time == 1130);  today_menu = (#MenuProvider).todayMenu();  (#Speaker).speak(today_menu);  (#EmailProvider).sendMail(\"thsxogud1123@gmail.com\", \"오늘의 메뉴\", today_menu);  wait until(1 MIN);}",
+            "is_opened": 0,
+            "priority": -1,
+            "state": "running",
+            "scheduled_things": [
+                { "service": "_(#EmailProvider).sendMail", "things": [{ "name": "EmailProvider_D83ADD4B4A4A" }] },
+                { "service": "_(#Clock).time", "things": [{ "name": "Clock_builtin" }] },
+                { "service": "_(#Speaker).speak", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] },
+                { "service": "_(#MenuProvider).todayMenu", "things": [{ "name": "MenuProvider_D83ADD4B4A4A" }] }
+            ]
+        },
+        {
+            "id": 7,
+            "name": "music_stop_scene",
+            "contents": "(#Speaker).stop();",
+            "is_opened": 0,
+            "priority": -1,
+            "state": "initialized",
+            "scheduled_things": [{ "service": "_(#Speaker).stop", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] }]
+        },
+        {
+            "id": 8,
+            "name": "add_face_scene",
+            "contents": "(#FaceRecognizer).addFace(\"thsvkd\");",
+            "is_opened": 0,
+            "priority": -1,
+            "state": "initialized",
+            "scheduled_things": [
+                { "service": "_(#FaceRecognizer).addFace", "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }] }
+            ]
+        },
+        {
+            "id": 9,
             "name": "delete_face_scene",
             "contents": "(#FaceRecognizer).deleteFace(\"thsvkd\");",
             "is_opened": 0,
             "priority": -1,
             "state": "initialized",
             "scheduled_things": [
+                { "service": "_(#FaceRecognizer).deleteFace", "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }] }
+            ]
+        },
+        {
+            "id": 10,
+            "name": "attendance_scene",
+            "contents": "loop(1 SEC) {\n  wait until((#Button #button1).pressed == true);\n\n  (#Light #Hue_lightstrip_plus_1).setColor(\"255|255|0\");\n  (#Light #Hue_lightstrip_plus_1).on();\n\n  detected_face_image = (#FaceRecognizer).detectFace();\n  person = (#FaceRecognizer).recognizeFaceFromFile(detected_face_image);\n\n  if (person == \"unknown\") {\n    (#Light #Hue_lightstrip_plus_1).setColor(\"255|0|0\");\n    (#Speaker).speak(\"신원을 확인할 수 없습니다.\");\n    (#Light #Hue_lightstrip_plus_1).alert();\n  } else {\n    (#Light #Hue_lightstrip_plus_1).setColor(\"0|255|0\");\n    (#FaceRecognizer).checkIn(person);\n\n    (#Speaker).speak(person)\n    (#Speaker).speak(\"님 출근 확인되었습니다.\");\n\n    emotion = (#CloudServiceProvider).detectEmotion(detected_face_image);\n    if (emotion == \"too many faces\") {\n      (#Speaker).speak(\"여러 개의 얼굴이 검출되어 감정을 확인할 수 없습니다. 다시 시도해주세요.\");\n    } else {\n      song = (#CloudServiceProvider).getRecommendSong(emotion);\n      (#Speaker).play(song);\n    }\n  }\n\n  wait until((#Button #button1).pressed == false);\n  (#Light #Hue_lightstrip_plus_1).off();\n}",
+            "is_opened": 0,
+            "priority": 0,
+            "state": "running",
+            "scheduled_things": [
+                { "service": "_(#button1#Button).pressed", "things": [{ "name": "Button_0013A20041C53D8A" }] },
                 {
-                    "service": "_(#FaceRecognizer).deleteFace",
-                    "things": [
-                        {
-                            "name": "FaceRecognizer_D83ADD4B4A4A"
-                        }
-                    ]
+                    "service": "_(#Hue_lightstrip_plus_1#Light).on",
+                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
+                },
+                {
+                    "service": "_(#FaceRecognizer).recognizeFaceFromFile",
+                    "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }]
+                },
+                { "service": "_(#Speaker).play", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] },
+                {
+                    "service": "_(#Hue_lightstrip_plus_1#Light).alert",
+                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
+                },
+                { "service": "_(#FaceRecognizer).checkIn", "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }] },
+                {
+                    "service": "_(#CloudServiceProvider).detectEmotion",
+                    "things": [{ "name": "CloudServiceProvider_D83ADD4B4A4A" }]
+                },
+                {
+                    "service": "_(#Hue_lightstrip_plus_1#Light).off",
+                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
+                },
+                { "service": "_(#Speaker).speak", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] },
+                {
+                    "service": "_(#Hue_lightstrip_plus_1#Light).setColor",
+                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
+                },
+                { "service": "_(#FaceRecognizer).detectFace", "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }] },
+                {
+                    "service": "_(#CloudServiceProvider).getRecommendSong",
+                    "things": [{ "name": "CloudServiceProvider_D83ADD4B4A4A" }]
                 }
             ]
         },
         {
-            "id": 7,
-            "name": "loop_01 : 3일마다 반복",
-            "contents": "loop(3 DAY, (#Clock).datetime > 2406040000 and (#Clock).datetime < 2407312359) {  if ((#AirQualityDetector).temperature <= 18) {    (#Speaker).speak(\"온도가 너무 낮습니다.\");  }  if ((#AirQualityDetector).temperature >= 26) {    (#Speaker).speak(\"온도가 너무 높습니다.\");  }  if ((#AirQualityDetector).humidity > 80) {    (#Speaker).speak(\"습도가 너무 높습니다.\");  }  if ((#AirQualityDetector).humidity < 20) {    (#Speaker).speak(\"너무 건조합니다.\");  }}",
+            "id": 11,
+            "name": "leaving_work_scene",
+            "contents": "loop(1 SEC) {\n  wait until((#Button #button2).pressed == true);\n\n  (#Light #Hue_lightstrip_plus_1).setColor(\"255|255|0\");\n  (#Light #Hue_lightstrip_plus_1).on();\n\n  detected_face_image = (#FaceRecognizer).detectFace();\n  person = (#FaceRecognizer).recognizeFaceFromFile(detected_face_image);\n\n  if (person == \"unknown\") {\n    (#Light #Hue_lightstrip_plus_1).setColor(\"255|0|0\");\n    (#Speaker).speak(\"신원을 확인할 수 없습니다.\");\n    (#Light #Hue_lightstrip_plus_1).alert();\n  } else {\n    (#Light #Hue_lightstrip_plus_1).setColor(\"0|255|0\");\n    (#FaceRecognizer).checkOut(person);\n\n    (#Speaker).speak(person)\n    (#Speaker).speak(\"님 퇴근 확인되었습니다.\");\n  }\n\n  wait until((#Button #button2).pressed == false);\n  (#Light #Hue_lightstrip_plus_1).off();\n}",
             "is_opened": 0,
-            "priority": -1,
-            "state": "initialized",
+            "priority": 0,
+            "state": "running",
             "scheduled_things": [
+                { "service": "_(#FaceRecognizer).checkOut", "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }] },
                 {
-                    "service": "_(#AirQualityDetector).temperature",
-                    "things": []
+                    "service": "_(#Hue_lightstrip_plus_1#Light).on",
+                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
                 },
                 {
-                    "service": "_(#Speaker).speak",
-                    "things": []
+                    "service": "_(#FaceRecognizer).recognizeFaceFromFile",
+                    "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }]
+                },
+                { "service": "_(#button2#Button).pressed", "things": [{ "name": "Button_0013A20041C53DD5" }] },
+                {
+                    "service": "_(#Hue_lightstrip_plus_1#Light).alert",
+                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
                 },
                 {
-                    "service": "_(#AirQualityDetector).humidity",
-                    "things": []
+                    "service": "_(#Hue_lightstrip_plus_1#Light).off",
+                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
                 },
+                { "service": "_(#Speaker).speak", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] },
                 {
-                    "service": "_(#Clock).isHoliday",
-                    "things": []
-                }
-            ]
-        },
-        {
-            "id": 8,
-            "name": "loop_02 : 매주 목, 금, 토 오후 3시마다 반복",
-            "contents": "loop(1 DAY, (#Clock).datetime > 2406040000 and (#Clock).datetime < 2407312359 and ( (#Clock).weekday == \"thursday\" or (#Clock).weekday == \"friday\" or (#Clock).weekday == \"saturday\") and (#Clock).time > 150000 or (#Clock).time < 150100 )) {  if ((#AirQualityDetector).temperature <= 18) {    (#Speaker).speak(\"온도가 너무 낮습니다.\");  }  if ((#AirQualityDetector).temperature >= 26) {    (#Speaker).speak(\"온도가 너무 높습니다.\");  }  if ((#AirQualityDetector).humidity > 80) {    (#Speaker).speak(\"습도가 너무 높습니다.\");  }  if ((#AirQualityDetector).humidity < 20) {    (#Speaker).speak(\"너무 건조합니다.\");  }}",
-            "is_opened": 0,
-            "priority": -1,
-            "state": "initialized",
-            "scheduled_things": [
-                {
-                    "service": "_(#AirQualityDetector).temperature",
-                    "things": []
+                    "service": "_(#Hue_lightstrip_plus_1#Light).setColor",
+                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
                 },
-                {
-                    "service": "_(#Speaker).speak",
-                    "things": []
-                },
-                {
-                    "service": "_(#AirQualityDetector).humidity",
-                    "things": []
-                },
-                {
-                    "service": "_(#Clock).isHoliday",
-                    "things": []
-                }
+                { "service": "_(#FaceRecognizer).detectFace", "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }] }
             ]
         }
     ],

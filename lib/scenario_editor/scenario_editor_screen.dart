@@ -18,7 +18,7 @@ class ScenarioEditorScreen extends StatefulWidget {
 
   Future<void> push(BuildContext context) {
     final viewModel = ScenarioEditorViewModel(scenario: scenario);
-    if(viewModel.originScenario != null) {
+    if (viewModel.originScenario != null) {
       viewModel.loadScenario(viewModel.originScenario!.contents);
     }
     return ChangeNotifierProvider<ScenarioEditorViewModel>.value(
@@ -58,11 +58,9 @@ class _ScenarioEditorScreenState extends State<StatefulWidget> {
                           _isShowCurrentScenario = !_isShowCurrentScenario;
                         });
                       },
-                      buttonText: _isShowCurrentScenario
-                          ? '초기 시나리오 로딩'
-                          : '현재 시나리오 로딩',
+                      buttonText:
+                          _isShowCurrentScenario ? '초기 시나리오 로딩' : '현재 시나리오 로딩',
                     ),
-
                     const SizedBox(height: 24),
                     ChangeNotifierProvider<ScenarioMixin>.value(
                       value: editorViewModel,
@@ -75,21 +73,19 @@ class _ScenarioEditorScreenState extends State<StatefulWidget> {
                 ),
               ),
             ),
-
             Container(
               height: 65,
               padding: const EdgeInsets.only(left: 30),
               alignment: Alignment.centerLeft,
               color: AppColors.cardBackground,
               child: Text(
-                '시나리오 생성',
+                '시나리오 편집',
                 style: AppTextStyles.size18Bold.singleLine.copyWith(
                   height: 29 / 18,
                   color: const Color(0xFF282828),
                 ),
               ),
             ),
-
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -101,7 +97,8 @@ class _ScenarioEditorScreenState extends State<StatefulWidget> {
                     TextButton(
                       onPressed: () {},
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 36, vertical: 14),
                         backgroundColor: const Color(0xFFF0F2F9),
                         textStyle: AppTextStyles.size16Medium,
                         foregroundColor: const Color(0xFF3F424B),
@@ -115,7 +112,8 @@ class _ScenarioEditorScreenState extends State<StatefulWidget> {
                     TextButton(
                       onPressed: () {},
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 36, vertical: 14),
                         backgroundColor: const Color(0xFF5D7CFF),
                         textStyle: AppTextStyles.size16Medium,
                         foregroundColor: const Color(0xFFFFFFFF),
