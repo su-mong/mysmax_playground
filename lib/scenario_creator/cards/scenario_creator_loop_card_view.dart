@@ -214,11 +214,10 @@ class _ScenarioCreatorLoopCardViewState
                 _textButton(
                   '매주',
                   width: 51,
-                  isSelected: _loopMode == LoopMode.WEEKLY ||
-                      _loopMode == LoopMode.WEEKDAYSELECT,
+                  isSelected: _loopMode == LoopMode.WEEKDAYSELECT,
                   onClick: () {
                     setState(() {
-                      _loopMode = LoopMode.WEEKLY;
+                      _loopMode = LoopMode.WEEKDAYSELECT;
                     });
                     setData();
                   },
