@@ -472,27 +472,19 @@ class _ScenarioCreatorServicesCardViewState
                     ),
                     const SizedBox(width: 16),
                     RadioTextButton<RangeType>(
-                      value: RangeType.AUTO,
-                      groupValue: _rangeTypesForCurrentFunctions[
-                          _selectedThingFunctionIndex!],
-                      onChanged: _setNewRangeTypeForCurrentFunction,
-                      title: '자동',
-                    ),
-                    const SizedBox(width: 16),
-                    RadioTextButton<RangeType>(
                       value: RangeType.ALL,
                       groupValue: _rangeTypesForCurrentFunctions[
                           _selectedThingFunctionIndex!],
                       onChanged: _setNewRangeTypeForCurrentFunction,
-                      title: '모두',
+                      title: '모두 선택',
                     ),
                     const SizedBox(width: 16),
                     RadioTextButton<RangeType>(
-                      value: RangeType.UNDEFINED,
+                      value: RangeType.AUTO,
                       groupValue: _rangeTypesForCurrentFunctions[
                           _selectedThingFunctionIndex!],
                       onChanged: _setNewRangeTypeForCurrentFunction,
-                      title: '선택',
+                      title: '자동 선택',
                     ),
                   ],
                 ),

@@ -12,6 +12,14 @@ class ScenarioCreatorViewModel extends ChangeNotifier with ScenarioMixin {
   WaitUntilBlock? _waitUntilBlock;
   FunctionServiceListBlock? _functionServiceListBlock;
   LoopBlock? _loopBlock;
+  ElseBlock? _elseBlock;
+  ElseBlock? get elseBlock => _elseBlock;
+  set elseBlock(ElseBlock? block) {
+    _elseBlock = block;
+    notifyListeners();
+  }
+
+  FunctionServiceListBlock? _elseFunctionServiceListBlock;
 
   bool _validateBlocks = false;
   bool get validateBlocks => _validateBlocks;
@@ -25,11 +33,8 @@ class ScenarioCreatorViewModel extends ChangeNotifier with ScenarioMixin {
       _functionServiceListBlock!.isValid() &&
       (_ifBlock == null || _ifBlock!.isValid()) &&
       (_waitUntilBlock == null || _waitUntilBlock!.isValid()) &&
-      (_loopBlock == null || _loopBlock!.isValid());
-
-  // TODO
-  // ElseBlock? _elseBlock;
-  // FunctionServiceListBlock? _elseFunctionServiceListBlock;
+      (_loopBlock == null || _loopBlock!.isValid()) &&
+      (_elseBlock == null || _elseBlock!.isValid());
 
   void onUpdateLoopBlock(LoopBlock block) {
     _loopBlock = block;
@@ -41,15 +46,29 @@ class ScenarioCreatorViewModel extends ChangeNotifier with ScenarioMixin {
     validateBlocks = _isValidateBlocks;
   }
 
-  void onUpdateConditionBlock(Block block) {
-    if (block is IfBlock) {
-      _ifBlock = block;
-      _waitUntilBlock = null;
-    } else if (block is WaitUntilBlock) {
-      _waitUntilBlock = block;
-      _ifBlock = null;
-    }
+  void onUpdateElseFunctionServiceListBlock(FunctionServiceListBlock block) {
+    _elseFunctionServiceListBlock = block;
+    validateBlocks = _isValidateBlocks;
+  }
 
+  void onUpdateIfBlock(IfBlock block) {
+    _ifBlock = block;
+    _waitUntilBlock = null;
+    validateBlocks = _isValidateBlocks;
+  }
+
+  // onUpdateWaitUntilBlock
+  void onUpdateWaitUntilBlock(WaitUntilBlock block) {
+    _waitUntilBlock = block;
+    _ifBlock = null;
+    elseBlock = null;
+    validateBlocks = _isValidateBlocks;
+  }
+
+  // onUpdateElseBlock - nullable for deletion
+  void onUpdateElseBlock(ElseBlock? block) {
+    elseBlock = block;
+    _waitUntilBlock = null;
     validateBlocks = _isValidateBlocks;
   }
 
@@ -81,6 +100,11 @@ class ScenarioCreatorViewModel extends ChangeNotifier with ScenarioMixin {
         addChildScenarioItem(
             parent: _ifBlock!, child: _functionServiceListBlock!);
         // _elseBlock가 있을 경우 elseBlock -> loopBlock
+        if (_elseBlock != null) {
+          addChildScenarioItem(parent: _loopBlock!, child: _elseBlock!);
+          addChildScenarioItem(
+              parent: _elseBlock!, child: _elseFunctionServiceListBlock!);
+        }
       }
       // case 2
       else if (_waitUntilBlock != null) {
@@ -105,6 +129,12 @@ class ScenarioCreatorViewModel extends ChangeNotifier with ScenarioMixin {
         addScenarioItem(_ifBlock!);
         addChildScenarioItem(
             parent: _ifBlock!, child: _functionServiceListBlock!);
+        // _elseBlock가 있을 경우 elseBlock -> rootBlock
+        if (_elseBlock != null) {
+          addScenarioItem(_elseBlock!);
+          addChildScenarioItem(
+              parent: _elseBlock!, child: _elseFunctionServiceListBlock!);
+        }
       }
       // case 5
       else if (_waitUntilBlock != null) {

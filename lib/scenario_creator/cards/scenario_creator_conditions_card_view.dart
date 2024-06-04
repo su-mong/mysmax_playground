@@ -28,11 +28,15 @@ const String _weatherServiceName = 'weather';
 const String _dateTimeServiceName = 'timestamp';
 
 class ScenarioCreatorConditionsCardView extends StatefulWidget {
-  final Function(Block) onUpdateBlock;
+  final Function(IfBlock) onUpdateIfBlock;
+  final Function(WaitUntilBlock) onUpdateWaitUntilBlock;
+  final Function(ElseBlock?) onUpdateElseBlock;
 
   const ScenarioCreatorConditionsCardView({
     super.key,
-    required this.onUpdateBlock,
+    required this.onUpdateIfBlock,
+    required this.onUpdateWaitUntilBlock,
+    required this.onUpdateElseBlock,
   });
 
   @override
@@ -370,6 +374,7 @@ class _ScenarioCreatorConditionsCardViewState
                     _isSelectedElse = isSelected;
                   });
                   setData();
+                  setElseOrNot();
                 },
                 hourController: _hourController,
                 minuteController: _minuteController,
@@ -573,9 +578,18 @@ class _ScenarioCreatorConditionsCardViewState
     );
 
     if (_state == ConditionBlockState.ifElse) {
-      widget.onUpdateBlock(ifBlock);
+      widget.onUpdateIfBlock(ifBlock);
     } else if (_state == ConditionBlockState.waitUntil) {
-      widget.onUpdateBlock(waitUntilBlock);
+      widget.onUpdateWaitUntilBlock(waitUntilBlock);
+    }
+  }
+
+  void setElseOrNot() {
+    if (_isSelectedElse) {
+      final elseBlock = ElseBlock();
+      widget.onUpdateElseBlock(elseBlock);
+    } else {
+      widget.onUpdateElseBlock(null);
     }
   }
 }

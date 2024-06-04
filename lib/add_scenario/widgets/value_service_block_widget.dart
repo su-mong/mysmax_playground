@@ -40,7 +40,7 @@ class _ValueServiceBlockWidgetState extends State<ValueServiceBlockWidget> {
   @override
   Widget build(BuildContext context) {
     var mqttViewModel = context.watch<MqttViewModel>();
-    var service = mqttViewModel.getValueByName(widget.item.serviceName);
+    var tagList = mqttViewModel.getTagListByValueName(widget.item.serviceName);
     return Theme(
       data: ThemeData(
         splashColor: Colors.transparent,
@@ -87,7 +87,7 @@ class _ValueServiceBlockWidgetState extends State<ValueServiceBlockWidget> {
                       )),
                   const SizedBox(height: 8),
                   TagListWidget(
-                    totalTags: service?.tags ?? [],
+                    totalTags: tagList,
                     initialSelectedTags: widget.item.tags.map((e) {
                       return Tag(name: e);
                     }).toList(),
@@ -108,7 +108,6 @@ class _ValueServiceBlockWidgetState extends State<ValueServiceBlockWidget> {
                         }).toList(),
                         tag,
                       ];
-                      service = service?.copyWith(tags: tags);
                       Future.delayed(const Duration(seconds: 1)).then((value) {
                         mqttViewModel.getThingList();
                         mqttViewModel.getServiceList();
@@ -126,8 +125,8 @@ class _ValueServiceBlockWidgetState extends State<ValueServiceBlockWidget> {
                     onSelectedTagsChanged: (List<Tag> selectedTags) {
                       setState(() {
                         _selectedTag = selectedTags.map((e) => e.name).toList();
-                        setData();
                       });
+                      setData();
                     },
                   ),
                   // Row(
@@ -209,7 +208,8 @@ class _ValueServiceBlockWidgetState extends State<ValueServiceBlockWidget> {
                                 _buildDeviceIcon(things[index].category),
                                 const SizedBox(width: 4),
                                 Text(things[index].name,
-                                    style: AppTextStyles.size13Medium.singleLine),
+                                    style:
+                                        AppTextStyles.size13Medium.singleLine),
                               ],
                             );
                           },
@@ -261,9 +261,13 @@ class _ValueServiceBlockWidgetState extends State<ValueServiceBlockWidget> {
                               ),
                             ),
                           ),
+                          // 자동 선택: (#거실 #1층).불켜기();
+                          // 모두 선택 (Function): all(#1층).불켜기();
+                          // 모두 선택 (Value): if ( any(#1층).온도 == 1 );
                           child: Text(
                             '모두 선택',
-                            style: AppTextStyles.size12Medium.singleLine.copyWith(
+                            style:
+                                AppTextStyles.size12Medium.singleLine.copyWith(
                               color: _isAll
                                   ? const Color(0xff5D7CFF)
                                   : const Color(0xff8F94A4),
@@ -295,7 +299,8 @@ class _ValueServiceBlockWidgetState extends State<ValueServiceBlockWidget> {
                           ),
                           child: Text(
                             '자동 선택',
-                            style: AppTextStyles.size11Medium.singleLine.copyWith(
+                            style:
+                                AppTextStyles.size11Medium.singleLine.copyWith(
                               color: !_isAll
                                   ? const Color(0xff5D7CFF)
                                   : const Color(0xff8F94A4),
@@ -321,7 +326,8 @@ class _ValueServiceBlockWidgetState extends State<ValueServiceBlockWidget> {
   }
 
   Widget _buildIcon(String valueName) {
-    var service = context.read<MqttViewModel>().getValueByName(valueName);
+    var service =
+        context.read<MqttViewModel>().getValueInfoByValueName(valueName);
     var defaultWidget = Container(
       width: 19,
       height: 19,
@@ -372,7 +378,7 @@ class _ValueServiceBlockWidgetState extends State<ValueServiceBlockWidget> {
       ValueServiceExpression(
         widget.item.serviceName,
         _selectedTag,
-        _isAll ? RangeType.ALL : RangeType.ANY,
+        _isAll ? RangeType.ANY : RangeType.AUTO,
       ),
       '',
     );

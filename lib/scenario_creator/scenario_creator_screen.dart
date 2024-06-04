@@ -91,9 +91,42 @@ class _ScenarioCreatorScreenState extends State<StatefulWidget> {
                           }),
                           SizedBox(height: 16),
                           ScenarioCreatorConditionsCardView(
+                              onUpdateIfBlock: (block) {
+                            creatorViewModel.onUpdateIfBlock(block);
+                          }, onUpdateWaitUntilBlock: (block) {
+                            creatorViewModel.onUpdateWaitUntilBlock(block);
+                          }, onUpdateElseBlock: (block) {
+                            creatorViewModel.onUpdateElseBlock(block);
+                          }),
+                          
+                          if(creatorViewModel.elseBlock != null) ...[
+                             SizedBox(height: 32),
+                             Text(
+                              '그렇지 않다면',
+                              style: AppTextStyles.size18Bold
+                                  .copyWith(color: const Color(0xFF282828)),
+                            ),
+                          SizedBox(height: 20),
+                          ScenarioCreatorServicesCardView(
                               onUpdateBlock: (block) {
-                            creatorViewModel.onUpdateConditionBlock(block);
-                          })
+                                creatorViewModel
+                                    .onUpdateElseFunctionServiceListBlock(
+                                        block);
+                              },
+                              tagList: const [Tag(name: 'test01')],
+                              getThingFunctionListByTag: (tag) => context
+                                  .read<MqttViewModel>()
+                                  .serviceFunctionListByTagForTest(),
+                              getAllThingsByThingFunction: context
+                                  .read<MqttViewModel>()
+                                  .allDevicesForService,
+                              variableList: creatorViewModel.allVariableList,
+                              generateNewVariable:
+                                  creatorViewModel.generateNewVariable,
+                              serviceFunctionByName: context
+                                  .read<MqttViewModel>()
+                                  .serviceFunctionByName)
+                          ],
                         ])),
                   ],
                 ),

@@ -53,8 +53,8 @@ mixin ScenarioMixin on ChangeNotifier {
     required Block parent,
     required Block child,
   }) {
-    _rootBlock.addChild(parent, child);
-    _rootBlock.searchLevel(0);
+    rootBlock.addChild(parent, child);
+    rootBlock.searchLevel(0);
     notifyListeners();
   }
 
@@ -62,26 +62,26 @@ mixin ScenarioMixin on ChangeNotifier {
     required Block currentBlock,
     required Block newBlock,
   }) {
-    _rootBlock.addSameLevel(currentBlock, newBlock);
-    _rootBlock.searchLevel(0);
+    rootBlock.addSameLevel(currentBlock, newBlock);
+    rootBlock.searchLevel(0);
     notifyListeners();
   }
 
   void addScenarioItem(Block block) {
-    _rootBlock.addBlock(block);
-    _rootBlock.searchLevel(0);
+    rootBlock.addBlock(block);
+    rootBlock.searchLevel(0);
     notifyListeners();
   }
 
   void updateScenarioItem(Block currentBlock, Block changedBlock) {
-    _rootBlock.updateBlock(currentBlock, changedBlock);
-    _rootBlock.searchLevel(0);
+    rootBlock.updateBlock(currentBlock, changedBlock);
+    rootBlock.searchLevel(0);
     notifyListeners();
   }
 
   void removeScenarioItem(Block item) {
-    _rootBlock.removeBlock(item);
-    _rootBlock.searchLevel(0);
+    rootBlock.removeBlock(item);
+    rootBlock.searchLevel(0);
     notifyListeners();
   }
 
@@ -110,7 +110,9 @@ mixin ScenarioMixin on ChangeNotifier {
   String generateNewVariable(String serviceName) {
     String variableName = '$serviceName결과값${Random().nextInt(1000)}';
 
-    while(allVariableList.where((variable) => variable.name == variableName).isNotEmpty) {
+    while (allVariableList
+        .where((variable) => variable.name == variableName)
+        .isNotEmpty) {
       variableName = '$serviceName결과값${Random().nextInt(1000)}';
     }
 
@@ -118,7 +120,8 @@ mixin ScenarioMixin on ChangeNotifier {
   }
 
   /// 변수명 관련 코드 3) 특정 타입에 해당하는 모든 변수명 리스트
-  List<Variable> variableListByType(String type) => rootBlock.getVariablesWithNameAndType()
+  List<Variable> variableListByType(String type) => rootBlock
+      .getVariablesWithNameAndType()
       .where((variable) => variable.type == type)
       .toList();
 }

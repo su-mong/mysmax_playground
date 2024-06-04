@@ -334,8 +334,8 @@ class _ScenarioItemWidgetState<T extends Block>
 
   Widget _buildScenarioValue(ValueServiceBlock item) {
     var mqttViewModel = context.watch<MqttViewModel>();
-    var value =
-        mqttViewModel.getValueByName(item.valueServiceExpression.serviceName);
+    var tagList = mqttViewModel
+        .getTagListByValueName(item.valueServiceExpression.serviceName);
     var thingList = mqttViewModel
         .thingListByValueName(item.valueServiceExpression.serviceName);
     return ExpansionTile(
@@ -364,7 +364,7 @@ class _ScenarioItemWidgetState<T extends Block>
                   )),
               const SizedBox(height: 8),
               TagListWidget(
-                totalTags: value?.tags ?? [],
+                totalTags: tagList ?? [],
                 initialSelectedTags: item.valueServiceExpression.tags.map((e) {
                   return Tag(name: e);
                 }).toList(),

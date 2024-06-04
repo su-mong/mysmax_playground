@@ -62,8 +62,17 @@ class MqttViewModel extends ChangeNotifier {
         .firstWhereOrNull((element) => element.name == name);
   }
 
-  ThingValue? getValueByName(String name) {
-    return serviceValueList.firstWhereOrNull((element) => element.name == name);
+  ThingValue? getValueInfoByValueName(String valueName) {
+    return serviceValueList
+        .firstWhereOrNull((element) => element.name == valueName);
+  }
+
+  List<Tag> getTagListByValueName(String valueName) {
+    return serviceValueList
+        .where((thingValue) => thingValue.name == valueName)
+        .expand((thingValue) => thingValue.tags)
+        .toSet()
+        .toList();
   }
 
   Thing? getThingByName(String name) {
@@ -129,8 +138,8 @@ class MqttViewModel extends ChangeNotifier {
   List<Tag> get allTagsForServiceFunctionList {
     final Set<Tag> tagSet = {};
 
-    for(var thingFunction in serviceFunctionList) {
-      if(thingFunction.tags != null) {
+    for (var thingFunction in serviceFunctionList) {
+      if (thingFunction.tags != null) {
         tagSet.addAll(thingFunction.tags!);
       }
     }
@@ -144,12 +153,12 @@ class MqttViewModel extends ChangeNotifier {
         .where((value) => value.tags?.contains(tag) ?? false)
         .toList();
   }
+
   List<ThingFunction> serviceFunctionListByTagForTest() {
     int additionalCount = 0;
-    return serviceFunctionList
-    .where((element) {
-      if(additionalCount < 8) {
-        if(Random().nextBool()) {
+    return serviceFunctionList.where((element) {
+      if (additionalCount < 8) {
+        if (Random().nextBool()) {
           additionalCount++;
           return true;
         }
@@ -157,18 +166,20 @@ class MqttViewModel extends ChangeNotifier {
       return false;
     }).toList();
   }
+
   /// DES | 추가 : name에 해당하는 ThingFunction을 찾아냄
   ThingFunction? serviceFunctionByName(String name) {
     return serviceFunctionList.firstWhereOrNull(
       (function) => function.name == name,
     );
   }
+
   /// DES | 임시 : 현재 시나리오의 모든 ThingFunction에 임의의 8개를 더한 리스트 리턴
   /// TODO: 추후 삭제
   List<ThingFunction> tmpFunctionList(FunctionServiceListBlock item) {
     final currentServiceNameList = <String>[];
 
-    for(var child in item.children) {
+    for (var child in item.children) {
       currentServiceNameList.add(child.serviceName);
       /*if(child is FunctionServiceBlock) {
         currentServiceNameList.add(child.serviceName);
@@ -178,12 +189,11 @@ class MqttViewModel extends ChangeNotifier {
     }
 
     int additionalCount = 0;
-    return serviceFunctionList
-        .where((element) {
-      if(currentServiceNameList.contains(element.name)) {
+    return serviceFunctionList.where((element) {
+      if (currentServiceNameList.contains(element.name)) {
         return true;
-      } else if(additionalCount < 8) {
-        if(Random().nextBool()) {
+      } else if (additionalCount < 8) {
+        if (Random().nextBool()) {
           additionalCount++;
           return true;
         }
@@ -197,13 +207,15 @@ class MqttViewModel extends ChangeNotifier {
     // serviceNames에 있는 모든 공백 제거
     serviceNames.removeWhere((element) => element.isEmpty);
 
-    final selectedServiceFunctionList = serviceFunctionList.where(
-      (value) => serviceNames.contains(value.name),
-    ).toList();
+    final selectedServiceFunctionList = serviceFunctionList
+        .where(
+          (value) => serviceNames.contains(value.name),
+        )
+        .toList();
 
     final Set<Tag> tagSet = {};
-    for(int i=0; i<selectedServiceFunctionList.length; i++) {
-      if(i == 0) {
+    for (int i = 0; i < selectedServiceFunctionList.length; i++) {
+      if (i == 0) {
         tagSet.addAll(selectedServiceFunctionList[i].tags ?? []);
       } else {
         tagSet.intersection(selectedServiceFunctionList[i].tags?.toSet() ?? {});
@@ -224,16 +236,20 @@ class MqttViewModel extends ChangeNotifier {
   }
 
   Future<void> initialize() async {
-    final serviceListOrigin = await rootBundle.loadString('assets/json/service_list.json');
+    final serviceListOrigin =
+        await rootBundle.loadString('assets/json/service_list.json');
 
-    serviceList = ((json.decode(serviceListOrigin) as Map<String, dynamic>)['services'])
-        .map<Service>((service) => Service.fromJson(service))
-        .toList();
+    serviceList =
+        ((json.decode(serviceListOrigin) as Map<String, dynamic>)['services'])
+            .map<Service>((service) => Service.fromJson(service))
+            .toList();
     getThingList();
-    final scenarioListOrigin = await rootBundle.loadString('assets/json/scenario_list.json');
-    scenarioList = ((json.decode(scenarioListOrigin) as Map<String, dynamic>)['scenarios'])
-        .map<Scenario>((scenario) => Scenario.fromJson(scenario))
-        .toList();
+    final scenarioListOrigin =
+        await rootBundle.loadString('assets/json/scenario_list.json');
+    scenarioList =
+        ((json.decode(scenarioListOrigin) as Map<String, dynamic>)['scenarios'])
+            .map<Scenario>((scenario) => Scenario.fromJson(scenario))
+            .toList();
 
     notifyListeners();
   }

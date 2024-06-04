@@ -69,7 +69,7 @@ class _LiteralBlockWidgetState extends State<LiteralBlockWidget> {
   }
 
   Widget _buildIcon(String valueName) {
-    var service = context.read<MqttViewModel>().getValueByName(valueName);
+    var service = context.read<MqttViewModel>().getValueInfoByValueName(valueName);
     var defaultWidget = Container(
       width: 19,
       height: 19,
