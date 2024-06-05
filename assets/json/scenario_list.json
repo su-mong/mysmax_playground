@@ -2,325 +2,472 @@
     "scenarios": [
         {
             "id": 1,
-            "name": "alert_scene",
-            "contents": "loop(60 MIN) {  if ((#AirQualityDetector).temperature <= 18) {    (#Speaker).speak(\"온도가 너무 낮습니다.\");  }  if ((#AirQualityDetector).temperature >= 26) {    (#Speaker).speak(\"온도가 너무 높습니다.\");  }  if ((#AirQualityDetector).humidity > 80) {    (#Speaker).speak(\"습도가 너무 높습니다.\");  }  if ((#AirQualityDetector).humidity < 20) {    (#Speaker).speak(\"너무 건조합니다.\");  }}",
+            "name": "scene1",
+            "contents": "loop(1 DAY, (#Clock).weekday == \"Monday\" or (#Clock).weekday == \"Tuesday\" or (#Clock).weekday == \"Wednesday\" or (#Clock).weekday == \"Thursday\" or (#Clock).weekday == \"Friday\") {   if (any(#PresenceSensor).presence == \"present\") {    if ((#AirQualityDetector).dustLevel > 50 or (#AirQualityDetector).fineDustLevel > 25 or (#AirQualityDetector).veryFineDustLevel > 10) {      all(#AirPurifier).on();      all(#AirPurifier).setAirPurifierFanMode(\"auto\");    }     if (any(#AirConditioner).switch == \"off\") {      all(#AirConditioner).on();    }    if ((#AirQualityDetector).temperature > 27 and (#AirQualityDetector).humidity > 50) {      all(#AirConditioner).setAirConditionerMode(\"cool\");      all(#AirConditioner).setTemperature(24);    } else {      if ((#AirQualityDetector).temperature < 20) {        all(#AirConditioner).setAirConditionerMode(\"heat\");        all(#AirConditioner).setTemperature(21);      }    }  }}",
             "is_opened": 0,
             "priority": -1,
-            "state": "running",
+            "state": "initialized",
             "scheduled_things": [
                 {
-                    "service": "_(#AirQualityDetector).temperature",
-                    "things": [{ "name": "AirQualityDetector__2CAB3307FA07" }]
+                    "service": "+(#PresenceSensor).presence",
+                    "things": [
+                        {
+                            "name": "PresenceSensor"
+                        }
+                    ]
                 },
-                { "service": "_(#Speaker).speak", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] },
+                {
+                    "service": "_(#AirQualityDetector).fineDustLevel",
+                    "things": [
+                        {
+                            "name": "AirQualityDetector"
+                        }
+                    ]
+                },
+                {
+                    "service": "*(#AirPurifier).on",
+                    "things": [
+                        {
+                            "name": "AirPurifier"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#AirQualityDetector).temperature",
+                    "things": [
+                        {
+                            "name": "AirQualityDetector"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#AirQualityDetector).dustLevel",
+                    "things": [
+                        {
+                            "name": "AirQualityDetector"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#Clock).weekday",
+                    "things": [
+                        {
+                            "name": "Clock"
+                        }
+                    ]
+                },
+                {
+                    "service": "*(#AirPurifier).setAirPurifierFanMode",
+                    "things": [
+                        {
+                            "name": "AirPurifier"
+                        }
+                    ]
+                },
+                {
+                    "service": "*(#AirConditioner).on",
+                    "things": [
+                        {
+                            "name": "AirConditioner"
+                        }
+                    ]
+                },
+                {
+                    "service": "*(#AirConditioner).setTemperature",
+                    "things": [
+                        {
+                            "name": "AirConditioner"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#AirQualityDetector).veryFineDustLevel",
+                    "things": [
+                        {
+                            "name": "AirQualityDetector"
+                        }
+                    ]
+                },
+                {
+                    "service": "+(#AirConditioner).switch",
+                    "things": [
+                        {
+                            "name": "AirConditioner"
+                        }
+                    ]
+                },
+                {
+                    "service": "*(#AirConditioner).setAirConditionerMode",
+                    "things": [
+                        {
+                            "name": "AirConditioner"
+                        }
+                    ]
+                },
                 {
                     "service": "_(#AirQualityDetector).humidity",
-                    "things": [{ "name": "AirQualityDetector__2CAB3307FA07" }]
-                },
-                { "service": "_(#Clock).isHoliday", "things": [{ "name": "Clock_builtin" }] }
+                    "things": [
+                        {
+                            "name": "AirQualityDetector"
+                        }
+                    ]
+                }
             ]
         },
         {
             "id": 2,
-            "name": "streching_scene",
-            "contents": "start_time = (#Clock).timestamp;loop(10 MIN, (#Clock).isHoliday == false and ((#Clock).time >= 0750 and (#Clock).time <= 2000) and ((#Clock).weekday == \"Monday\" or (#Clock).weekday == \"Tuesday\" or (#Clock).weekday == \"Wednesday\" or (#Clock).weekday == \"Thursday\" or (#Clock).weekday == \"Friday\")) {  cur_time = (#Clock).timestamp;  gap_time = (#Calculator).sub(cur_time, start_time);  if (any(#MotionSensor).occupancy == \"occupied\" or any(#Hue #MotionSensor).motion == true) {    start_time = (#Clock).timestamp;  } else {    if (gap_time > 3600) {      (#Speaker).speak(\"한 시간이 지났습니다. 일어나서 스트레칭을 해주세요.\");    }  }}",
+            "name": "scene2",
+            "contents": "loop(1 HOUR, (#Clock).weekday == \"Saturday\") {  (#EmailProvider).sendMail(\"example@gmail.com\",\"스마트팜 알람\",\"버튼을 눌러 텃밭에 물을 주세요.\");  wait until((#Button #물주기).button == \"pushed\");  (#Irrigator #스마트팜).on();  soil_humidity1 = (#SoilMoistureSensor #스파티필름).soilHumidity;  soil_humidity2 = (#SoilMoistureSensor #몬스테라).soilHumidity;  soil_humidity3 = (#SoilMoistureSensor #아레카야자).soilHumidity;  soil_humidity4 = (#SoilMoistureSensor #피토니아).soilHumidity;  soil_humidity5 = (#SoilMoistureSensor #드라세나).soilHumidity;  if (soil_humidity1 < 10) {    (#Irrigator #스파티필름).setWaterPortion(15.0, \"ounces\");    (#Irrigator #스파티필름).startWatering();  }  if (soil_humidity2 < 20) {    (#Irrigator #몬스테라).setWaterPortion(25.0, \"ounces\");    (#Irrigator #몬스테라).startWatering();  }  if (soil_humidity3 < 30) {    (#Irrigator #아레카야자).setWaterPortion(20.0, \"ounces\");    (#Irrigator #아레카야자).startWatering();  }  if (soil_humidity4 < 40) {    (#Irrigator #피토니아).setWaterPortion(25.0, \"ounces\");    (#Irrigator #피토니아).startWatering();  }  if (soil_humidity5 < 50) {    (#Irrigator #드라세나).setWaterPortion(55.0, \"ounces\");    (#Irrigator #드라세나).startWatering();  }}",
             "is_opened": 0,
             "priority": -1,
-            "state": "running",
+            "state": "initialized",
             "scheduled_things": [
-                { "service": "_(#Clock).weekday", "things": [{ "name": "Clock_builtin" }] },
-                { "service": "_(#Calculator).sub", "things": [{ "name": "Calculator_builtin" }] },
                 {
-                    "service": "+(#MotionSensor#Hue).motion",
+                    "service": "_(#EmailProvider).sendMail",
                     "things": [
-                        { "name": "MotionSensor__6205485f_d3f1_4b04_8bdb_3ce2f5c02296" },
-                        { "name": "MotionSensor__7a84a2ba_9847_4cb3_982d_e949bb653c81" }
+                        {
+                            "name": "EmailProvider"
+                        }
                     ]
                 },
-                { "service": "_(#Clock).time", "things": [{ "name": "Clock_builtin" }] },
-                { "service": "_(#Speaker).speak", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] },
-                { "service": "_(#Clock).timestamp", "things": [{ "name": "Clock_builtin" }] },
                 {
-                    "service": "+(#MotionSensor).occupancy",
-                    "things": [{ "name": "MotionSensor_0013A20041BEEBC8" }, { "name": "MotionSensor_0013A20041C53DC7" }]
+                    "service": "_(#피토니아#Irrigator).setWaterPortion",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
                 },
-                { "service": "_(#Clock).isHoliday", "things": [{ "name": "Clock_builtin" }] }
+                {
+                    "service": "_(#스파티필름#Irrigator).startWatering",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#Clock).weekday",
+                    "things": [
+                        {
+                            "name": "Clock"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#드라세나#SoilMoistureSensor).soilHumidity",
+                    "things": [
+                        {
+                            "name": "SoilMoistureSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#드라세나#Irrigator).setWaterPortion",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#물주기#Button).button",
+                    "things": [
+                        {
+                            "name": "Button"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#아레카야자#SoilMoistureSensor).soilHumidity",
+                    "things": [
+                        {
+                            "name": "SoilMoistureSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#아레카야자#Irrigator).setWaterPortion",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#피토니아#Irrigator).startWatering",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#몬스테라#SoilMoistureSensor).soilHumidity",
+                    "things": [
+                        {
+                            "name": "SoilMoistureSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#피토니아#SoilMoistureSensor).soilHumidity",
+                    "things": [
+                        {
+                            "name": "SoilMoistureSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#몬스테라#Irrigator).startWatering",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#스파티필름#SoilMoistureSensor).soilHumidity",
+                    "things": [
+                        {
+                            "name": "SoilMoistureSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#스파티필름#Irrigator).setWaterPortion",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#아레카야자#Irrigator).startWatering",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#드라세나#Irrigator).startWatering",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#스마트팜#Irrigator).on",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#몬스테라#Irrigator).setWaterPortion",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                }
             ]
         },
         {
             "id": 3,
-            "name": "idle_scene1",
-            "contents": "loop(1 SEC, (#Clock).isHoliday == false and ((#Clock).weekday == \"Monday\" or (#Clock).weekday == \"Tuesday\" or (#Clock).weekday == \"Wednesday\" or (#Clock).weekday == \"Thursday\" or (#Clock).weekday == \"Friday\")) {  if ((#Clock).time == 0750 and (#AirQualityDetector).temperature <= 16) {    if ((#AirConditioner).switch == false) {      (#AirConditioner).on();    }    (#AirConditioner).setTemperature(21);  }}",
+            "name": "scene3",
+            "contents": "loop(1 SEC) {  if ((#PresenceSensor #침실).presence == \"not_present\" and (#PresenceSensor #복도).presence == \"not_present\" and (#PresenceSensor #아이방).presence == \"not_present\" and (#PresenceSensor #거실).presence == \"not_present\") {    if (any(#Switch #전등).switch == \"on\") {      all(#Switch #전등).off();    }    if ((#Television).switch == \"on\") {      (#Television).off();    }    if ((#AirConditioner).switch == \"on\") {      (#AirConditioner).off();    }    wait until((#MotionSensor #뒷문).motion == \"active\" and (#ContactSensor #뒷문).contact == \"open\");    (#Speaker).speak(\"도둑이 침입하였습니다!\");    (#Speaker).speak(\"도둑이 침입하였습니다!\");    (#Speaker).speak(\"도둑이 침입하였습니다!\");    (#EmailProvider).sendMail(\"example@gmail.com\",\"실내에 침입자 알림\",\"뒷문으로 거수자가 침입하였습니다.\");  } else {    if ((#MotionSensor #침실).motion == \"active\") {      if ((#Light #침실).switch == \"off\") {        (#Light #침실).on();      }      if ((#Light #복도).switch == \"off\") {        (#Light #복도).on();      }      if ((#Light #아이방).switch == \"off\") {        (#Light #아이방).on();      }      if ((#Light #거실).switch == \"off\") {        (#Light #거실).on();      }    }  }}",
             "is_opened": 0,
             "priority": -1,
-            "state": "stucked",
+            "state": "initialized",
             "scheduled_things": [
                 {
-                    "service": "_(#AirQualityDetector).temperature",
-                    "things": [{ "name": "AirQualityDetector__2CAB3307FA07" }]
-                },
-                { "service": "_(#AirConditioner).setTemperature", "things": [] },
-                { "service": "_(#Clock).weekday", "things": [{ "name": "Clock_builtin" }] },
-                { "service": "_(#Clock).time", "things": [{ "name": "Clock_builtin" }] },
-                {
-                    "service": "_(#AirConditioner).switch",
-                    "things": [{ "name": "AirConditioner__eb3a3ff9913360d8a4sydw" }]
-                },
-                {
-                    "service": "_(#AirConditioner).on",
-                    "things": [{ "name": "AirConditioner__eb3a3ff9913360d8a4sydw" }]
-                },
-                { "service": "_(#Clock).isHoliday", "things": [{ "name": "Clock_builtin" }] }
-            ]
-        },
-        {
-            "id": 4,
-            "name": "idle_scene2",
-            "contents": "start_time = (#Clock).timestamp;loop(1 SEC) {  cur_time = (#Clock).timestamp;  gap_time = (#Calculator).sub(cur_time, start_time);  if (any(#MotionSensor).occupancy == \"occupied\" or any(#Hue #MotionSensor).motion == true) {    if (any(#Switch).switch == false) {      all(#Switch).on();    }    start_time = (#Clock).timestamp;  } else {    if (gap_time > 600) {      if (any(#Switch).switch == true) {        all(#Switch).off();      }    }  }}",
-            "is_opened": 0,
-            "priority": -1,
-            "state": "running",
-            "scheduled_things": [
-                { "service": "_(#Calculator).sub", "things": [{ "name": "Calculator_builtin" }] },
-                {
-                    "service": "+(#MotionSensor#Hue).motion",
+                    "service": "_(#EmailProvider).sendMail",
                     "things": [
-                        { "name": "MotionSensor__6205485f_d3f1_4b04_8bdb_3ce2f5c02296" },
-                        { "name": "MotionSensor__7a84a2ba_9847_4cb3_982d_e949bb653c81" }
-                    ]
-                },
-                { "service": "_(#Clock).timestamp", "things": [{ "name": "Clock_builtin" }] },
-                {
-                    "service": "+(#MotionSensor).occupancy",
-                    "things": [{ "name": "MotionSensor_0013A20041BEEBC8" }, { "name": "MotionSensor_0013A20041C53DC7" }]
-                },
-                {
-                    "service": "+(#Switch).switch",
-                    "things": [
-                        { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" },
-                        { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                        {
+                            "name": "EmailProvider"
+                        }
                     ]
                 },
                 {
-                    "service": "*(#Switch).off",
+                    "service": "_(#침실#Light).switch",
                     "things": [
-                        { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" },
-                        { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                        {
+                            "name": "Light"
+                        }
                     ]
                 },
                 {
-                    "service": "*(#Switch).on",
+                    "service": "_(#복도#Light).on",
                     "things": [
-                        { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" },
-                        { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                        {
+                            "name": "Light"
+                        }
                     ]
-                }
-            ]
-        },
-        {
-            "id": 5,
-            "name": "idle_scene3",
-            "contents": "start_time = (#Clock).timestamp;loop(1 SEC) {  cur_time = (#Clock).timestamp;  gap_time = (#Calculator).sub(cur_time, start_time);  if (any(#MotionSensor).occupancy == \"occupied\" or any(#Hue #MotionSensor).motion == true) {    if (any(#SmartPlug).switch == false) {      all(#SmartPlug).on();    }    if ((#AirQualityDetector).temperature <= 18) {      if ((#AirConditioner).switch == false) {        (#AirConditioner).on();      }      (#AirConditioner).setTemperature(21);    }    if ((#AirQualityDetector).temperature >= 26) {      if ((#AirConditioner).switch == false) {        (#AirConditioner).on();      }      (#AirConditioner).setTemperature(24);    }    start_time = (#Clock).timestamp;  } else {    if (gap_time > 1800) {      if (any(#Switch).switch == true) {        all(#Switch).off();      }      if (any(#SmartPlug).switch == true) {        all(#SmartPlug).off();      }      if ((#AirConditioner).switch == true) {        (#AirConditioner).off();      }    }  } }",
-            "is_opened": 0,
-            "priority": -1,
-            "state": "stucked",
-            "scheduled_things": [
-                {
-                    "service": "_(#AirQualityDetector).temperature",
-                    "things": [{ "name": "AirQualityDetector__2CAB3307FA07" }]
                 },
-                { "service": "_(#AirConditioner).setTemperature", "things": [] },
+                {
+                    "service": "_(#아이방#Light).on",
+                    "things": [
+                        {
+                            "name": "Light"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#아이방#PresenceSensor).presence",
+                    "things": [
+                        {
+                            "name": "PresenceSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#거실#PresenceSensor).presence",
+                    "things": [
+                        {
+                            "name": "PresenceSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#Television).off",
+                    "things": [
+                        {
+                            "name": "Television"
+                        }
+                    ]
+                },
                 {
                     "service": "_(#AirConditioner).off",
-                    "things": [{ "name": "AirConditioner__eb3a3ff9913360d8a4sydw" }]
-                },
-                { "service": "_(#Calculator).sub", "things": [{ "name": "Calculator_builtin" }] },
-                {
-                    "service": "*(#SmartPlug).on",
                     "things": [
-                        { "name": "SmartPlug__eb3377e5ffd045b5f3qdur" },
-                        { "name": "SmartPlug__2fbd6d0c_369e_4dab_b397_115672442ab9" },
-                        { "name": "SmartPlug__a26ad08c_f427_45c6_b783_16997acb191a" },
-                        { "name": "SmartPlug__e29dc1b2_f577_4bfa_a11b_3bfe8b1d2fd9" },
-                        { "name": "SmartPlug__b5a555ff_1707_4474_9481_ce4800346fde" }
+                        {
+                            "name": "AirConditioner"
+                        }
                     ]
                 },
                 {
-                    "service": "+(#MotionSensor#Hue).motion",
+                    "service": "_(#복도#Light).switch",
                     "things": [
-                        { "name": "MotionSensor__6205485f_d3f1_4b04_8bdb_3ce2f5c02296" },
-                        { "name": "MotionSensor__7a84a2ba_9847_4cb3_982d_e949bb653c81" }
+                        {
+                            "name": "Light"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#침실#PresenceSensor).presence",
+                    "things": [
+                        {
+                            "name": "PresenceSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#복도#PresenceSensor).presence",
+                    "things": [
+                        {
+                            "name": "PresenceSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#침실#MotionSensor).motion",
+                    "things": [
+                        {
+                            "name": "MotionSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#거실#Light).on",
+                    "things": [
+                        {
+                            "name": "Light"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#Television).switch",
+                    "things": [
+                        {
+                            "name": "Television"
+                        }
                     ]
                 },
                 {
                     "service": "_(#AirConditioner).switch",
-                    "things": [{ "name": "AirConditioner__eb3a3ff9913360d8a4sydw" }]
-                },
-                {
-                    "service": "_(#AirConditioner).on",
-                    "things": [{ "name": "AirConditioner__eb3a3ff9913360d8a4sydw" }]
-                },
-                { "service": "_(#Clock).timestamp", "things": [{ "name": "Clock_builtin" }] },
-                {
-                    "service": "+(#MotionSensor).occupancy",
-                    "things": [{ "name": "MotionSensor_0013A20041BEEBC8" }, { "name": "MotionSensor_0013A20041C53DC7" }]
-                },
-                {
-                    "service": "+(#SmartPlug).switch",
                     "things": [
-                        { "name": "SmartPlug__eb3377e5ffd045b5f3qdur" },
-                        { "name": "SmartPlug__2fbd6d0c_369e_4dab_b397_115672442ab9" },
-                        { "name": "SmartPlug__a26ad08c_f427_45c6_b783_16997acb191a" },
-                        { "name": "SmartPlug__e29dc1b2_f577_4bfa_a11b_3bfe8b1d2fd9" },
-                        { "name": "SmartPlug__b5a555ff_1707_4474_9481_ce4800346fde" }
+                        {
+                            "name": "AirConditioner"
+                        }
                     ]
                 },
                 {
-                    "service": "+(#Switch).switch",
+                    "service": "*(#전등#Switch).off",
                     "things": [
-                        { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" },
-                        { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                        {
+                            "name": "Switch"
+                        }
                     ]
                 },
                 {
-                    "service": "*(#Switch).off",
+                    "service": "_(#뒷문#ContactSensor).contact",
                     "things": [
-                        { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" },
-                        { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                        {
+                            "name": "ContactSensor"
+                        }
                     ]
                 },
                 {
-                    "service": "*(#SmartPlug).off",
+                    "service": "_(#Speaker).speak",
                     "things": [
-                        { "name": "SmartPlug__eb3377e5ffd045b5f3qdur" },
-                        { "name": "SmartPlug__2fbd6d0c_369e_4dab_b397_115672442ab9" },
-                        { "name": "SmartPlug__a26ad08c_f427_45c6_b783_16997acb191a" },
-                        { "name": "SmartPlug__e29dc1b2_f577_4bfa_a11b_3bfe8b1d2fd9" },
-                        { "name": "SmartPlug__b5a555ff_1707_4474_9481_ce4800346fde" }
+                        {
+                            "name": "Speaker"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#침실#Light).on",
+                    "things": [
+                        {
+                            "name": "Light"
+                        }
+                    ]
+                },
+                {
+                    "service": "+(#전등#Switch).switch",
+                    "things": [
+                        {
+                            "name": "Switch"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#뒷문#MotionSensor).motion",
+                    "things": [
+                        {
+                            "name": "MotionSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#아이방#Light).switch",
+                    "things": [
+                        {
+                            "name": "Light"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#거실#Light).switch",
+                    "things": [
+                        {
+                            "name": "Light"
+                        }
                     ]
                 }
-            ]
-        },
-        {
-            "id": 6,
-            "name": "lunch_scene",
-            "contents": "loop(1 SEC) {  wait until((#Clock).time == 1130);  today_menu = (#MenuProvider).todayMenu();  (#Speaker).speak(today_menu);  (#EmailProvider).sendMail(\"thsxogud1123@gmail.com\", \"오늘의 메뉴\", today_menu);  wait until(1 MIN);}",
-            "is_opened": 0,
-            "priority": -1,
-            "state": "running",
-            "scheduled_things": [
-                { "service": "_(#EmailProvider).sendMail", "things": [{ "name": "EmailProvider_D83ADD4B4A4A" }] },
-                { "service": "_(#Clock).time", "things": [{ "name": "Clock_builtin" }] },
-                { "service": "_(#Speaker).speak", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] },
-                { "service": "_(#MenuProvider).todayMenu", "things": [{ "name": "MenuProvider_D83ADD4B4A4A" }] }
-            ]
-        },
-        {
-            "id": 7,
-            "name": "music_stop_scene",
-            "contents": "(#Speaker).stop();",
-            "is_opened": 0,
-            "priority": -1,
-            "state": "initialized",
-            "scheduled_things": [{ "service": "_(#Speaker).stop", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] }]
-        },
-        {
-            "id": 8,
-            "name": "add_face_scene",
-            "contents": "(#FaceRecognizer).addFace(\"thsvkd\");",
-            "is_opened": 0,
-            "priority": -1,
-            "state": "initialized",
-            "scheduled_things": [
-                { "service": "_(#FaceRecognizer).addFace", "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }] }
-            ]
-        },
-        {
-            "id": 9,
-            "name": "delete_face_scene",
-            "contents": "(#FaceRecognizer).deleteFace(\"thsvkd\");",
-            "is_opened": 0,
-            "priority": -1,
-            "state": "initialized",
-            "scheduled_things": [
-                { "service": "_(#FaceRecognizer).deleteFace", "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }] }
-            ]
-        },
-        {
-            "id": 10,
-            "name": "attendance_scene",
-            "contents": "loop(1 SEC) {\n  wait until((#Button #button1).pressed == true);\n\n  (#Light #Hue_lightstrip_plus_1).setColor(\"255|255|0\");\n  (#Light #Hue_lightstrip_plus_1).on();\n\n  detected_face_image = (#FaceRecognizer).detectFace();\n  person = (#FaceRecognizer).recognizeFaceFromFile(detected_face_image);\n\n  if (person == \"unknown\") {\n    (#Light #Hue_lightstrip_plus_1).setColor(\"255|0|0\");\n    (#Speaker).speak(\"신원을 확인할 수 없습니다.\");\n    (#Light #Hue_lightstrip_plus_1).alert();\n  } else {\n    (#Light #Hue_lightstrip_plus_1).setColor(\"0|255|0\");\n    (#FaceRecognizer).checkIn(person);\n\n    (#Speaker).speak(person)\n    (#Speaker).speak(\"님 출근 확인되었습니다.\");\n\n    emotion = (#CloudServiceProvider).detectEmotion(detected_face_image);\n    if (emotion == \"too many faces\") {\n      (#Speaker).speak(\"여러 개의 얼굴이 검출되어 감정을 확인할 수 없습니다. 다시 시도해주세요.\");\n    } else {\n      song = (#CloudServiceProvider).getRecommendSong(emotion);\n      (#Speaker).play(song);\n    }\n  }\n\n  wait until((#Button #button1).pressed == false);\n  (#Light #Hue_lightstrip_plus_1).off();\n}",
-            "is_opened": 0,
-            "priority": 0,
-            "state": "running",
-            "scheduled_things": [
-                { "service": "_(#button1#Button).pressed", "things": [{ "name": "Button_0013A20041C53D8A" }] },
-                {
-                    "service": "_(#Hue_lightstrip_plus_1#Light).on",
-                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
-                },
-                {
-                    "service": "_(#FaceRecognizer).recognizeFaceFromFile",
-                    "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }]
-                },
-                { "service": "_(#Speaker).play", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] },
-                {
-                    "service": "_(#Hue_lightstrip_plus_1#Light).alert",
-                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
-                },
-                { "service": "_(#FaceRecognizer).checkIn", "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }] },
-                {
-                    "service": "_(#CloudServiceProvider).detectEmotion",
-                    "things": [{ "name": "CloudServiceProvider_D83ADD4B4A4A" }]
-                },
-                {
-                    "service": "_(#Hue_lightstrip_plus_1#Light).off",
-                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
-                },
-                { "service": "_(#Speaker).speak", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] },
-                {
-                    "service": "_(#Hue_lightstrip_plus_1#Light).setColor",
-                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
-                },
-                { "service": "_(#FaceRecognizer).detectFace", "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }] },
-                {
-                    "service": "_(#CloudServiceProvider).getRecommendSong",
-                    "things": [{ "name": "CloudServiceProvider_D83ADD4B4A4A" }]
-                }
-            ]
-        },
-        {
-            "id": 11,
-            "name": "leaving_work_scene",
-            "contents": "loop(1 SEC) {\n  wait until((#Button #button2).pressed == true);\n\n  (#Light #Hue_lightstrip_plus_1).setColor(\"255|255|0\");\n  (#Light #Hue_lightstrip_plus_1).on();\n\n  detected_face_image = (#FaceRecognizer).detectFace();\n  person = (#FaceRecognizer).recognizeFaceFromFile(detected_face_image);\n\n  if (person == \"unknown\") {\n    (#Light #Hue_lightstrip_plus_1).setColor(\"255|0|0\");\n    (#Speaker).speak(\"신원을 확인할 수 없습니다.\");\n    (#Light #Hue_lightstrip_plus_1).alert();\n  } else {\n    (#Light #Hue_lightstrip_plus_1).setColor(\"0|255|0\");\n    (#FaceRecognizer).checkOut(person);\n\n    (#Speaker).speak(person)\n    (#Speaker).speak(\"님 퇴근 확인되었습니다.\");\n  }\n\n  wait until((#Button #button2).pressed == false);\n  (#Light #Hue_lightstrip_plus_1).off();\n}",
-            "is_opened": 0,
-            "priority": 0,
-            "state": "running",
-            "scheduled_things": [
-                { "service": "_(#FaceRecognizer).checkOut", "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }] },
-                {
-                    "service": "_(#Hue_lightstrip_plus_1#Light).on",
-                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
-                },
-                {
-                    "service": "_(#FaceRecognizer).recognizeFaceFromFile",
-                    "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }]
-                },
-                { "service": "_(#button2#Button).pressed", "things": [{ "name": "Button_0013A20041C53DD5" }] },
-                {
-                    "service": "_(#Hue_lightstrip_plus_1#Light).alert",
-                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
-                },
-                {
-                    "service": "_(#Hue_lightstrip_plus_1#Light).off",
-                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
-                },
-                { "service": "_(#Speaker).speak", "things": [{ "name": "Speaker_D83ADD4B4A4A" }] },
-                {
-                    "service": "_(#Hue_lightstrip_plus_1#Light).setColor",
-                    "things": [{ "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }]
-                },
-                { "service": "_(#FaceRecognizer).detectFace", "things": [{ "name": "FaceRecognizer_D83ADD4B4A4A" }] }
             ]
         }
     ],
