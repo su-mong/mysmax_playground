@@ -1,8 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:mysmax_playground/add_scenario/widgets/literal_block_widget.dart';
 import 'package:mysmax_playground/add_scenario/widgets/value_service_block_widget.dart';
 import 'package:mysmax_playground/app_text_styles.dart';
 import 'package:mysmax_playground/core/scenario_code_parser/block.dart';
@@ -15,11 +13,11 @@ import 'package:mysmax_playground/helper/icon_helper.dart';
 import 'package:mysmax_playground/models/condition_item.dart';
 import 'package:mysmax_playground/models/enums/weather_state.dart';
 import 'package:mysmax_playground/models/thing_value.dart';
-import 'package:mysmax_playground/scenario_editor/widgets/editor_date_button.dart';
 import 'package:mysmax_playground/scenario_editor/widgets/editor_number_text_field.dart';
-import 'package:mysmax_playground/scenario_editor/widgets/editor_select_time_widget.dart';
+import 'package:mysmax_playground/scenario_editor/widgets/editor_select_date_time_widget.dart';
 import 'package:mysmax_playground/scenario_editor/widgets/editor_variable_list_widget.dart';
 import 'package:mysmax_playground/widgets/custom_drop_down.dart';
+import 'package:mysmax_playground/widgets/number_slider.dart';
 import 'package:mysmax_playground/widgets/radio_text_button.dart';
 import 'package:provider/provider.dart';
 
@@ -55,7 +53,7 @@ class _ScenarioEditorConditionsCardViewState extends State<ScenarioEditorConditi
   /// 중요) [IfBlock]에 쓰일 현재 시나리오 상태를 표현할 UI용 객체
   ///      나중에 시나리오 블록으로 변환하기 위한 용도이다.
   Operator? _logicalOperatorForIf;
-  List<String> _thingValueTypesForIf = [];
+  List<ThingValue> _thingValuesForIf = [];
   List<ConditionItem> _conditionsForIf = [
     ConditionItem(
       conditionType: Operator.EQUAL
@@ -77,7 +75,7 @@ class _ScenarioEditorConditionsCardViewState extends State<ScenarioEditorConditi
 
   /// 아래는 UI 및 검색 관련 기능들에 쓰일 객체
   /// For [IfBlock]
-  bool _isExpandedSensorDeviceStatus = false;
+  bool _isExpandedVariableStatus = false;
   bool _isExpandedOperatorStatus = false;
   bool _isExpandedConstantStatus = false;
 
@@ -88,13 +86,8 @@ class _ScenarioEditorConditionsCardViewState extends State<ScenarioEditorConditi
   final TextEditingController _constantSearchController = TextEditingController();
   final FocusNode _constantSearchFocusNode = FocusNode();
   String _constantSearchTerm = '';
-  final TextEditingController _constantNumberController = TextEditingController();
-  final TextEditingController _constantStringController = TextEditingController();
-  final TextEditingController _constantHourController = TextEditingController();
-  final TextEditingController _constantMinuteController = TextEditingController();
 
-  final TextEditingController _hourController = TextEditingController();
-  final TextEditingController _minuteController = TextEditingController();
+  List<TextEditingController> _constantStringControllerList = [];
 
   /// TODO| 'ELSE'구문 추가용
   bool _isSelectedElse = false;
@@ -104,6 +97,7 @@ class _ScenarioEditorConditionsCardViewState extends State<ScenarioEditorConditi
   bool _isExpandedOperatorStatusUntil = false;
   bool _isExpandedConstantStatusUntil = false;
 
+  ThingValue? _untilThingValue;
   final TextEditingController _searchControllerUntil = TextEditingController();
   final FocusNode _searchFocusNodeUntil = FocusNode();
   String _searchTermUntil = '';
@@ -111,11 +105,8 @@ class _ScenarioEditorConditionsCardViewState extends State<ScenarioEditorConditi
   final TextEditingController _constantSearchControllerUntil = TextEditingController();
   final FocusNode _constantSearchFocusNodeUntil = FocusNode();
   String _constantSearchTermUntil = '';
-  final TextEditingController _untilConstantNumberController = TextEditingController();
-  final TextEditingController _untilConstantStringController = TextEditingController();
-  final TextEditingController _untilConstantHourController = TextEditingController();
-  final TextEditingController _untilConstantMinuteController = TextEditingController();
 
+  final TextEditingController _untilConstantStringController = TextEditingController();
   final TextEditingController _periodNumberController = TextEditingController();
 
   @override
@@ -129,20 +120,27 @@ class _ScenarioEditorConditionsCardViewState extends State<ScenarioEditorConditi
       _conditionsForIf = widget.conditionBlock.ifBlock.condition.conditions;
 
       final mqttViewModel = context.read<MqttViewModel>();
-      _thingValueTypesForIf = widget.conditionBlock.ifBlock.condition.conditions.map(
+      _thingValuesForIf = widget.conditionBlock.ifBlock.condition.conditions.map(
         (condition) {
           return mqttViewModel.serviceValueList.firstWhere(
             (thingValue) => thingValue.name == (condition.firstValue as ValueServiceExpression).serviceName,
-          ).type;
+          );
         }
       ).toList();
 
-      /*_constantNumberController.text = ;
-      _constantStringController.text = ;
-      _constantHourController.text = ;
-      _constantMinuteController.text = ;
-      _hourController.text = ;
-      _minuteController.text = ;*/
+      _constantStringControllerList = [];
+      for(var i=0; i<_conditionsForIf.length; i++) {
+        final constantStringController = TextEditingController();
+
+        if(_conditionsForIf[i].lastValue is LiteralExpression) {
+          /// 현재 condition의 lastValue가 STRING type의 LiteralExpression인 경우 -> 문자열 입력 TextEditingController를 채움
+          if((_conditionsForIf[i].lastValue as LiteralExpression).literalType == LiteralType.STRING) {
+            constantStringController.text = (_conditionsForIf[i].lastValue as LiteralExpression).valueString;
+          }
+        }
+
+        _constantStringControllerList.add(constantStringController);
+      }
     } else if(widget.conditionBlock.state == ConditionBlockState.waitUntil) {
       _state = ConditionBlockState.waitUntil;
 
@@ -300,9 +298,9 @@ class _ScenarioEditorConditionsCardViewState extends State<ScenarioEditorConditi
             else if(_state == ConditionBlockState.ifElse)
               _IfElsePage(
                 _conditionsForIf,
-                thingValueTypes: _thingValueTypesForIf,
-                addThingValueType: (type) {
-                  _thingValueTypesForIf.add(type);
+                thingValues: _thingValuesForIf,
+                addThingValue: (thingValue) {
+                  _thingValuesForIf.add(thingValue);
                 },
                 editMode: widget.editMode,
                 setNewFirstValue: (int index, dynamic newFirstValue, RangeType? firstRangeType) {
@@ -325,10 +323,10 @@ class _ScenarioEditorConditionsCardViewState extends State<ScenarioEditorConditi
                   });
                   setData();
                 },
-                isExpandedSensorDeviceStatus: _isExpandedSensorDeviceStatus,
-                onSensorDeviceStatusExpansionChanged: (isExpanded) {
+                isExpandedVariableStatus: _isExpandedVariableStatus,
+                onVariableStatusExpansionChanged: (isExpanded) {
                   setState(() {
-                    _isExpandedSensorDeviceStatus = isExpanded;
+                    _isExpandedVariableStatus = isExpanded;
                   });
                 },
                 logicalOperator: _logicalOperatorForIf,
@@ -380,18 +378,13 @@ class _ScenarioEditorConditionsCardViewState extends State<ScenarioEditorConditi
                 constantThingValueList: _constantSearchTerm.isEmpty
                     ? mqttViewModel.serviceValueList
                     : mqttViewModel.serviceValueList.where((e) => e.name.contains(_constantSearchTerm)).toList(),
-                constantNumberController: _constantNumberController,
-                constantStringController: _constantStringController,
-                constantHourController: _constantHourController,
-                constantMinuteController: _constantMinuteController,
+                constantStringController: _constantStringControllerList,
                 isSelectedElse: _isSelectedElse,
                 changeSelectedElse: (isSelected) {
                   setState(() {
                     _isSelectedElse = isSelected;
                   });
                 },
-                hourController: _hourController,
-                minuteController: _minuteController,
                 variableListByType: widget.variableListByType,
               )
             else if(_state == ConditionBlockState.waitUntil)
@@ -424,6 +417,12 @@ class _ScenarioEditorConditionsCardViewState extends State<ScenarioEditorConditi
                     _conditionsForUntil[index].lastValueRangeType = lastRangeType;
                   });
                   setData();
+                },
+                thingValue: _untilThingValue,
+                changeThingValue: (thingValue) {
+                  setState(() {
+                    _untilThingValue = thingValue;
+                  });
                 },
                 isExpandedSensorDeviceStatus: _isExpandedSensorDeviceStatusUntil,
                 onSensorDeviceStatusExpansionChanged: (isExpanded) {
@@ -464,10 +463,7 @@ class _ScenarioEditorConditionsCardViewState extends State<ScenarioEditorConditi
                 constantThingValueList: _constantSearchTermUntil.isEmpty
                     ? mqttViewModel.serviceValueList
                     : mqttViewModel.serviceValueList.where((e) => e.name.contains(_constantSearchTermUntil)).toList(),
-                constantNumberController: _untilConstantNumberController,
                 constantStringController: _untilConstantStringController,
-                constantHourController: _untilConstantHourController,
-                constantMinuteController: _untilConstantMinuteController,
                 variableListByType: widget.variableListByType,
                 periodNumberController: _periodNumberController,
                 onChangePeriodNumber: (periodValue) {
@@ -676,8 +672,8 @@ class _FirstPage extends StatelessWidget {
 
 class _IfElsePage extends StatelessWidget {
   final List<ConditionItem> conditions;
-  final List<String> thingValueTypes;
-  final void Function(String) addThingValueType;
+  final List<ThingValue> thingValues;
+  final void Function(ThingValue) addThingValue;
   final bool editMode;
   final Function(int index, dynamic newFirstValue, RangeType? firstRangeType) setNewFirstValue;
   final Function(int index, Operator operator) setNewOperator;
@@ -687,8 +683,8 @@ class _IfElsePage extends StatelessWidget {
   final void Function(Operator) onChangedLogicalOperator;
   final VoidCallback addCondition;
 
-  final bool isExpandedSensorDeviceStatus;
-  final void Function(bool) onSensorDeviceStatusExpansionChanged;
+  final bool isExpandedVariableStatus;
+  final void Function(bool) onVariableStatusExpansionChanged;
   final TextEditingController searchController;
   final FocusNode searchFocusNode;
   final void Function(String) onSearch;
@@ -704,29 +700,24 @@ class _IfElsePage extends StatelessWidget {
   final FocusNode constantSearchFocusNode;
   final void Function(String) onConstantSearch;
   final List<ThingValue> constantThingValueList;
-  final TextEditingController constantNumberController;
-  final TextEditingController constantStringController;
-  final TextEditingController constantHourController;
-  final TextEditingController constantMinuteController;
+
+  final List<TextEditingController> constantStringController;
 
   final bool isSelectedElse;
   final void Function(bool) changeSelectedElse;
-
-  final TextEditingController hourController;
-  final TextEditingController minuteController;
 
   final List<Variable> Function(String) variableListByType;
 
   const _IfElsePage(
     this.conditions, {
-    required this.thingValueTypes,
-    required this.addThingValueType,
+    required this.thingValues,
+    required this.addThingValue,
     required this.editMode,
     required this.setNewFirstValue,
     required this.setNewOperator,
     required this.setNewLastValue,
-    required this.isExpandedSensorDeviceStatus,
-    required this.onSensorDeviceStatusExpansionChanged,
+    required this.isExpandedVariableStatus,
+    required this.onVariableStatusExpansionChanged,
     required this.logicalOperator,
     required this.onChangedLogicalOperator,
     required this.addCondition,
@@ -745,12 +736,7 @@ class _IfElsePage extends StatelessWidget {
     required this.isSelectedElse,
     required this.changeSelectedElse,
     required this.constantThingValueList,
-    required this.constantNumberController,
     required this.constantStringController,
-    required this.constantHourController,
-    required this.constantMinuteController,
-    required this.hourController,
-    required this.minuteController,
     required this.variableListByType,
   });
 
@@ -817,14 +803,14 @@ class _IfElsePage extends StatelessWidget {
               _VariableStatusWidget(
                 conditions[index].firstValue,
                 editMode: editMode,
-                isExpanded: isExpandedSensorDeviceStatus,
-                onExpansionChanged: onSensorDeviceStatusExpansionChanged,
+                isExpanded: isExpandedVariableStatus,
+                onExpansionChanged: onVariableStatusExpansionChanged,
                 searchController: searchController,
                 searchFocusNode: searchFocusNode,
                 onSearch: onSearch,
                 thingValueList: statusThingValueList,
                 setFirstValue: (ThingValue thingValue) {
-                  addThingValueType(thingValue.type);
+                  addThingValue(thingValue);
                   setNewFirstValue(
                     index,
                     thingValue.toValueServiceExpression(RangeType.AUTO),
@@ -854,7 +840,7 @@ class _IfElsePage extends StatelessWidget {
                 },
                 otherOperatorList: _isWeatherServiceSelected(index)
                     ? [Operator.EQUAL, Operator.NOT_EQUAL]
-                    : (index < thingValueTypes.length) && (thingValueTypes[index] != 'double' && thingValueTypes[index] != 'int')
+                    : (index < thingValues.length) && (thingValues[index] != 'double' && thingValues[index] != 'int')
                     ? [Operator.EQUAL, Operator.NOT_EQUAL]
                     : otherOperatorList,
               ),
@@ -904,26 +890,21 @@ class _IfElsePage extends StatelessWidget {
                       );
                     }
                   },
-                  hourController: hourController,
-                  minuteController: minuteController,
                 )
-              else if(index < thingValueTypes.length)
+              else if(index < thingValues.length)
                 _ConstantStatusWidget(
                   conditions[index].lastValue,
                   editMode: editMode,
                   isExpanded: isExpandedConstantStatus,
                   onExpansionChanged: onConstantStatusExpansionChanged,
-                  thingValueType: thingValueTypes[index],
+                  thingValue: thingValues[index],
                   searchController: constantSearchController,
                   searchFocusNode: constantSearchFocusNode,
                   onSearch: onConstantSearch,
                   thingValueList: constantThingValueList.where(
-                    (element) => element.type == thingValueTypes[index],
+                    (element) => element.type == thingValues[index].type,
                   ).toList(),
-                  numberController: constantNumberController,
-                  stringController: constantStringController,
-                  hourController: constantHourController,
-                  minuteController: constantMinuteController,
+                  stringController: constantStringController[index],
                   variableListByType: variableListByType,
                   setLastValue: (ThingValue thingValue) {
                     setNewLastValue(
@@ -1039,6 +1020,8 @@ class _UntilPage extends StatelessWidget {
   final PeriodExpression? periodExpression;
 
   /// condition으로 조건을 짤 때 사용
+  final ThingValue? thingValue;
+  final void Function(ThingValue) changeThingValue;
   final bool isExpandedSensorDeviceStatus;
   final void Function(bool) onSensorDeviceStatusExpansionChanged;
   final TextEditingController searchController;
@@ -1056,10 +1039,8 @@ class _UntilPage extends StatelessWidget {
   final FocusNode constantSearchFocusNode;
   final void Function(String) onConstantSearch;
   final List<ThingValue> constantThingValueList;
-  final TextEditingController constantNumberController;
+
   final TextEditingController constantStringController;
-  final TextEditingController constantHourController;
-  final TextEditingController constantMinuteController;
 
   final List<Variable> Function(String) variableListByType;
 
@@ -1078,6 +1059,8 @@ class _UntilPage extends StatelessWidget {
     required this.setNewFirstValue,
     required this.setNewOperator,
     required this.setNewLastValue,
+    required this.thingValue,
+    required this.changeThingValue,
     required this.isExpandedSensorDeviceStatus,
     required this.onSensorDeviceStatusExpansionChanged,
     required this.searchController,
@@ -1093,10 +1076,7 @@ class _UntilPage extends StatelessWidget {
     required this.constantSearchFocusNode,
     required this.onConstantSearch,
     required this.constantThingValueList,
-    required this.constantNumberController,
     required this.constantStringController,
-    required this.constantHourController,
-    required this.constantMinuteController,
     required this.variableListByType,
     required this.periodNumberController,
     required this.onChangePeriodNumber,
@@ -1152,6 +1132,7 @@ class _UntilPage extends StatelessWidget {
             onSearch: onSearch,
             thingValueList: statusThingValueList,
             setFirstValue: (ThingValue thingValue) {
+              changeThingValue(thingValue);
               setNewFirstValue(
                 0,
                 thingValue.toValueServiceExpression(RangeType.AUTO),
@@ -1180,54 +1161,52 @@ class _UntilPage extends StatelessWidget {
             },
             otherOperatorList: otherOperatorList,
           ),
-          _ConstantStatusWidget(
-            conditions[0].lastValue,
-            editMode: editMode,
-            isExpanded: isExpandedConstantStatus,
-            thingValueType: 'xxxxx',
-            onExpansionChanged: onConstantStatusExpansionChanged,
-            searchController: constantSearchController,
-            searchFocusNode: constantSearchFocusNode,
-            onSearch: onConstantSearch,
-            thingValueList: constantThingValueList,
-            numberController: constantNumberController,
-            stringController: constantStringController,
-            hourController: constantHourController,
-            minuteController: constantMinuteController,
-            variableListByType: variableListByType,
-            setLastValue: (ThingValue thingValue) {
-              setNewLastValue(
-                0,
-                thingValue.toValueServiceExpression(RangeType.AUTO),
-                null,
-              );
-            },
-            setLastValueByExpression: (LiteralExpression expression) {
-              setNewLastValue(
-                0,
-                expression,
-                null,
-              );
-            },
-            onBlockChanged: (ValueServiceBlock changedBlock) {
-              setNewLastValue(
-                0,
-                conditions[0].firstValue.copyWith(
-                    tags: changedBlock.valueServiceExpression.tags.map((e) {
-                      return e;
-                      // return Tag(name: e);
-                    }).toList()),
-                changedBlock.valueServiceExpression.rangeType,
-              );
-            },
-            onLiteralExpressionChanged: (LiteralExpression expression) {
-              setNewLastValue(
-                0,
-                expression,
-                null,
-              );
-            },
-          ),
+          if(thingValue != null)
+            _ConstantStatusWidget(
+              conditions[0].lastValue,
+              editMode: editMode,
+              isExpanded: isExpandedConstantStatus,
+              onExpansionChanged: onConstantStatusExpansionChanged,
+              thingValue: thingValue!,
+              searchController: constantSearchController,
+              searchFocusNode: constantSearchFocusNode,
+              onSearch: onConstantSearch,
+              thingValueList: constantThingValueList,
+              stringController: constantStringController,
+              variableListByType: variableListByType,
+              setLastValue: (ThingValue thingValue) {
+                setNewLastValue(
+                  0,
+                  thingValue.toValueServiceExpression(RangeType.AUTO),
+                  null,
+                );
+              },
+              setLastValueByExpression: (LiteralExpression expression) {
+                setNewLastValue(
+                  0,
+                  expression,
+                  null,
+                );
+              },
+              onBlockChanged: (ValueServiceBlock changedBlock) {
+                setNewLastValue(
+                  0,
+                  conditions[0].firstValue.copyWith(
+                      tags: changedBlock.valueServiceExpression.tags.map((e) {
+                        return e;
+                        // return Tag(name: e);
+                      }).toList()),
+                  changedBlock.valueServiceExpression.rangeType,
+                );
+              },
+              onLiteralExpressionChanged: (LiteralExpression expression) {
+                setNewLastValue(
+                  0,
+                  expression,
+                  null,
+                );
+              },
+            ),
         ] else ...[
           const SizedBox(height: 12),
           Row(
@@ -1441,15 +1420,11 @@ class _VariableStatusWidget extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(2, 16, 0, 16),
                     child: Row(
                       children: [
-                        CachedNetworkImage(
-                          imageUrl: IconHelper.getServiceIcon(thingValueListExceptWeatherAndTimestamp[index].category ?? ''),
+                        Image.asset(
+                          IconHelper.getServiceIcon(thingValueListExceptWeatherAndTimestamp[index].category ?? ''),
                           height: 19,
                           fit: BoxFit.fitHeight,
-                          errorWidget: (context, url, error) => CachedNetworkImage(
-                            imageUrl: IconHelper.getServiceIcon('undefined'),
-                            height: 19,
-                            fit: BoxFit.fitHeight,
-                          ),
+                          errorBuilder: IconHelper.iconErrorWidgetBuilder(height: 19),
                         ),
                         const SizedBox(width: 16),
                         Text(
@@ -1606,12 +1581,12 @@ class _ConstantStatusWidget extends StatelessWidget {
   final bool editMode;
   final bool isExpanded;
   final void Function(bool isExpanded) onExpansionChanged;
-  final String thingValueType;
+  final ThingValue thingValue;
   final TextEditingController searchController;
   final FocusNode searchFocusNode;
   final void Function(String value) onSearch;
   final List<ThingValue> thingValueList;
-  final TextEditingController numberController;
+
   final TextEditingController stringController;
 
   final dynamic lastValue;
@@ -1620,9 +1595,6 @@ class _ConstantStatusWidget extends StatelessWidget {
   final Function(ValueServiceBlock block) onBlockChanged;
   final Function(LiteralExpression expression) onLiteralExpressionChanged;
 
-  final TextEditingController hourController;
-  final TextEditingController minuteController;
-
   final List<Variable> Function(String type) variableListByType;
 
   const _ConstantStatusWidget(
@@ -1630,19 +1602,16 @@ class _ConstantStatusWidget extends StatelessWidget {
     required this.editMode,
     required this.isExpanded,
     required this.onExpansionChanged,
-    required this.thingValueType,
+    required this.thingValue,
     required this.searchController,
     required this.searchFocusNode,
     required this.onSearch,
     required this.thingValueList,
-    required this.numberController,
     required this.stringController,
     required this.setLastValue,
     required this.setLastValueByExpression,
     required this.onBlockChanged,
     required this.onLiteralExpressionChanged,
-    required this.hourController,
-    required this.minuteController,
     required this.variableListByType,
   });
 
@@ -1655,22 +1624,15 @@ class _ConstantStatusWidget extends StatelessWidget {
       );
     }
 
-    /*if (lastValue is LiteralExpression) {
-      return LiteralBlockWidget(
-        lastValue,
-        onBlockChanged: onLiteralExpressionChanged,
-      );
-    }*/
-
-    bool isWeatherServiceExist = false;
-    bool isDateTimeServiceExist = false;
+    /*bool isWeatherServiceExist = false;
+    bool isDateTimeServiceExist = false;*/
     final thingValueListExceptWeatherAndTimestamp = thingValueList.where(
           (element) {
-        if(element.name == _weatherServiceName) {
+        /*if(element.name == _weatherServiceName) {
           isWeatherServiceExist = true;
         } else if(element.name == _dateTimeServiceName) {
           isDateTimeServiceExist = true;
-        }
+        }*/
 
         return element.name != _weatherServiceName && element.name != _dateTimeServiceName;
       },
@@ -1783,65 +1745,34 @@ class _ConstantStatusWidget extends StatelessWidget {
               color: Color(0xFFF3F5FA),
             ),
 
-            /// 날씨
-            if(isWeatherServiceExist && thingValueType == 'string')
-              _ConstantWeatherWidget(
-                selectedWeather: (lastValue is LiteralExpression
-                    && (lastValue as LiteralExpression).literalType == LiteralType.STRING)
-                    ? (lastValue as LiteralExpression).valueString.toWeatherStateFromValue
-                    : null,
-                onSelect: (weather) {
-                  setLastValueByExpression(
-                    LiteralExpression(weather.value, literalType: LiteralType.STRING),
-                  );
-                },
-              ),
-            /// 시간
-            if(isDateTimeServiceExist && thingValueType == 'int')
-              _ConstantDateTimeWidget(
+            /// 숫자
+            if(thingValue.type == 'int' || thingValue.type == 'double')
+              _numberStatus(
                 editMode: editMode,
-                dateTime: (lastValue is LiteralExpression
+                name: '밝기',
+                value: (lastValue is LiteralExpression
+                    && (lastValue as LiteralExpression).literalType == LiteralType.DOUBLE)
+                    ? ((lastValue as LiteralExpression).value as double)
+                    : (lastValue is LiteralExpression
                     && (lastValue as LiteralExpression).literalType == LiteralType.INTEGER)
-                    ? DateTime.fromMillisecondsSinceEpoch((lastValue as LiteralExpression).value * 1000)
-                    : null,
-                onChange: (dateTime) {
-                  if(dateTime != null) {
+                    ? (((lastValue as LiteralExpression).value as num).toInt())
+                    : 0,
+                min: thingValue.bound?.min_value,
+                max: thingValue.bound?.max_value,
+                onChanged: (num value) {
+                  if(thingValue.type == 'int') {
                     setLastValueByExpression(
-                      LiteralExpression(
-                        dateTime.millisecondsSinceEpoch ~/ 1000,
-                        literalType: LiteralType.INTEGER,
-                      ),
+                      LiteralExpression(value.toInt(), literalType: LiteralType.INTEGER),
                     );
                   } else {
                     setLastValueByExpression(
-                      LiteralExpression(null, literalType: LiteralType.UNDEFINED),
-                    );
-                  }
-                },
-                hourController: hourController,
-                minuteController: minuteController,
-              ),
-            /// 숫자
-            if(thingValueType == 'int' || thingValueType == 'double')
-              _otherStatus(
-                title: '숫자',
-                editMode: editMode,
-                controller: numberController,
-                inputType: TextInputType.number,
-                onChanged: (String value) {
-                  if(double.tryParse(value) != null) {
-                    setLastValueByExpression(
-                      LiteralExpression(double.parse(value), literalType: LiteralType.DOUBLE),
-                    );
-                  } else if(int.tryParse(value) != null) {
-                    setLastValueByExpression(
-                      LiteralExpression(int.parse(value), literalType: LiteralType.INTEGER),
+                      LiteralExpression(value.toDouble(), literalType: LiteralType.DOUBLE),
                     );
                   }
                 },
               ),
             /// 문자열
-            if(thingValueType == 'string')
+            if(thingValue.type == 'string')
               _otherStatus(
                 title: '문자열',
                 editMode: editMode,
@@ -1854,7 +1785,7 @@ class _ConstantStatusWidget extends StatelessWidget {
                 }
               ),
             /// 참/거짓
-            if(thingValueType == 'bool')
+            if(thingValue.type == 'bool')
               _boolStatus(
                 editMode: editMode,
                 currentValue: (lastValue is LiteralExpression
@@ -1869,8 +1800,9 @@ class _ConstantStatusWidget extends StatelessWidget {
               ),
             /// 변수값
             EditorVariableListWidget(
+              editMode: editMode,
               isVariableForLeftSide: false,
-              variableList: variableListByType(thingValueType).map((variable) => variable.name).toList(),
+              variableList: variableListByType(thingValue.type).map((variable) => variable.name).toList(),
               initialSelectedVariable: (lastValue is LiteralExpression
                   && (lastValue as LiteralExpression).literalType == LiteralType.VARIABLE)
                   ? (lastValue as LiteralExpression).valueString
@@ -1883,6 +1815,55 @@ class _ConstantStatusWidget extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _numberStatus({
+    required bool editMode,
+    required String name,
+    required num value,
+    required void Function(num) onChanged,
+    required num? min,
+    required num? max,
+  }) {
+    return Theme(
+      data: ThemeData(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+      ),
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFFFFFFFF),
+          border: Border(
+            bottom: BorderSide(width: 1, color: Color(0xFFF3F5FA)),
+          ),
+        ),
+        child: ExpansionTile(
+          initiallyExpanded: false,
+          shape: const Border(),
+          tilePadding: const EdgeInsets.fromLTRB(14, 0, 11, 0), //16
+          onExpansionChanged: onExpansionChanged,
+          title: const Text(
+            '숫자',
+            style: AppTextStyles.size12Bold,
+          ),
+          trailing: SvgPicture.asset(
+            isExpanded
+                ? 'assets/icons/expansion_up.svg'
+                : 'assets/icons/expansion_down.svg',
+          ),
+          childrenPadding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+          children: [
+            NumberSlider(
+              enabled: editMode,
+              value: value,
+              onChanged: onChanged,
+              min: min ?? ((value < 0) ? value : 0),
+              max: max ?? ((value > 100) ? value : 100),
+            ),
+          ],
+        )
       ),
     );
   }
@@ -2148,21 +2129,14 @@ class _ConstantWeatherWidget extends StatelessWidget {
 }
 
 class _ConstantDateTimeWidget extends StatelessWidget {
-  static final DateTime _lastDate = DateTime(2099, 12, 31);
-
   final bool editMode;
   final DateTime? dateTime;
   final void Function(DateTime?) onChange;
-
-  final TextEditingController hourController;
-  final TextEditingController minuteController;
 
   const _ConstantDateTimeWidget({
     required this.editMode,
     required this.dateTime,
     required this.onChange,
-    required this.hourController,
-    required this.minuteController,
   });
 
   @override
@@ -2196,36 +2170,11 @@ class _ConstantDateTimeWidget extends StatelessWidget {
           childrenPadding: const EdgeInsets.symmetric(horizontal: 12),
           expandedCrossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            EditorDateButton(
-              dateTime,
-              enabled: editMode,
-              onClick: () async {
-                final DateTime? selectedDateTime = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: _lastDate,
-                );
-
-                onChange(selectedDateTime);
-              },
-            ),
-
-            const SizedBox(height: 6),
-            EditorSelectTimeWidget(
+            EditorSelectDateTimeWidget(
               enabled: editMode && dateTime != null,
-              selectedTimePrefix: dateTime?.getAmPm ?? AmPm.am,
-              onChangedTimePrefix: (amPm) {
-                if(amPm != null) {
-                  onChange(dateTime?.copyWithAmPm(amPm));
-                }
-              },
-              hourController: hourController,
-              onChangedHour: (hour) => onChange(dateTime?.copyWith(hour: hour)),
-              minuteController: minuteController,
-              onChangedMinute: (minute) => onChange(dateTime?.copyWith(minute: minute)),
+              initialDateTime: dateTime,
+              onChangeDateTime: onChange,
             ),
-
             const SizedBox(height: 12),
           ],
         ),

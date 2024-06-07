@@ -86,6 +86,7 @@ class _ScenarioDetailScreenState extends State<ScenarioDetailScreen> {
               child: ScenarioItemWidget(
                 viewModel.rootBlock,
                 editMode: false,
+                parentContext: context,
               ),
             ),
           ],

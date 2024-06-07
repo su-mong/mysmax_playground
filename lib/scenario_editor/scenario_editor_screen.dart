@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mysmax_playground/app_text_styles.dart';
 import 'package:mysmax_playground/colors.dart';
 import 'package:mysmax_playground/helper/navigator_helper.dart';
+import 'package:mysmax_playground/models/enums/scenario_state.dart';
 import 'package:mysmax_playground/models/scenario.dart';
+import 'package:mysmax_playground/models/scenario_samples.dart';
 import 'package:mysmax_playground/scenario_editor/scenario_editor_view_model.dart';
 import 'package:mysmax_playground/scenario_item_widget.dart';
 import 'package:mysmax_playground/scenario_mixin.dart';
@@ -15,6 +17,19 @@ class ScenarioEditorScreen extends StatefulWidget {
     super.key,
     this.scenario,
   });
+
+  factory ScenarioEditorScreen.fromScenarioSampleData(
+    ScenarioSampleData data,
+  ) => ScenarioEditorScreen(
+    scenario: Scenario(
+      id: 1,
+      name: data.name,
+      contents: data.scenario_code,
+      state: ScenarioState.initialized,
+      /// TODO: 이거 안써도 되는거임? 확인 필요.
+      scheduled_things: [],
+    ),
+  );
 
   Future<void> push(BuildContext context) {
     final viewModel = ScenarioEditorViewModel(scenario: scenario);
@@ -67,6 +82,7 @@ class _ScenarioEditorScreenState extends State<StatefulWidget> {
                       child: ScenarioItemWidget(
                         editorViewModel.rootBlock,
                         editMode: true,
+                        parentContext: context,
                       ),
                     ),
                   ],
@@ -95,7 +111,9 @@ class _ScenarioEditorScreenState extends State<StatefulWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 36, vertical: 14),

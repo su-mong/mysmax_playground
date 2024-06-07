@@ -10,6 +10,7 @@ import 'package:mysmax_playground/models/enums/scenario_item_type.dart';
 import 'package:mysmax_playground/models/scheduled_thing.dart';
 import 'package:mysmax_playground/models/tag.dart';
 import 'package:mysmax_playground/scenario_editor/cards/scenario_editor_conditions_card_view.dart';
+import 'package:mysmax_playground/scenario_editor/cards/scenario_editor_else_view.dart';
 import 'package:mysmax_playground/scenario_editor/cards/scenario_editor_services_card_view.dart';
 import 'package:mysmax_playground/scenario_editor/cards/scenario_editor_loop_card_view.dart';
 import 'package:mysmax_playground/scenario_mixin.dart';
@@ -21,11 +22,13 @@ import 'package:provider/provider.dart';
 class ScenarioItemWidget<T extends Block> extends StatefulWidget {
   final T item;
   final bool editMode;
+  final BuildContext parentContext;
   const ScenarioItemWidget(
-    this.item, {
-    super.key,
-    required this.editMode,
-  });
+      this.item, {
+        super.key,
+        required this.editMode,
+        required this.parentContext,
+      });
 
   @override
   _ScenarioItemWidgetState createState() => _ScenarioItemWidgetState();
@@ -48,15 +51,17 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
 
   @override
   Widget build(BuildContext context) {
+    final isElseBlock = widget.item is ElseBlock;
+
     return Column(
       children: [
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 21) + const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
-            color: const Color(0xFFFFFFFF),
+            color: isElseBlock ? null : const Color(0xFFFFFFFF),
             border: widget.item.blockBorder,
-            borderRadius: BorderRadius.circular(13),
-            boxShadow: [
+            borderRadius: isElseBlock ? null : BorderRadius.circular(13),
+            boxShadow: isElseBlock ? null : [
               BoxShadow(
                 color: const Color(0xFF46517D).withAlpha(6),
                 blurRadius: 8,
@@ -72,13 +77,13 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
               } else if (widget.item is LoopBlock) {
                 return _buildScenarioLoop(widget.item as LoopBlock);
               } else if (widget.item is ConditionBlock) {
-                var viewModel = context.read<ScenarioMixin>();
+                var viewModel = widget.parentContext.read<ScenarioMixin>();
 
                 return ScenarioEditorConditionsCardView(
                   (widget.item as ConditionBlock),
                   editMode: widget.editMode,
                   onChanged: (block) {
-                    var viewModel = context.read<ScenarioMixin>();
+                    var viewModel = widget.parentContext.read<ScenarioMixin>();
                     viewModel.updateScenarioItem(widget.item, widget.item.copyWith(block));
                   },
                   variableListByType: viewModel.variableListByType,
@@ -87,12 +92,12 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
                 return _buildScenarioCondition(widget.item as IfBlock);
               } else if (widget.item is WaitUntilBlock) {
                 return _buildScenarioUntil(widget.item as WaitUntilBlock);
-              } else if (widget.item is ElseBlock) {
-                return _buildScenarioType("else");
               } else if(widget.item is FunctionServiceBlock) {
                 return _buildScenarioFunctionService(widget.item as FunctionServiceBlock);
               } else if(widget.item is ValueServiceBlock) {
                 return _buildScenarioValue(widget.item as ValueServiceBlock);
+              } else if (widget.item is ElseBlock) {
+                return const ScenarioEditorElseView();
               } else {
                 return Container();
               }
@@ -103,6 +108,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
           return ScenarioItemWidget(
             e,
             editMode: widget.editMode,
+            parentContext: context,
             // onChangeItem: (block) {
             //   setState(() {
             //     for (var e in changedItem.blocks) {
@@ -236,7 +242,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
               splashRadius: 12,
               onSelected: (String result) {
                 if (result == '삭제') {
-                  var viewModel = context.read<ScenarioMixin>();
+                  var viewModel = widget.parentContext.read<ScenarioMixin>();
                   viewModel.removeScenarioItem(widget.item);
                 }
               },
@@ -326,7 +332,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
         break;
       case ScenarioItemType.Else:
         if (widget.item is IfBlock) {
-          var viewModel = context.read<ScenarioMixin>();
+          var viewModel = widget.parentContext.read<ScenarioMixin>();
           viewModel.addSameLevelScenarioItem(
               currentBlock: widget.item, newBlock: ElseBlock());
         }
@@ -337,11 +343,12 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
   }
 
   Widget _buildScenarioService(FunctionServiceListBlock item) {
-    final mqttViewModel = context.read<MqttViewModel>();
-    var viewModel = context.read<ScenarioMixin>();
+    final mqttViewModel = widget.parentContext.read<MqttViewModel>();
+    var viewModel = widget.parentContext.read<ScenarioMixin>();
 
     return ScenarioEditorServicesCardView(
       item,
+      editMode: widget.editMode,
       tagList: const [Tag(name: 'test01')], // mqttViewModel.allTagsForServiceFunctionList,
       initialSelectedTag: const Tag(name: 'test01'), // mqttViewModel.tagForAllServices(serviceNames),
       getThingFunctionListByTag: (tag) => mqttViewModel.tmpFunctionList(item), // mqttViewModel.serviceFunctionListByTag,
@@ -360,7 +367,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
     return ScenarioServiceItem(
       item,
       onChanged: (block) {
-        var viewModel = context.read<ScenarioMixin>();
+        var viewModel = widget.parentContext.read<ScenarioMixin>();
         viewModel.updateScenarioItem(item, item.copyWith(block));
       },
     );
@@ -432,7 +439,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
                         item.variableName,
                       ),
                     );
-                    var scenarioViewModel = context.read<ScenarioMixin>();
+                    var scenarioViewModel = widget.parentContext.read<ScenarioMixin>();
                     scenarioViewModel.updateScenarioItem(
                         item, item.copyWith(changedItem));
                   });
@@ -490,7 +497,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
                 children: [
                   GestureDetector(
                     onTap: () {
-                      var viewModel = context.read<ScenarioMixin>();
+                      var viewModel = widget.parentContext.read<ScenarioMixin>();
                       viewModel.updateScenarioItem(
                           item,
                           item.copyWith(
@@ -519,7 +526,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
                   const SizedBox(width: 14),
                   GestureDetector(
                     onTap: () {
-                      var viewModel = context.read<ScenarioMixin>();
+                      var viewModel = widget.parentContext.read<ScenarioMixin>();
                       viewModel.updateScenarioItem(
                           item,
                           item.copyWith(
@@ -576,8 +583,9 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
   Widget _buildScenarioLoop(LoopBlock item) {
     return ScenarioEditorLoopCardView(
       item,
+      editMode: widget.editMode,
       onChanged: (block) {
-        var viewModel = context.read<ScenarioMixin>();
+        var viewModel = widget.parentContext.read<ScenarioMixin>();
         viewModel.updateScenarioItem(item, item.copyWith(block));
       },
     );
@@ -751,7 +759,7 @@ class _ScenarioItemWidgetState<T extends Block> extends State<ScenarioItemWidget
 
   Widget _buildVariableList(BuildContext context,
       {required ValueServiceBlock item}) {
-    var viewModel = context.watch<ScenarioMixin>();
+    var viewModel = widget.parentContext.watch<ScenarioMixin>();
     var variableList = viewModel.searchVariableList;
 
     return Padding(

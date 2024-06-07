@@ -3,7 +3,7 @@
         {
             "id": 1,
             "name": "scene1",
-            "contents": "loop(1 DAY, (#Clock).weekday == \"Monday\" or (#Clock).weekday == \"Tuesday\" or (#Clock).weekday == \"Wednesday\" or (#Clock).weekday == \"Thursday\" or (#Clock).weekday == \"Friday\") {   if (any(#PresenceSensor).presence == \"present\") {    if ((#AirQualityDetector).dustLevel > 50 or (#AirQualityDetector).fineDustLevel > 25 or (#AirQualityDetector).veryFineDustLevel > 10) {      all(#AirPurifier).on();      all(#AirPurifier).setAirPurifierFanMode(\"auto\");    }     if (any(#AirConditioner).switch == \"off\") {      all(#AirConditioner).on();    }    if ((#AirQualityDetector).temperature > 27 and (#AirQualityDetector).humidity > 50) {      all(#AirConditioner).setAirConditionerMode(\"cool\");      all(#AirConditioner).setTemperature(24);    } else {      if ((#AirQualityDetector).temperature < 20) {        all(#AirConditioner).setAirConditionerMode(\"heat\");        all(#AirConditioner).setTemperature(21);      }    }  }}",
+            "contents": "loop(1 DAY, (#Clock).datetime > 202405011300 and (#Clock).datetime < 202407312359 and (#Clock).weekday == \"Monday\" or (#Clock).weekday == \"Tuesday\" or (#Clock).weekday == \"Wednesday\" or (#Clock).weekday == \"Thursday\" or (#Clock).weekday == \"Friday\") {   if (any(#PresenceSensor).presence == \"present\") {    if ((#AirQualityDetector).dustLevel > 50 or (#AirQualityDetector).fineDustLevel > 25 or (#AirQualityDetector).veryFineDustLevel > 10) {      all(#AirPurifier).on();      all(#AirPurifier).setAirPurifierFanMode(\"auto\");    }     if (any(#AirConditioner).switch == \"off\") {      all(#AirConditioner).on();    }    if ((#AirQualityDetector).temperature > 27 and (#AirQualityDetector).humidity > 50) {      all(#AirConditioner).setAirConditionerMode(\"cool\");      all(#AirConditioner).setTemperature(24);    } else {      if ((#AirQualityDetector).temperature < 20) {        all(#AirConditioner).setAirConditionerMode(\"heat\");        all(#AirConditioner).setTemperature(21);      }    }  }}",
             "is_opened": 0,
             "priority": -1,
             "state": "initialized",
@@ -279,7 +279,7 @@
         {
             "id": 3,
             "name": "scene3",
-            "contents": "loop(1 SEC) {  if ((#PresenceSensor #침실).presence == \"not_present\" and (#PresenceSensor #복도).presence == \"not_present\" and (#PresenceSensor #아이방).presence == \"not_present\" and (#PresenceSensor #거실).presence == \"not_present\") {    if (any(#Switch #전등).switch == \"on\") {      all(#Switch #전등).off();    }    if ((#Television).switch == \"on\") {      (#Television).off();    }    if ((#AirConditioner).switch == \"on\") {      (#AirConditioner).off();    }    wait until((#MotionSensor #뒷문).motion == \"active\" and (#ContactSensor #뒷문).contact == \"open\");    (#Speaker).speak(\"도둑이 침입하였습니다!\");    (#Speaker).speak(\"도둑이 침입하였습니다!\");    (#Speaker).speak(\"도둑이 침입하였습니다!\");    (#EmailProvider).sendMail(\"example@gmail.com\",\"실내에 침입자 알림\",\"뒷문으로 거수자가 침입하였습니다.\");  } else {    if ((#MotionSensor #침실).motion == \"active\") {      if ((#Light #침실).switch == \"off\") {        (#Light #침실).on();      }      if ((#Light #복도).switch == \"off\") {        (#Light #복도).on();      }      if ((#Light #아이방).switch == \"off\") {        (#Light #아이방).on();      }      if ((#Light #거실).switch == \"off\") {        (#Light #거실).on();      }    }  }}",
+            "contents": "loop(1 SEC) {  if ((#PresenceSensor #침실).presence == \"not_present\" and (#PresenceSensor #복도).presence == \"not_present\" and (#PresenceSensor #아이방).presence == \"not_present\" and (#PresenceSensor #거실).presence == \"not_present\") {    if (any(#Switch #전등).switch == \"on\") {      all(#Switch #전등).off();    }    if ((#Television).switch == \"on\") {      (#Television).off();    }    if ((#AirConditioner).switch == \"on\") {      (#AirConditioner).off();    }    wait until((#MotionSensor #뒷문).motion == \"active\" and (#ContactSensor #뒷문).contact == \"open\");    (#Speaker).speak(\"도둑이 침입하였습니다!\");    (#EmailProvider).sendMail(\"example@gmail.com\",\"실내에 침입자 알림\",\"뒷문으로 거수자가 침입하였습니다.\");  } else {    if ((#MotionSensor #침실).motion == \"active\") {      if ((#Light #침실).switch == \"off\") {        (#Light #침실).on();      }      if ((#Light #복도).switch == \"off\") {        (#Light #복도).on();      }      if ((#Light #아이방).switch == \"off\") {        (#Light #아이방).on();      }      if ((#Light #거실).switch == \"off\") {        (#Light #거실).on();      }    }  }}",
             "is_opened": 0,
             "priority": -1,
             "state": "initialized",
@@ -465,6 +465,168 @@
                     "things": [
                         {
                             "name": "Light"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "scene2_수정",
+            "contents": "loop(1 HOUR, (#Clock).weekday == \"Saturday\") {  (#EmailProvider).sendMail(\"example@gmail.com\",\"스마트팜 알람\",\"버튼을 눌러 텃밭에 물을 주세요.\");  wait until((#Button #물주기).button == \"pushed\");  (#Irrigator #스마트팜).on();  if ((#SoilMoistureSensor #스파티필름).soilHumidity < 10) {    (#Irrigator #스파티필름).setWaterPortion(15.0, \"ounces\");    (#Irrigator #스파티필름).startWatering();  }  if ((#SoilMoistureSensor #몬스테라).soilHumidity < 20) {    (#Irrigator #몬스테라).setWaterPortion(25.0, \"ounces\");    (#Irrigator #몬스테라).startWatering();  }  if ((#SoilMoistureSensor #아레카야자).soilHumidity < 30) {    (#Irrigator #아레카야자).setWaterPortion(20.0, \"ounces\");    (#Irrigator #아레카야자).startWatering();  }  if ((#SoilMoistureSensor #피토니아).soilHumidity < 40) {    (#Irrigator #피토니아).setWaterPortion(25.0, \"ounces\");    (#Irrigator #피토니아).startWatering();  }  if ((#SoilMoistureSensor #드라세나).soilHumidity < 50) {    (#Irrigator #드라세나).setWaterPortion(55.0, \"ounces\");    (#Irrigator #드라세나).startWatering();  }}",
+            "is_opened": 0,
+            "priority": -1,
+            "state": "initialized",
+            "scheduled_things": [
+                {
+                    "service": "_(#EmailProvider).sendMail",
+                    "things": [
+                        {
+                            "name": "EmailProvider"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#피토니아#Irrigator).setWaterPortion",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#스파티필름#Irrigator).startWatering",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#Clock).weekday",
+                    "things": [
+                        {
+                            "name": "Clock"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#드라세나#SoilMoistureSensor).soilHumidity",
+                    "things": [
+                        {
+                            "name": "SoilMoistureSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#드라세나#Irrigator).setWaterPortion",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#물주기#Button).button",
+                    "things": [
+                        {
+                            "name": "Button"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#아레카야자#SoilMoistureSensor).soilHumidity",
+                    "things": [
+                        {
+                            "name": "SoilMoistureSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#아레카야자#Irrigator).setWaterPortion",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#피토니아#Irrigator).startWatering",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#몬스테라#SoilMoistureSensor).soilHumidity",
+                    "things": [
+                        {
+                            "name": "SoilMoistureSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#피토니아#SoilMoistureSensor).soilHumidity",
+                    "things": [
+                        {
+                            "name": "SoilMoistureSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#몬스테라#Irrigator).startWatering",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#스파티필름#SoilMoistureSensor).soilHumidity",
+                    "things": [
+                        {
+                            "name": "SoilMoistureSensor"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#스파티필름#Irrigator).setWaterPortion",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#아레카야자#Irrigator).startWatering",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#드라세나#Irrigator).startWatering",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#스마트팜#Irrigator).on",
+                    "things": [
+                        {
+                            "name": "Irrigator"
+                        }
+                    ]
+                },
+                {
+                    "service": "_(#몬스테라#Irrigator).setWaterPortion",
+                    "things": [
+                        {
+                            "name": "Irrigator"
                         }
                     ]
                 }

@@ -38,11 +38,14 @@ enum LiteralType {
 
 enum PeriodType {
   UNDEFINED(''),
-  MSEC('밀리초'),
+  // MSEC('밀리초'),
   SEC('초'),
   MIN('분'),
   HOUR('시간'),
-  DAY('일');
+  DAY('일'),
+  WEEK('주'),
+  MONTH('월'),
+  YEAR('년');
 
   final String unitName;
   const PeriodType(this.unitName);
@@ -50,7 +53,8 @@ enum PeriodType {
   @override
   String toString() => unitName;
 
-  static List<PeriodType> get enableList => [PeriodType.SEC, PeriodType.MIN, PeriodType.HOUR, PeriodType.DAY];
+  static List<PeriodType> get enableList => [PeriodType.SEC, PeriodType.MIN, PeriodType.HOUR,
+    PeriodType.DAY, PeriodType.WEEK, PeriodType.MONTH, PeriodType.YEAR];
 }
 
 enum ValueServiceType {
@@ -350,8 +354,8 @@ extension ComparisonOperatorsExtension on Operator {
 extension PeriodTypeExtension on PeriodType {
   static PeriodType fromString(String value) {
     switch (value.toUpperCase()) {
-      case 'MSEC':
-        return PeriodType.MSEC;
+      /*case 'MSEC':
+        return PeriodType.MSEC;*/
       case 'SEC':
         return PeriodType.SEC;
       case 'MIN':
@@ -360,6 +364,12 @@ extension PeriodTypeExtension on PeriodType {
         return PeriodType.HOUR;
       case 'DAY':
         return PeriodType.DAY;
+      case 'WEEK':
+        return PeriodType.WEEK;
+      case 'MONTH':
+        return PeriodType.MONTH;
+      case 'YEAR':
+        return PeriodType.YEAR;
       default:
         return PeriodType.UNDEFINED;
     }
@@ -368,8 +378,8 @@ extension PeriodTypeExtension on PeriodType {
   String toDisplayName(int? value) {
     if (value == null) return '';
     switch (this) {
-      case PeriodType.MSEC:
-        return '$value밀리초';
+      /*case PeriodType.MSEC:
+        return '$value밀리초';*/
       case PeriodType.SEC:
         return '$value초';
       case PeriodType.MIN:
@@ -377,7 +387,13 @@ extension PeriodTypeExtension on PeriodType {
       case PeriodType.HOUR:
         return '$value시간';
       case PeriodType.DAY:
-        return '매일';
+        return (value == 1) ? '매일' : '$value일';
+      case PeriodType.WEEK:
+        return (value == 1) ? '매주' : '$value주';
+      case PeriodType.MONTH:
+        return (value == 1) ? '매월' : '$value개월';
+      case PeriodType.YEAR:
+        return (value == 1) ? '매년' : '$value년';
       default:
         return '';
     }
@@ -385,8 +401,8 @@ extension PeriodTypeExtension on PeriodType {
 
   String get toName {
     switch (this) {
-      case PeriodType.MSEC:
-        return '밀리초';
+      /*case PeriodType.MSEC:
+        return '밀리초';*/
       case PeriodType.SEC:
         return '초';
       case PeriodType.MIN:
@@ -395,6 +411,12 @@ extension PeriodTypeExtension on PeriodType {
         return '시간';
       case PeriodType.DAY:
         return '매일';
+      case PeriodType.WEEK:
+        return '매주';
+      case PeriodType.MONTH:
+        return '매월';
+      case PeriodType.YEAR:
+        return '매년';
       default:
         return '';
     }
@@ -402,8 +424,8 @@ extension PeriodTypeExtension on PeriodType {
 
   String get value {
     switch (this) {
-      case PeriodType.MSEC:
-        return 'MSEC';
+      /*case PeriodType.MSEC:
+        return 'MSEC';*/
       case PeriodType.SEC:
         return 'SEC';
       case PeriodType.MIN:
@@ -412,6 +434,12 @@ extension PeriodTypeExtension on PeriodType {
         return 'HOUR';
       case PeriodType.DAY:
         return 'DAY';
+      case PeriodType.WEEK:
+        return 'WEEK';
+      case PeriodType.MONTH:
+        return 'MONTH';
+      case PeriodType.YEAR:
+        return 'YEAR';
       default:
         return '';
     }

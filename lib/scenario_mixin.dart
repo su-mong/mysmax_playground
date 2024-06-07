@@ -17,7 +17,7 @@ mixin ScenarioMixin on ChangeNotifier {
 
   set rootBlock(RootBlock value) {
     _rootBlock = value;
-    _rootBlock.searchLevel(0);
+    _rootBlock.searchLevel(0, 0);
     notifyListeners();
   }
 
@@ -54,7 +54,7 @@ mixin ScenarioMixin on ChangeNotifier {
     required Block child,
   }) {
     rootBlock.addChild(parent, child);
-    rootBlock.searchLevel(0);
+    rootBlock.searchLevel(0, 0);
     notifyListeners();
   }
 
@@ -63,25 +63,25 @@ mixin ScenarioMixin on ChangeNotifier {
     required Block newBlock,
   }) {
     rootBlock.addSameLevel(currentBlock, newBlock);
-    rootBlock.searchLevel(0);
+    rootBlock.searchLevel(0, 0);
     notifyListeners();
   }
 
   void addScenarioItem(Block block) {
     rootBlock.addBlock(block);
-    rootBlock.searchLevel(0);
+    rootBlock.searchLevel(0, 0);
     notifyListeners();
   }
 
   void updateScenarioItem(Block currentBlock, Block changedBlock) {
     rootBlock.updateBlock(currentBlock, changedBlock);
-    rootBlock.searchLevel(0);
+    rootBlock.searchLevel(0, 0);
     notifyListeners();
   }
 
   void removeScenarioItem(Block item) {
     rootBlock.removeBlock(item);
-    rootBlock.searchLevel(0);
+    rootBlock.searchLevel(0, 0);
     notifyListeners();
   }
 

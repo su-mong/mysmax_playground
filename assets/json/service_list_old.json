@@ -1,0 +1,3285 @@
+{
+    "services": [
+        {
+            "middleware": "JOI Hub_D83ADDD14F2A",
+            "hierarchy": "local",
+            "things": [
+                {
+                    "name": "Clock_builtin",
+                    "nick_name": "Clock",
+                    "category": "Clock",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 1,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "date",
+                            "description": "",
+                            "category": "date",
+                            "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "20240604.00",
+                            "updated_on": "2024-06-04 19:06:02.925",
+                            "tags": [{ "name": "Clock" }, { "name": "Clock_builtin" }]
+                        },
+                        {
+                            "name": "datetime",
+                            "description": "",
+                            "category": "datetime",
+                            "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "202406042122.00",
+                            "updated_on": "2024-06-04 21:22:00.488",
+                            "tags": [{ "name": "Clock" }, { "name": "Clock_builtin" }]
+                        },
+                        {
+                            "name": "day",
+                            "description": "",
+                            "category": "day",
+                            "bound": { "min_value": 1.0, "max_value": 31.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "4",
+                            "updated_on": "2024-06-04 19:06:03.049",
+                            "tags": [{ "name": "Clock" }, { "name": "Clock_builtin" }]
+                        },
+                        {
+                            "name": "hour",
+                            "description": "",
+                            "category": "hour",
+                            "bound": { "min_value": 0.0, "max_value": 24.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "21",
+                            "updated_on": "2024-06-04 21:00:00.447",
+                            "tags": [{ "name": "Clock" }, { "name": "Clock_builtin" }]
+                        },
+                        {
+                            "name": "isHoliday",
+                            "description": "",
+                            "category": "isHoliday",
+                            "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0",
+                            "updated_on": "2024-06-04 19:06:03.078",
+                            "tags": [{ "name": "Clock" }, { "name": "Clock_builtin" }]
+                        },
+                        {
+                            "name": "minute",
+                            "description": "",
+                            "category": "minute",
+                            "bound": { "min_value": 0.0, "max_value": 60.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "22",
+                            "updated_on": "2024-06-04 21:22:00.694",
+                            "tags": [{ "name": "Clock" }, { "name": "Clock_builtin" }]
+                        },
+                        {
+                            "name": "month",
+                            "description": "",
+                            "category": "month",
+                            "bound": { "min_value": 1.0, "max_value": 12.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "6",
+                            "updated_on": "2024-06-04 19:06:03.115",
+                            "tags": [{ "name": "Clock" }, { "name": "Clock_builtin" }]
+                        },
+                        {
+                            "name": "second",
+                            "description": "",
+                            "category": "second",
+                            "bound": { "min_value": 0.0, "max_value": 60.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "15",
+                            "updated_on": "2024-06-04 21:22:15.879",
+                            "tags": [{ "name": "Clock" }, { "name": "Clock_builtin" }]
+                        },
+                        {
+                            "name": "time",
+                            "description": "",
+                            "category": "time",
+                            "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "2122.00",
+                            "updated_on": "2024-06-04 21:22:00.243",
+                            "tags": [{ "name": "Clock" }, { "name": "Clock_builtin" }]
+                        },
+                        {
+                            "name": "timestamp",
+                            "description": "",
+                            "category": "timestamp",
+                            "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1717503736.33",
+                            "updated_on": "2024-06-04 21:22:16.327",
+                            "tags": [{ "name": "Clock" }, { "name": "Clock_builtin" }]
+                        },
+                        {
+                            "name": "weekday",
+                            "description": "",
+                            "category": "weekday",
+                            "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "Tuesday",
+                            "updated_on": "2024-06-04 19:06:03.429",
+                            "tags": [{ "name": "Clock" }, { "name": "Clock_builtin" }]
+                        },
+                        {
+                            "name": "year",
+                            "description": "",
+                            "category": "year",
+                            "bound": { "min_value": 0.0, "max_value": 100000.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "2024",
+                            "updated_on": "2024-06-04 19:06:03.444",
+                            "tags": [{ "name": "Clock" }, { "name": "Clock_builtin" }]
+                        }
+                    ],
+                    "functions": []
+                },
+                {
+                    "name": "Calculator_builtin",
+                    "nick_name": "Calculator",
+                    "category": "Calculator",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 1,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [],
+                    "functions": [
+                        {
+                            "name": "add",
+                            "category": "add",
+                            "description": "",
+                            "return_type": "double",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 10,
+                            "tags": [{ "name": "Calculator" }, { "name": "Calculator_builtin" }],
+                            "arguments": [
+                                {
+                                    "name": "a",
+                                    "order": 0,
+                                    "type": "double",
+                                    "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 }
+                                },
+                                {
+                                    "name": "b",
+                                    "order": 1,
+                                    "type": "double",
+                                    "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "div",
+                            "category": "div",
+                            "description": "",
+                            "return_type": "double",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 10,
+                            "tags": [{ "name": "Calculator" }, { "name": "Calculator_builtin" }],
+                            "arguments": [
+                                {
+                                    "name": "a",
+                                    "order": 0,
+                                    "type": "double",
+                                    "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 }
+                                },
+                                {
+                                    "name": "b",
+                                    "order": 1,
+                                    "type": "double",
+                                    "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "mod",
+                            "category": "mod",
+                            "description": "",
+                            "return_type": "double",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 10,
+                            "tags": [{ "name": "Calculator" }, { "name": "Calculator_builtin" }],
+                            "arguments": [
+                                {
+                                    "name": "a",
+                                    "order": 0,
+                                    "type": "double",
+                                    "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 }
+                                },
+                                {
+                                    "name": "b",
+                                    "order": 1,
+                                    "type": "double",
+                                    "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "mul",
+                            "category": "mul",
+                            "description": "",
+                            "return_type": "double",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 10,
+                            "tags": [{ "name": "Calculator" }, { "name": "Calculator_builtin" }],
+                            "arguments": [
+                                {
+                                    "name": "a",
+                                    "order": 0,
+                                    "type": "double",
+                                    "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 }
+                                },
+                                {
+                                    "name": "b",
+                                    "order": 1,
+                                    "type": "double",
+                                    "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "sub",
+                            "category": "sub",
+                            "description": "",
+                            "return_type": "double",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 10,
+                            "tags": [{ "name": "Calculator" }, { "name": "Calculator_builtin" }],
+                            "arguments": [
+                                {
+                                    "name": "a",
+                                    "order": 0,
+                                    "type": "double",
+                                    "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 }
+                                },
+                                {
+                                    "name": "b",
+                                    "order": 1,
+                                    "type": "double",
+                                    "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "WeatherProvider_builtin",
+                    "nick_name": "WeatherProvider",
+                    "category": "WeatherProvider",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 1,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "humidity",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 999999999999.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "81.00",
+                            "updated_on": "2024-06-04 20:56:04.767",
+                            "tags": [{ "name": "WeatherProvider" }, { "name": "WeatherProvider_builtin" }]
+                        },
+                        {
+                            "name": "pressure",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 999999999999.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1014.00",
+                            "updated_on": "2024-06-04 20:46:04.669",
+                            "tags": [{ "name": "WeatherProvider" }, { "name": "WeatherProvider_builtin" }]
+                        },
+                        {
+                            "name": "temperature",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 999999999999.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "26.14",
+                            "updated_on": "2024-06-04 20:56:04.780",
+                            "tags": [{ "name": "WeatherProvider" }, { "name": "WeatherProvider_builtin" }]
+                        },
+                        {
+                            "name": "weather",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "Clouds",
+                            "updated_on": "2024-06-04 19:06:03.705",
+                            "tags": [{ "name": "WeatherProvider" }, { "name": "WeatherProvider_builtin" }]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "getWeatherInfo",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 30000,
+                            "energy": 0,
+                            "tags": [{ "name": "WeatherProvider" }, { "name": "WeatherProvider_builtin" }],
+                            "arguments": [
+                                {
+                                    "name": "lat",
+                                    "order": 0,
+                                    "type": "double",
+                                    "bound": { "min_value": 0.0, "max_value": 10000.0 }
+                                },
+                                {
+                                    "name": "lon",
+                                    "order": 1,
+                                    "type": "double",
+                                    "bound": { "min_value": 0.0, "max_value": 10000.0 }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463",
+                    "nick_name": "Aqara_Smart_Wall_Switch_1",
+                    "category": "Switch",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1",
+                            "updated_on": "2024-06-04 19:06:18.373",
+                            "tags": [
+                                { "name": "Aqara_Smart_Wall_Switch_1" },
+                                { "name": "Samsung" },
+                                { "name": "Switch" },
+                                { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "off",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Smart_Wall_Switch_1" },
+                                { "name": "Samsung" },
+                                { "name": "Switch" },
+                                { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" }
+                            ]
+                        },
+                        {
+                            "name": "on",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Smart_Wall_Switch_1" },
+                                { "name": "Samsung" },
+                                { "name": "Switch" },
+                                { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Smart_Wall_Switch_1" },
+                                { "name": "Samsung" },
+                                { "name": "Switch" },
+                                { "name": "Switch__0fb16381_6e78_4b78_aad2_b39257554463" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "AirQualityDetector__2CAB3307FA07",
+                    "nick_name": "MySmaXBLE",
+                    "category": "AirQualityDetector",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "carbonDioxide",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 999999.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1549.00",
+                            "updated_on": "2024-06-04 21:22:09.715",
+                            "tags": [
+                                { "name": "AirQualityDetector" },
+                                { "name": "AirQualityDetector__2CAB3307FA07" },
+                                { "name": "MySmaXBLE" }
+                            ]
+                        },
+                        {
+                            "name": "discomfortIndex",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 999999.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "72.00",
+                            "updated_on": "2024-06-04 21:22:09.726",
+                            "tags": [
+                                { "name": "AirQualityDetector" },
+                                { "name": "AirQualityDetector__2CAB3307FA07" },
+                                { "name": "MySmaXBLE" }
+                            ]
+                        },
+                        {
+                            "name": "dustLevel",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 999999.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "5.00",
+                            "updated_on": "2024-06-04 19:06:06.290",
+                            "tags": [
+                                { "name": "AirQualityDetector" },
+                                { "name": "AirQualityDetector__2CAB3307FA07" },
+                                { "name": "MySmaXBLE" }
+                            ]
+                        },
+                        {
+                            "name": "fineDustLevel",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 999999.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "5.00",
+                            "updated_on": "2024-06-04 19:06:06.298",
+                            "tags": [
+                                { "name": "AirQualityDetector" },
+                                { "name": "AirQualityDetector__2CAB3307FA07" },
+                                { "name": "MySmaXBLE" }
+                            ]
+                        },
+                        {
+                            "name": "humidity",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 999999.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "48.50",
+                            "updated_on": "2024-06-04 21:21:39.133",
+                            "tags": [
+                                { "name": "AirQualityDetector" },
+                                { "name": "AirQualityDetector__2CAB3307FA07" },
+                                { "name": "MySmaXBLE" }
+                            ]
+                        },
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1",
+                            "updated_on": "2024-06-04 19:06:06.314",
+                            "tags": [
+                                { "name": "AirQualityDetector" },
+                                { "name": "AirQualityDetector__2CAB3307FA07" },
+                                { "name": "MySmaXBLE" }
+                            ]
+                        },
+                        {
+                            "name": "temperature",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 999999.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "26.00",
+                            "updated_on": "2024-06-04 21:22:09.734",
+                            "tags": [
+                                { "name": "AirQualityDetector" },
+                                { "name": "AirQualityDetector__2CAB3307FA07" },
+                                { "name": "MySmaXBLE" }
+                            ]
+                        },
+                        {
+                            "name": "tvocLevel",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 999999.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0.00",
+                            "updated_on": "2024-06-04 21:09:55.928",
+                            "tags": [
+                                { "name": "AirQualityDetector" },
+                                { "name": "AirQualityDetector__2CAB3307FA07" },
+                                { "name": "MySmaXBLE" }
+                            ]
+                        },
+                        {
+                            "name": "veryFineDustLevel",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 999999.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "5.00",
+                            "updated_on": "2024-06-04 19:06:06.342",
+                            "tags": [
+                                { "name": "AirQualityDetector" },
+                                { "name": "AirQualityDetector__2CAB3307FA07" },
+                                { "name": "MySmaXBLE" }
+                            ]
+                        }
+                    ],
+                    "functions": []
+                },
+                {
+                    "name": "SmartPlug__eb3377e5ffd045b5f3qdur",
+                    "nick_name": "plug__1__MySmaX_office",
+                    "category": "SmartPlug",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "current",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 100000.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0.00",
+                            "updated_on": "2024-06-04 19:06:16.543",
+                            "tags": [
+                                { "name": "Hejhome" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__eb3377e5ffd045b5f3qdur" },
+                                { "name": "plug__1__MySmaX_office" }
+                            ]
+                        },
+                        {
+                            "name": "power",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 100000.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0.00",
+                            "updated_on": "2024-06-04 19:06:16.552",
+                            "tags": [
+                                { "name": "Hejhome" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__eb3377e5ffd045b5f3qdur" },
+                                { "name": "plug__1__MySmaX_office" }
+                            ]
+                        },
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1",
+                            "updated_on": "2024-06-04 19:06:16.587",
+                            "tags": [
+                                { "name": "Hejhome" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__eb3377e5ffd045b5f3qdur" },
+                                { "name": "plug__1__MySmaX_office" }
+                            ]
+                        },
+                        {
+                            "name": "voltage",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 100000.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "208.70",
+                            "updated_on": "2024-06-04 20:24:16.289",
+                            "tags": [
+                                { "name": "Hejhome" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__eb3377e5ffd045b5f3qdur" },
+                                { "name": "plug__1__MySmaX_office" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "off",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hejhome" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__eb3377e5ffd045b5f3qdur" },
+                                { "name": "plug__1__MySmaX_office" }
+                            ]
+                        },
+                        {
+                            "name": "on",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hejhome" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__eb3377e5ffd045b5f3qdur" },
+                                { "name": "plug__1__MySmaX_office" }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hejhome" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__eb3377e5ffd045b5f3qdur" },
+                                { "name": "plug__1__MySmaX_office" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc",
+                    "nick_name": "Aqara_Smart_Wall_Switch_2",
+                    "category": "Switch",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1",
+                            "updated_on": "2024-06-04 19:06:18.441",
+                            "tags": [
+                                { "name": "Aqara_Smart_Wall_Switch_2" },
+                                { "name": "Samsung" },
+                                { "name": "Switch" },
+                                { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "off",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Smart_Wall_Switch_2" },
+                                { "name": "Samsung" },
+                                { "name": "Switch" },
+                                { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                            ]
+                        },
+                        {
+                            "name": "on",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Smart_Wall_Switch_2" },
+                                { "name": "Samsung" },
+                                { "name": "Switch" },
+                                { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Smart_Wall_Switch_2" },
+                                { "name": "Samsung" },
+                                { "name": "Switch" },
+                                { "name": "Switch__851ccf5c_0ad4_4e5b_a431_e330af7dbddc" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "SmartPlug__2fbd6d0c_369e_4dab_b397_115672442ab9",
+                    "nick_name": "Aqara_Smart_Plug_EU_1",
+                    "category": "SmartPlug",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1",
+                            "updated_on": "2024-06-04 19:06:18.450",
+                            "tags": [
+                                { "name": "Aqara_Smart_Plug_EU_1" },
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__2fbd6d0c_369e_4dab_b397_115672442ab9" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "off",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Smart_Plug_EU_1" },
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__2fbd6d0c_369e_4dab_b397_115672442ab9" }
+                            ]
+                        },
+                        {
+                            "name": "on",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Smart_Plug_EU_1" },
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__2fbd6d0c_369e_4dab_b397_115672442ab9" }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Smart_Plug_EU_1" },
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__2fbd6d0c_369e_4dab_b397_115672442ab9" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "AirConditioner__eb3a3ff9913360d8a4sydw",
+                    "nick_name": "air_conditioner_MySmaX",
+                    "category": "AirConditioner",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "airConditionerMode",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 10.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0",
+                            "updated_on": "2024-06-04 19:06:16.637",
+                            "tags": [
+                                { "name": "AirConditioner" },
+                                { "name": "AirConditioner__eb3a3ff9913360d8a4sydw" },
+                                { "name": "Hejhome" },
+                                { "name": "air_conditioner_MySmaX" }
+                            ]
+                        },
+                        {
+                            "name": "fanSpeed",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 10.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "3",
+                            "updated_on": "2024-06-04 19:06:16.645",
+                            "tags": [
+                                { "name": "AirConditioner" },
+                                { "name": "AirConditioner__eb3a3ff9913360d8a4sydw" },
+                                { "name": "Hejhome" },
+                                { "name": "air_conditioner_MySmaX" }
+                            ]
+                        },
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1",
+                            "updated_on": "2024-06-04 19:06:16.669",
+                            "tags": [
+                                { "name": "AirConditioner" },
+                                { "name": "AirConditioner__eb3a3ff9913360d8a4sydw" },
+                                { "name": "Hejhome" },
+                                { "name": "air_conditioner_MySmaX" }
+                            ]
+                        },
+                        {
+                            "name": "temperature",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 100.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1",
+                            "updated_on": "2024-06-04 20:55:35.348",
+                            "tags": [
+                                { "name": "AirConditioner" },
+                                { "name": "AirConditioner__eb3a3ff9913360d8a4sydw" },
+                                { "name": "Hejhome" },
+                                { "name": "air_conditioner_MySmaX" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "off",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "AirConditioner" },
+                                { "name": "AirConditioner__eb3a3ff9913360d8a4sydw" },
+                                { "name": "Hejhome" },
+                                { "name": "air_conditioner_MySmaX" }
+                            ]
+                        },
+                        {
+                            "name": "on",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "AirConditioner" },
+                                { "name": "AirConditioner__eb3a3ff9913360d8a4sydw" },
+                                { "name": "Hejhome" },
+                                { "name": "air_conditioner_MySmaX" }
+                            ]
+                        },
+                        {
+                            "name": "setAirConditionerMode",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "AirConditioner" },
+                                { "name": "AirConditioner__eb3a3ff9913360d8a4sydw" },
+                                { "name": "Hejhome" },
+                                { "name": "air_conditioner_MySmaX" }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "mode",
+                                    "order": 0,
+                                    "type": "int",
+                                    "bound": { "min_value": 0, "max_value": 100 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "setFanSpeed",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "AirConditioner" },
+                                { "name": "AirConditioner__eb3a3ff9913360d8a4sydw" },
+                                { "name": "Hejhome" },
+                                { "name": "air_conditioner_MySmaX" }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "fan_speed",
+                                    "order": 0,
+                                    "type": "int",
+                                    "bound": { "min_value": 0, "max_value": 100 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "setTemperature",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "AirConditioner" },
+                                { "name": "AirConditioner__eb3a3ff9913360d8a4sydw" },
+                                { "name": "Hejhome" },
+                                { "name": "air_conditioner_MySmaX" }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "temperature",
+                                    "order": 0,
+                                    "type": "int",
+                                    "bound": { "min_value": 0, "max_value": 100 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "AirConditioner" },
+                                { "name": "AirConditioner__eb3a3ff9913360d8a4sydw" },
+                                { "name": "Hejhome" },
+                                { "name": "air_conditioner_MySmaX" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "SmartPlug__a26ad08c_f427_45c6_b783_16997acb191a",
+                    "nick_name": "Aqara_Smart_Plug_EU_2",
+                    "category": "SmartPlug",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1",
+                            "updated_on": "2024-06-04 19:06:18.463",
+                            "tags": [
+                                { "name": "Aqara_Smart_Plug_EU_2" },
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__a26ad08c_f427_45c6_b783_16997acb191a" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "off",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Smart_Plug_EU_2" },
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__a26ad08c_f427_45c6_b783_16997acb191a" }
+                            ]
+                        },
+                        {
+                            "name": "on",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Smart_Plug_EU_2" },
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__a26ad08c_f427_45c6_b783_16997acb191a" }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Smart_Plug_EU_2" },
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__a26ad08c_f427_45c6_b783_16997acb191a" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "SmartPlug__e29dc1b2_f577_4bfa_a11b_3bfe8b1d2fd9",
+                    "nick_name": "Tapo_Smart_Plug_1",
+                    "category": "SmartPlug",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1",
+                            "updated_on": "2024-06-04 19:06:18.471",
+                            "tags": [
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__e29dc1b2_f577_4bfa_a11b_3bfe8b1d2fd9" },
+                                { "name": "Tapo_Smart_Plug_1" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "off",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__e29dc1b2_f577_4bfa_a11b_3bfe8b1d2fd9" },
+                                { "name": "Tapo_Smart_Plug_1" }
+                            ]
+                        },
+                        {
+                            "name": "on",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__e29dc1b2_f577_4bfa_a11b_3bfe8b1d2fd9" },
+                                { "name": "Tapo_Smart_Plug_1" }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__e29dc1b2_f577_4bfa_a11b_3bfe8b1d2fd9" },
+                                { "name": "Tapo_Smart_Plug_1" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "SmartPlug__b5a555ff_1707_4474_9481_ce4800346fde",
+                    "nick_name": "Tapo_Smart_Plug_2",
+                    "category": "SmartPlug",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1",
+                            "updated_on": "2024-06-04 19:06:18.480",
+                            "tags": [
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__b5a555ff_1707_4474_9481_ce4800346fde" },
+                                { "name": "Tapo_Smart_Plug_2" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "off",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__b5a555ff_1707_4474_9481_ce4800346fde" },
+                                { "name": "Tapo_Smart_Plug_2" }
+                            ]
+                        },
+                        {
+                            "name": "on",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__b5a555ff_1707_4474_9481_ce4800346fde" },
+                                { "name": "Tapo_Smart_Plug_2" }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Samsung" },
+                                { "name": "SmartPlug" },
+                                { "name": "SmartPlug__b5a555ff_1707_4474_9481_ce4800346fde" },
+                                { "name": "Tapo_Smart_Plug_2" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "ContactSensor__899b1d0b_5e9e_4ba1_b6f2_68d5a2b85b58",
+                    "nick_name": "Aqara_Door_and_Window_Sensor_P2",
+                    "category": "ContactSensor",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "contact",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "closed",
+                            "updated_on": "2024-06-04 20:51:37.986",
+                            "tags": [
+                                { "name": "Aqara_Door_and_Window_Sensor_P2" },
+                                { "name": "ContactSensor" },
+                                { "name": "ContactSensor__899b1d0b_5e9e_4ba1_b6f2_68d5a2b85b58" },
+                                { "name": "Samsung" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "refresh",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "void",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Door_and_Window_Sensor_P2" },
+                                { "name": "ContactSensor" },
+                                { "name": "ContactSensor__899b1d0b_5e9e_4ba1_b6f2_68d5a2b85b58" },
+                                { "name": "Samsung" }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Aqara_Door_and_Window_Sensor_P2" },
+                                { "name": "ContactSensor" },
+                                { "name": "ContactSensor__899b1d0b_5e9e_4ba1_b6f2_68d5a2b85b58" },
+                                { "name": "Samsung" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Button__52acf5a4_8a6d_49d6_9fe4_cec03f6a3aa0",
+                    "nick_name": "Button_1",
+                    "category": "Button",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "battery",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": 0.0, "max_value": 100.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "100",
+                            "updated_on": "2024-06-04 19:06:18.496",
+                            "tags": [
+                                { "name": "Button" },
+                                { "name": "Button_1" },
+                                { "name": "Button__52acf5a4_8a6d_49d6_9fe4_cec03f6a3aa0" },
+                                { "name": "Samsung" }
+                            ]
+                        },
+                        {
+                            "name": "button",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "none",
+                            "updated_on": "2024-06-04 19:06:18.505",
+                            "tags": [
+                                { "name": "Button" },
+                                { "name": "Button_1" },
+                                { "name": "Button__52acf5a4_8a6d_49d6_9fe4_cec03f6a3aa0" },
+                                { "name": "Samsung" }
+                            ]
+                        },
+                        {
+                            "name": "temperature",
+                            "description": "",
+                            "category": "testSkillValue",
+                            "bound": { "min_value": -460.0, "max_value": 10000.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "24.90",
+                            "updated_on": "2024-06-04 21:11:45.830",
+                            "tags": [
+                                { "name": "Button" },
+                                { "name": "Button_1" },
+                                { "name": "Button__52acf5a4_8a6d_49d6_9fe4_cec03f6a3aa0" },
+                                { "name": "Samsung" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "refresh",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "void",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Button" },
+                                { "name": "Button_1" },
+                                { "name": "Button__52acf5a4_8a6d_49d6_9fe4_cec03f6a3aa0" },
+                                { "name": "Samsung" }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Button" },
+                                { "name": "Button_1" },
+                                { "name": "Button__52acf5a4_8a6d_49d6_9fe4_cec03f6a3aa0" },
+                                { "name": "Samsung" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Light__f036295d_3b9e_4123_a05b_44ed9b1ce257",
+                    "nick_name": "Hue_color_lamp_1",
+                    "category": "Light",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "color",
+                            "description": "",
+                            "category": "color",
+                            "bound": { "min_value": 0.0, "max_value": 100.0 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "255.0000|70.0000|1.0000",
+                            "updated_on": "2024-06-04 19:06:19.842",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f036295d_3b9e_4123_a05b_44ed9b1ce257" }
+                            ]
+                        },
+                        {
+                            "name": "level",
+                            "description": "",
+                            "category": "level",
+                            "bound": { "min_value": 0.0, "max_value": 256.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0",
+                            "updated_on": "2024-06-04 19:06:19.850",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f036295d_3b9e_4123_a05b_44ed9b1ce257" }
+                            ]
+                        },
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "switch",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0",
+                            "updated_on": "2024-06-04 19:06:19.858",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f036295d_3b9e_4123_a05b_44ed9b1ce257" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "alert",
+                            "category": "alert",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f036295d_3b9e_4123_a05b_44ed9b1ce257" }
+                            ]
+                        },
+                        {
+                            "name": "off",
+                            "category": "off",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f036295d_3b9e_4123_a05b_44ed9b1ce257" }
+                            ]
+                        },
+                        {
+                            "name": "on",
+                            "category": "on",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f036295d_3b9e_4123_a05b_44ed9b1ce257" }
+                            ]
+                        },
+                        {
+                            "name": "setColor",
+                            "category": "setColor",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f036295d_3b9e_4123_a05b_44ed9b1ce257" }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "rgb",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "setLevel",
+                            "category": "setLevel",
+                            "description": "",
+                            "return_type": "int",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f036295d_3b9e_4123_a05b_44ed9b1ce257" }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "level",
+                                    "order": 0,
+                                    "type": "int",
+                                    "bound": { "min_value": 0, "max_value": 255 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f036295d_3b9e_4123_a05b_44ed9b1ce257" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Light__ce8ab5f1_ab5b_4072_b138_f38858060699",
+                    "nick_name": "Hue_color_lamp_2",
+                    "category": "Light",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "color",
+                            "description": "",
+                            "category": "color",
+                            "bound": { "min_value": 0.0, "max_value": 100.0 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "255.0000|196.0000|99.0000",
+                            "updated_on": "2024-06-04 19:06:19.880",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_2" },
+                                { "name": "Light" },
+                                { "name": "Light__ce8ab5f1_ab5b_4072_b138_f38858060699" }
+                            ]
+                        },
+                        {
+                            "name": "level",
+                            "description": "",
+                            "category": "level",
+                            "bound": { "min_value": 0.0, "max_value": 256.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0",
+                            "updated_on": "2024-06-04 19:06:19.895",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_2" },
+                                { "name": "Light" },
+                                { "name": "Light__ce8ab5f1_ab5b_4072_b138_f38858060699" }
+                            ]
+                        },
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "switch",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0",
+                            "updated_on": "2024-06-04 19:06:19.903",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_2" },
+                                { "name": "Light" },
+                                { "name": "Light__ce8ab5f1_ab5b_4072_b138_f38858060699" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "alert",
+                            "category": "alert",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_2" },
+                                { "name": "Light" },
+                                { "name": "Light__ce8ab5f1_ab5b_4072_b138_f38858060699" }
+                            ]
+                        },
+                        {
+                            "name": "off",
+                            "category": "off",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_2" },
+                                { "name": "Light" },
+                                { "name": "Light__ce8ab5f1_ab5b_4072_b138_f38858060699" }
+                            ]
+                        },
+                        {
+                            "name": "on",
+                            "category": "on",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_2" },
+                                { "name": "Light" },
+                                { "name": "Light__ce8ab5f1_ab5b_4072_b138_f38858060699" }
+                            ]
+                        },
+                        {
+                            "name": "setColor",
+                            "category": "setColor",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_2" },
+                                { "name": "Light" },
+                                { "name": "Light__ce8ab5f1_ab5b_4072_b138_f38858060699" }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "rgb",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "setLevel",
+                            "category": "setLevel",
+                            "description": "",
+                            "return_type": "int",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_2" },
+                                { "name": "Light" },
+                                { "name": "Light__ce8ab5f1_ab5b_4072_b138_f38858060699" }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "level",
+                                    "order": 0,
+                                    "type": "int",
+                                    "bound": { "min_value": 0, "max_value": 255 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_color_lamp_2" },
+                                { "name": "Light" },
+                                { "name": "Light__ce8ab5f1_ab5b_4072_b138_f38858060699" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5",
+                    "nick_name": "Hue_lightstrip_plus_1",
+                    "category": "Light",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "color",
+                            "description": "",
+                            "category": "color",
+                            "bound": { "min_value": 0.0, "max_value": 100.0 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "255.0000|70.0000|1.0000",
+                            "updated_on": "2024-06-04 19:06:19.910",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_lightstrip_plus_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }
+                            ]
+                        },
+                        {
+                            "name": "level",
+                            "description": "",
+                            "category": "level",
+                            "bound": { "min_value": 0.0, "max_value": 256.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "100",
+                            "updated_on": "2024-06-04 19:06:19.921",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_lightstrip_plus_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }
+                            ]
+                        },
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "switch",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0",
+                            "updated_on": "2024-06-04 19:06:19.932",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_lightstrip_plus_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "alert",
+                            "category": "alert",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_lightstrip_plus_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }
+                            ]
+                        },
+                        {
+                            "name": "off",
+                            "category": "off",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_lightstrip_plus_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }
+                            ]
+                        },
+                        {
+                            "name": "on",
+                            "category": "on",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_lightstrip_plus_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }
+                            ]
+                        },
+                        {
+                            "name": "setColor",
+                            "category": "setColor",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_lightstrip_plus_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "rgb",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "setLevel",
+                            "category": "setLevel",
+                            "description": "",
+                            "return_type": "int",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_lightstrip_plus_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "level",
+                                    "order": 0,
+                                    "type": "int",
+                                    "bound": { "min_value": 0, "max_value": 255 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_lightstrip_plus_1" },
+                                { "name": "Light" },
+                                { "name": "Light__f0128f3e_1c3b_4dd2_b4c5_3d3c82f647f5" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Light__e9641025_89b7_4e52_b144_83239a69c9f9",
+                    "nick_name": "Hue_go_1",
+                    "category": "Light",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "color",
+                            "description": "",
+                            "category": "color",
+                            "bound": { "min_value": 0.0, "max_value": 100.0 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "255.0000|178.0000|67.0000",
+                            "updated_on": "2024-06-04 19:06:19.940",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_go_1" },
+                                { "name": "Light" },
+                                { "name": "Light__e9641025_89b7_4e52_b144_83239a69c9f9" }
+                            ]
+                        },
+                        {
+                            "name": "level",
+                            "description": "",
+                            "category": "level",
+                            "bound": { "min_value": 0.0, "max_value": 256.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "100",
+                            "updated_on": "2024-06-04 19:06:19.949",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_go_1" },
+                                { "name": "Light" },
+                                { "name": "Light__e9641025_89b7_4e52_b144_83239a69c9f9" }
+                            ]
+                        },
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "switch",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0",
+                            "updated_on": "2024-06-04 19:06:19.959",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_go_1" },
+                                { "name": "Light" },
+                                { "name": "Light__e9641025_89b7_4e52_b144_83239a69c9f9" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "alert",
+                            "category": "alert",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_go_1" },
+                                { "name": "Light" },
+                                { "name": "Light__e9641025_89b7_4e52_b144_83239a69c9f9" }
+                            ]
+                        },
+                        {
+                            "name": "off",
+                            "category": "off",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_go_1" },
+                                { "name": "Light" },
+                                { "name": "Light__e9641025_89b7_4e52_b144_83239a69c9f9" }
+                            ]
+                        },
+                        {
+                            "name": "on",
+                            "category": "on",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_go_1" },
+                                { "name": "Light" },
+                                { "name": "Light__e9641025_89b7_4e52_b144_83239a69c9f9" }
+                            ]
+                        },
+                        {
+                            "name": "setColor",
+                            "category": "setColor",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_go_1" },
+                                { "name": "Light" },
+                                { "name": "Light__e9641025_89b7_4e52_b144_83239a69c9f9" }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "rgb",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "setLevel",
+                            "category": "setLevel",
+                            "description": "",
+                            "return_type": "int",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_go_1" },
+                                { "name": "Light" },
+                                { "name": "Light__e9641025_89b7_4e52_b144_83239a69c9f9" }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "level",
+                                    "order": 0,
+                                    "type": "int",
+                                    "bound": { "min_value": 0, "max_value": 255 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_go_1" },
+                                { "name": "Light" },
+                                { "name": "Light__e9641025_89b7_4e52_b144_83239a69c9f9" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "MotionSensor__7a84a2ba_9847_4cb3_982d_e949bb653c81",
+                    "nick_name": "Hue_motion_sensor_1",
+                    "category": "MotionSensor",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "battery_level",
+                            "description": "",
+                            "category": "battery",
+                            "bound": { "min_value": 0.0, "max_value": 200.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "100",
+                            "updated_on": "2024-06-04 19:06:19.967",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_motion_sensor_1" },
+                                { "name": "MotionSensor" },
+                                { "name": "MotionSensor__7a84a2ba_9847_4cb3_982d_e949bb653c81" }
+                            ]
+                        },
+                        {
+                            "name": "light",
+                            "description": "",
+                            "category": "light",
+                            "bound": { "min_value": 0.0, "max_value": 9999999.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "19933",
+                            "updated_on": "2024-06-04 21:08:15.184",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_motion_sensor_1" },
+                                { "name": "MotionSensor" },
+                                { "name": "MotionSensor__7a84a2ba_9847_4cb3_982d_e949bb653c81" }
+                            ]
+                        },
+                        {
+                            "name": "motion",
+                            "description": "",
+                            "category": "motion",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0",
+                            "updated_on": "2024-06-04 19:34:24.499",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_motion_sensor_1" },
+                                { "name": "MotionSensor" },
+                                { "name": "MotionSensor__7a84a2ba_9847_4cb3_982d_e949bb653c81" }
+                            ]
+                        },
+                        {
+                            "name": "temperature",
+                            "description": "",
+                            "category": "temperature",
+                            "bound": { "min_value": 0.0, "max_value": 9999999.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "25.11",
+                            "updated_on": "2024-06-04 21:13:30.436",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_motion_sensor_1" },
+                                { "name": "MotionSensor" },
+                                { "name": "MotionSensor__7a84a2ba_9847_4cb3_982d_e949bb653c81" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_motion_sensor_1" },
+                                { "name": "MotionSensor" },
+                                { "name": "MotionSensor__7a84a2ba_9847_4cb3_982d_e949bb653c81" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "MotionSensor__6205485f_d3f1_4b04_8bdb_3ce2f5c02296",
+                    "nick_name": "Hue_motion_sensor_2",
+                    "category": "MotionSensor",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "battery_level",
+                            "description": "",
+                            "category": "battery",
+                            "bound": { "min_value": 0.0, "max_value": 200.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "100",
+                            "updated_on": "2024-06-04 19:06:20.001",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_motion_sensor_2" },
+                                { "name": "MotionSensor" },
+                                { "name": "MotionSensor__6205485f_d3f1_4b04_8bdb_3ce2f5c02296" }
+                            ]
+                        },
+                        {
+                            "name": "light",
+                            "description": "",
+                            "category": "light",
+                            "bound": { "min_value": 0.0, "max_value": 9999999.0 },
+                            "type": "int",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "17871",
+                            "updated_on": "2024-06-04 21:21:16.059",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_motion_sensor_2" },
+                                { "name": "MotionSensor" },
+                                { "name": "MotionSensor__6205485f_d3f1_4b04_8bdb_3ce2f5c02296" }
+                            ]
+                        },
+                        {
+                            "name": "motion",
+                            "description": "",
+                            "category": "motion",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "1",
+                            "updated_on": "2024-06-04 21:21:40.416",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_motion_sensor_2" },
+                                { "name": "MotionSensor" },
+                                { "name": "MotionSensor__6205485f_d3f1_4b04_8bdb_3ce2f5c02296" }
+                            ]
+                        },
+                        {
+                            "name": "temperature",
+                            "description": "",
+                            "category": "temperature",
+                            "bound": { "min_value": 0.0, "max_value": 9999999.0 },
+                            "type": "double",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "24.10",
+                            "updated_on": "2024-06-04 21:16:22.174",
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_motion_sensor_2" },
+                                { "name": "MotionSensor" },
+                                { "name": "MotionSensor__6205485f_d3f1_4b04_8bdb_3ce2f5c02296" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Hue" },
+                                { "name": "Hue_motion_sensor_2" },
+                                { "name": "MotionSensor" },
+                                { "name": "MotionSensor__6205485f_d3f1_4b04_8bdb_3ce2f5c02296" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Button__5f8fc14b_0c5f_44a6_a529_d94f659041c5",
+                    "nick_name": "Hue_tap_dial_switch_1",
+                    "category": "Button",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "button1",
+                            "description": "",
+                            "category": "button",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "up",
+                            "updated_on": "2024-06-04 19:06:20.037",
+                            "tags": [
+                                { "name": "Button" },
+                                { "name": "Button__5f8fc14b_0c5f_44a6_a529_d94f659041c5" },
+                                { "name": "Hue" },
+                                { "name": "Hue_tap_dial_switch_1" }
+                            ]
+                        },
+                        {
+                            "name": "button2",
+                            "description": "",
+                            "category": "button",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "up",
+                            "updated_on": "2024-06-04 19:06:20.049",
+                            "tags": [
+                                { "name": "Button" },
+                                { "name": "Button__5f8fc14b_0c5f_44a6_a529_d94f659041c5" },
+                                { "name": "Hue" },
+                                { "name": "Hue_tap_dial_switch_1" }
+                            ]
+                        },
+                        {
+                            "name": "button3",
+                            "description": "",
+                            "category": "button",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "up",
+                            "updated_on": "2024-06-04 19:06:20.057",
+                            "tags": [
+                                { "name": "Button" },
+                                { "name": "Button__5f8fc14b_0c5f_44a6_a529_d94f659041c5" },
+                                { "name": "Hue" },
+                                { "name": "Hue_tap_dial_switch_1" }
+                            ]
+                        },
+                        {
+                            "name": "button4",
+                            "description": "",
+                            "category": "button",
+                            "bound": { "min_value": 0.0, "max_value": 2.0 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "up",
+                            "updated_on": "2024-06-04 19:06:20.067",
+                            "tags": [
+                                { "name": "Button" },
+                                { "name": "Button__5f8fc14b_0c5f_44a6_a529_d94f659041c5" },
+                                { "name": "Hue" },
+                                { "name": "Hue_tap_dial_switch_1" }
+                            ]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "state",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 5000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "Button" },
+                                { "name": "Button__5f8fc14b_0c5f_44a6_a529_d94f659041c5" },
+                                { "name": "Hue" },
+                                { "name": "Hue_tap_dial_switch_1" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "MotionSensor_0013A20041BEEBC8",
+                    "nick_name": "MotionSensor_0013A20041BEEBC8",
+                    "category": "Undefined",
+                    "description": "",
+                    "version": "",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 0,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 10,
+                    "values": [
+                        {
+                            "name": "motion",
+                            "description": "",
+                            "category": "undefined",
+                            "bound": { "min_value": 0.0, "max_value": 100.0 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "inactive",
+                            "updated_on": "2024-06-04 19:34:22.867",
+                            "tags": [{ "name": "MotionSensor" }, { "name": "MotionSensor_0013A20041BEEBC8" }]
+                        },
+                        {
+                            "name": "occupancy",
+                            "description": "",
+                            "category": "undefined",
+                            "bound": { "min_value": 0.0, "max_value": 100.0 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "unoccupied",
+                            "updated_on": "2024-06-04 19:39:23.857",
+                            "tags": [{ "name": "MotionSensor" }, { "name": "MotionSensor_0013A20041BEEBC8" }]
+                        }
+                    ],
+                    "functions": []
+                },
+                {
+                    "name": "MotionSensor_0013A20041C53DC7",
+                    "nick_name": "MotionSensor_0013A20041C53DC7",
+                    "category": "Undefined",
+                    "description": "",
+                    "version": "",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 0,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 10,
+                    "values": [
+                        {
+                            "name": "motion",
+                            "description": "",
+                            "category": "undefined",
+                            "bound": { "min_value": 0.0, "max_value": 100.0 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "inactive",
+                            "updated_on": "2024-06-04 21:22:07.946",
+                            "tags": [{ "name": "MotionSensor" }, { "name": "MotionSensor_0013A20041C53DC7" }]
+                        },
+                        {
+                            "name": "occupancy",
+                            "description": "",
+                            "category": "undefined",
+                            "bound": { "min_value": 0.0, "max_value": 100.0 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "occupied",
+                            "updated_on": "2024-06-04 21:19:47.076",
+                            "tags": [{ "name": "MotionSensor" }, { "name": "MotionSensor_0013A20041C53DC7" }]
+                        }
+                    ],
+                    "functions": []
+                },
+                {
+                    "name": "Button_0013A20041C53D8A",
+                    "nick_name": "Button_0013A20041C53D8A",
+                    "category": "Undefined",
+                    "description": "",
+                    "version": "",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 0,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "pressed",
+                            "description": "",
+                            "category": "undefined",
+                            "bound": { "min_value": 0.0, "max_value": 1.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0",
+                            "updated_on": "2024-06-04 19:08:29.237",
+                            "tags": [{ "name": "Button" }, { "name": "button1" }, { "name": "Button_0013A20041C53D8A" }]
+                        }
+                    ],
+                    "functions": []
+                },
+                {
+                    "name": "Button_0013A20041C53DD5",
+                    "nick_name": "Button_0013A20041C53DD5",
+                    "category": "Undefined",
+                    "description": "",
+                    "version": "",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 0,
+                    "is_builtin": 0,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "pressed",
+                            "description": "",
+                            "category": "undefined",
+                            "bound": { "min_value": 0.0, "max_value": 1.0 },
+                            "type": "bool",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "0",
+                            "updated_on": "2024-06-04 19:08:29.356",
+                            "tags": [{ "name": "Button" }, { "name": "button2" }, { "name": "Button_0013A20041C53DD5" }]
+                        }
+                    ],
+                    "functions": []
+                },
+                {
+                    "name": "Speaker_D83ADD4B4A4A",
+                    "nick_name": "Speaker",
+                    "category": "Speaker",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 1,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [
+                        {
+                            "name": "playbackStatus",
+                            "description": "",
+                            "category": "playbackStatus",
+                            "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "stopped",
+                            "updated_on": "2024-06-04 20:12:00.749",
+                            "tags": [{ "name": "Speaker" }, { "name": "Speaker_D83ADD4B4A4A" }]
+                        },
+                        {
+                            "name": "switch",
+                            "description": "",
+                            "category": "switch",
+                            "bound": { "min_value": -9.2233720368547758e18, "max_value": 9.2233720368547758e18 },
+                            "type": "string",
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "latest_val": "true",
+                            "updated_on": "2024-06-04 19:11:17.235",
+                            "tags": [{ "name": "Speaker" }, { "name": "Speaker_D83ADD4B4A4A" }]
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "name": "off",
+                            "category": "off",
+                            "description": "",
+                            "return_type": "void",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 30000,
+                            "energy": 0,
+                            "tags": [{ "name": "Speaker" }, { "name": "Speaker_D83ADD4B4A4A" }]
+                        },
+                        {
+                            "name": "on",
+                            "category": "on",
+                            "description": "",
+                            "return_type": "void",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 30000,
+                            "energy": 0,
+                            "tags": [{ "name": "Speaker" }, { "name": "Speaker_D83ADD4B4A4A" }]
+                        },
+                        {
+                            "name": "pause",
+                            "category": "pause",
+                            "description": "",
+                            "return_type": "void",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 30000,
+                            "energy": 0,
+                            "tags": [{ "name": "Speaker" }, { "name": "Speaker_D83ADD4B4A4A" }]
+                        },
+                        {
+                            "name": "play",
+                            "category": "play",
+                            "description": "",
+                            "return_type": "void",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 300000,
+                            "energy": 0,
+                            "tags": [{ "name": "Speaker" }, { "name": "Speaker_D83ADD4B4A4A" }],
+                            "arguments": [
+                                {
+                                    "name": "source",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "speak",
+                            "category": "speak",
+                            "description": "",
+                            "return_type": "void",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 120000,
+                            "energy": 0,
+                            "tags": [{ "name": "Speaker" }, { "name": "Speaker_D83ADD4B4A4A" }],
+                            "arguments": [
+                                {
+                                    "name": "text",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "stop",
+                            "category": "stop",
+                            "description": "",
+                            "return_type": "void",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 30000,
+                            "energy": 0,
+                            "tags": [{ "name": "Speaker" }, { "name": "Speaker_D83ADD4B4A4A" }]
+                        }
+                    ]
+                },
+                {
+                    "name": "FaceRecognizer_D83ADD4B4A4A",
+                    "nick_name": "FaceRecognizer",
+                    "category": "FaceRecognizer",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 1,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [],
+                    "functions": [
+                        {
+                            "name": "addFace",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 45,
+                            "tags": [{ "name": "FaceRecognizer" }, { "name": "FaceRecognizer_D83ADD4B4A4A" }],
+                            "arguments": [
+                                {
+                                    "name": "name",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "checkIn",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 12,
+                            "tags": [{ "name": "FaceRecognizer" }, { "name": "FaceRecognizer_D83ADD4B4A4A" }],
+                            "arguments": [
+                                {
+                                    "name": "person",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "checkOut",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 12,
+                            "tags": [{ "name": "FaceRecognizer" }, { "name": "FaceRecognizer_D83ADD4B4A4A" }],
+                            "arguments": [
+                                {
+                                    "name": "person",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "deleteFace",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "bool",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 12,
+                            "tags": [{ "name": "FaceRecognizer" }, { "name": "FaceRecognizer_D83ADD4B4A4A" }],
+                            "arguments": [
+                                {
+                                    "name": "name",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "detectFace",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 12,
+                            "tags": [{ "name": "FaceRecognizer" }, { "name": "FaceRecognizer_D83ADD4B4A4A" }]
+                        },
+                        {
+                            "name": "recognizeFace",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 12,
+                            "tags": [{ "name": "FaceRecognizer" }, { "name": "FaceRecognizer_D83ADD4B4A4A" }],
+                            "arguments": [
+                                {
+                                    "name": "timeout",
+                                    "order": 0,
+                                    "type": "double",
+                                    "bound": { "min_value": 0.0, "max_value": 10000.0 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "recognizeFaceFromFile",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 12,
+                            "tags": [{ "name": "FaceRecognizer" }, { "name": "FaceRecognizer_D83ADD4B4A4A" }],
+                            "arguments": [
+                                {
+                                    "name": "img_path",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "MenuProvider_D83ADD4B4A4A",
+                    "nick_name": "MenuProvider",
+                    "category": "MenuProvider",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 1,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [],
+                    "functions": [
+                        {
+                            "name": "menu",
+                            "category": "menu",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [{ "name": "MenuProvider" }, { "name": "MenuProvider_D83ADD4B4A4A" }],
+                            "arguments": [
+                                {
+                                    "name": "command",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "todayMenu",
+                            "category": "todayMenu",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 0,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [{ "name": "MenuProvider" }, { "name": "MenuProvider_D83ADD4B4A4A" }]
+                        }
+                    ]
+                },
+                {
+                    "name": "CloudServiceProvider_D83ADD4B4A4A",
+                    "nick_name": "CloudServiceProvider",
+                    "category": "CloudServiceProvider",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 1,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [],
+                    "functions": [
+                        {
+                            "name": "detectEmotion",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "CloudServiceProvider" },
+                                { "name": "CloudServiceProvider_D83ADD4B4A4A" },
+                                { "name": "Google" }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "image_path",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "getRecommendSong",
+                            "category": "testSkillFunction",
+                            "description": "",
+                            "return_type": "string",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 10000,
+                            "energy": 0,
+                            "tags": [
+                                { "name": "CloudServiceProvider" },
+                                { "name": "CloudServiceProvider_D83ADD4B4A4A" },
+                                { "name": "Google" }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "emotion_state",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "EmailProvider_D83ADD4B4A4A",
+                    "nick_name": "EmailProvider",
+                    "category": "EmailProvider",
+                    "description": "",
+                    "version": "0.4.2.0",
+                    "is_alive": 1,
+                    "is_super": 0,
+                    "is_parallel": 1,
+                    "is_builtin": 1,
+                    "is_manager": 0,
+                    "is_matter": 0,
+                    "alive_cycle": 60,
+                    "values": [],
+                    "functions": [
+                        {
+                            "name": "sendMail",
+                            "category": "sendMail",
+                            "description": "",
+                            "return_type": "void",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 30000,
+                            "energy": 0,
+                            "tags": [{ "name": "EmailProvider" }, { "name": "EmailProvider_D83ADD4B4A4A" }],
+                            "arguments": [
+                                {
+                                    "name": "text",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                },
+                                {
+                                    "name": "title",
+                                    "order": 1,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                },
+                                {
+                                    "name": "toAddress",
+                                    "order": 2,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "sendMailWithFile",
+                            "category": "sendMailWithFile",
+                            "description": "",
+                            "return_type": "void",
+                            "use_arg": 1,
+                            "is_private": 0,
+                            "is_opened": 0,
+                            "exec_time": 30000,
+                            "energy": 0,
+                            "tags": [{ "name": "EmailProvider" }, { "name": "EmailProvider_D83ADD4B4A4A" }],
+                            "arguments": [
+                                {
+                                    "name": "filePath",
+                                    "order": 0,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                },
+                                {
+                                    "name": "text",
+                                    "order": 1,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                },
+                                {
+                                    "name": "title",
+                                    "order": 2,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                },
+                                {
+                                    "name": "toAddress",
+                                    "order": 3,
+                                    "type": "string",
+                                    "bound": { "min_value": -1, "max_value": -1 }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -7,7 +7,7 @@ const durationType = [
   PeriodType.HOUR,
   PeriodType.MIN,
   PeriodType.SEC,
-  PeriodType.MSEC,
+  // PeriodType.MSEC,
 ];
 
 class AddLoopScenarioViewModel extends ChangeNotifier {

@@ -381,7 +381,7 @@ class _AddLoopScenarioPageState extends State<AddLoopScenarioPage> {
           Expanded(
               child: IndexedStack(
             alignment: Alignment.center,
-            index: durationType == PeriodType.MSEC ? 0 : 1,
+            index: 1, // durationType == PeriodType.MSEC ? 0 : 1,
             children: [
               SizedBox(
                 width: 100,

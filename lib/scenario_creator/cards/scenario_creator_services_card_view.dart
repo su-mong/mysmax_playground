@@ -13,7 +13,6 @@ import 'package:mysmax_playground/models/tag.dart';
 import 'package:mysmax_playground/models/thing.dart';
 import 'package:mysmax_playground/models/thing_function.dart';
 import 'package:mysmax_playground/scenario_editor/widgets/editor_variable_list_widget.dart';
-import 'package:mysmax_playground/widgets/check_toggle.dart';
 import 'package:mysmax_playground/widgets/custom_drop_down.dart';
 import 'package:mysmax_playground/widgets/radio_text_button.dart';
 import 'package:provider/provider.dart';
@@ -533,14 +532,11 @@ class _ScenarioCreatorServicesCardViewState
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Row(
                       children: [
-                        CachedNetworkImage(
-                          imageUrl: IconHelper.getDeviceIcon(
+                        Image.asset(
+                          IconHelper.getDeviceIcon(
                               _selectedDevicesForTags[index].category ??
                                   'undefined'),
-                          errorWidget: (_, __, ___) => CachedNetworkImage(
-                            imageUrl: IconHelper.getDeviceIcon('undefined'),
-                            height: 29,
-                          ),
+                          errorBuilder: IconHelper.iconErrorWidgetBuilder(height: 29),
                           height: 29,
                         ),
                         const SizedBox(width: 3),
@@ -624,6 +620,7 @@ class _ScenarioCreatorServicesCardViewState
           children: List.generate(orderedArguments.length, (index) {
             return ArgumentWidget(
               orderedArguments[index],
+              editMode: true,
               onChanged: (value) async {
                 setState(() {
                   final newFunction = _currentFunctions[serviceIndex].copyWith(
@@ -763,6 +760,7 @@ class _ScenarioCreatorServicesCardViewState
       ),
       children: [
         EditorVariableListWidget(
+          editMode: true,
           isVariableForLeftSide: true,
           variableList: _variableList,
           initialSelectedVariable: _variableNameList[index],
@@ -893,9 +891,10 @@ class _ScenarioCreatorServicesCardViewState
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CachedNetworkImage(
-              imageUrl: icon,
-              height: 15, // TODO 임시값, 확인 필요
+            Image.asset(
+              icon,
+              height: 15,
+              errorBuilder: IconHelper.iconErrorWidgetBuilder(height: 15),
             ),
             const SizedBox(width: 6),
             Expanded(

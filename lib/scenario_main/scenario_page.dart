@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mysmax_playground/add_scenario/pages/add_scenario_example_page.dart';
 import 'package:mysmax_playground/core/viewmodels/mqtt_view_model.dart';
@@ -16,7 +15,7 @@ import 'package:mysmax_playground/scenario_editor/scenario_editor_screen.dart';
 import 'package:mysmax_playground/scenario_main/widgets/scenario_main_list_view.dart';
 import 'package:provider/provider.dart';
 
-import '../add_scenario/add_scenario_screen.dart';
+import '../add_scenario/add_scenario_screen_new.dart';
 import '../app_text_styles.dart';
 import '../colors.dart';
 
@@ -65,9 +64,6 @@ class _ScenarioPageState extends State<ScenarioPage> {
   void initState() {
     super.initState();
 
-    var viewModel = context.read<MqttViewModel>();
-    viewModel.initialize();
-
     setState(() {
       _isExpandedList
           .addAll(ScenarioPage.allScenario.map((_) => false).toList());
@@ -102,7 +98,7 @@ class _ScenarioPageState extends State<ScenarioPage> {
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
-                    const ScenarioCreatorScreen().push(context);
+                    const AddScenarioScreen().push(context);
 
                     // const AddScenarioExamplePage().push(context);
 

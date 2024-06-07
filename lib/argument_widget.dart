@@ -4,10 +4,10 @@ import 'package:mysmax_playground/models/enums/argument_type.dart';
 import 'package:mysmax_playground/models/function_argument.dart';
 
 class ArgumentWidget extends StatefulWidget {
+  final bool editMode;
   final FunctionArgument argument;
   final Function(dynamic)? onChanged;
-  const ArgumentWidget(this.argument, {Key? key, this.onChanged})
-      : super(key: key);
+  const ArgumentWidget(this.argument, {super.key, required this.editMode, this.onChanged});
 
   @override
   _ArgumentWidgetState createState() => _ArgumentWidgetState();

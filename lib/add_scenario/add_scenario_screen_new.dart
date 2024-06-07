@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mysmax_playground/add_scenario/add_scenario_new_view_model.dart';
 import 'package:mysmax_playground/app_text_styles.dart';
 import 'package:mysmax_playground/colors.dart';
+import 'package:mysmax_playground/helper/navigator_helper.dart';
 import 'package:mysmax_playground/scenario_editor/scenario_editor_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../scenario_creator/scenario_creator_screen.dart';
 
 class AddScenarioScreen extends StatefulWidget {
   const AddScenarioScreen({super.key});
+
+  Future<void> push(BuildContext context) {
+    final viewModel = AddScenarioNewViewModel();
+    viewModel.loadRecommendScenario();
+    return ChangeNotifierProvider<AddScenarioNewViewModel>.value(
+      value: viewModel,
+      child: this,
+    ).pushByPageRoute(context);
+  }
 
   @override
   State<StatefulWidget> createState() => _AddScenarioScreenState();
@@ -14,6 +28,8 @@ class AddScenarioScreen extends StatefulWidget {
 class _AddScenarioScreenState extends State<AddScenarioScreen> {
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<AddScenarioNewViewModel>();
+
     return Scaffold(
       backgroundColor: AppColors.cardBackground,
       appBar: AppBar(
@@ -38,10 +54,7 @@ class _AddScenarioScreenState extends State<AddScenarioScreen> {
             children: [
               _buildScenarioAction(
                   onPressed: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ScenarioEditorScreen()),
-                    );
+                    const ScenarioCreatorScreen().push(context);
                   },
                   title: '직접 만들기',
                   subtitle: '일상을 자동화하기 위해 시나리오를 직접 생성해 보세요.',
@@ -70,31 +83,25 @@ class _AddScenarioScreenState extends State<AddScenarioScreen> {
                 ],
               ),
 
-              const SizedBox(height: 9),
-              _buildScenarioAction(
-                onPressed: () {},
-                title: 'Cleaning',
-                subtitle: '단순한 작업을 주기적으로 실행해요.',
-                example: '예) 3시간에 한 번 환기해줘',
-              ),
+              if(viewModel.scenarioSamples != null)
+                ...List.generate(
+                  viewModel.scenarioSamples!.samples.length,
+                  (index) => Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: _buildScenarioAction(
+                      onPressed: () {
+                        ScenarioEditorScreen.fromScenarioSampleData(
+                          viewModel.scenarioSamples!.samples[index].scenarios[0],
+                        ).push(context);
+                      },
+                      title: viewModel.scenarioSamples!.samples[index].category,
+                      subtitle: viewModel.scenarioSamples!.samples[index].category_description,
+                      example: viewModel.scenarioSamples!.samples[index].scenarios[0].name,
+                    ),
+                  ),
+                ),
 
-              const SizedBox(height: 8),
-              _buildScenarioAction(
-                onPressed: () {},
-                title: 'Comfort',
-                subtitle: '내가 실행 버튼을 누를 때 실행해요.',
-                example: '예) 오늘 날씨에 맞는 음악 재생해줘',
-              ),
-
-              const SizedBox(height: 8),
-              _buildScenarioAction(
-                onPressed: () {},
-                title: 'Saving',
-                subtitle: '어떤 조건을 만족할 때 자동 실행해요.',
-                example: ' 예) 사람이 없으면, 불 끄고 로봇 청소 시작해줘',
-              ),
-
-              const Spacer(),
+              /*const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -126,7 +133,7 @@ class _AddScenarioScreenState extends State<AddScenarioScreen> {
                     child: const Text('다음'),
                   ),
                 ],
-              ),
+              ),*/
             ],
           ),
         ),

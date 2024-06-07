@@ -328,48 +328,21 @@ class _ValueServiceBlockWidgetState extends State<ValueServiceBlockWidget> {
   Widget _buildIcon(String valueName) {
     var service =
         context.read<MqttViewModel>().getValueInfoByValueName(valueName);
-    var defaultWidget = Container(
-      width: 19,
-      height: 19,
-      decoration: const ShapeDecoration(
-        gradient: LinearGradient(
-          begin: Alignment(-0.68, 0.74),
-          end: Alignment(0.68, -0.74),
-          colors: [Color(0xFF8198F5), Color(0xFF83CDF6)],
-        ),
-        shape: OvalBorder(),
-      ),
-    );
 
-    return CachedNetworkImage(
-      imageUrl: IconHelper.getServiceIcon(service?.category ?? ''),
+    return Image.asset(
+      IconHelper.getServiceIcon(service?.category ?? 'undefined'),
       height: 19,
       fit: BoxFit.fitHeight,
-      placeholder: (context, url) => defaultWidget,
-      errorWidget: (context, url, error) => defaultWidget,
+      errorBuilder: IconHelper.iconErrorWidgetBuilder(height: 19),
     );
   }
 
   Widget _buildDeviceIcon(String? thingCategory) {
-    var defaultWidget = Container(
-      width: 19,
-      height: 19,
-      decoration: const ShapeDecoration(
-        gradient: LinearGradient(
-          begin: Alignment(-0.68, 0.74),
-          end: Alignment(0.68, -0.74),
-          colors: [Color(0xFF8198F5), Color(0xFF83CDF6)],
-        ),
-        shape: OvalBorder(),
-      ),
-    );
-
-    return CachedNetworkImage(
-      imageUrl: IconHelper.getDeviceIcon(thingCategory ?? ''),
+    return Image.asset(
+      IconHelper.getDeviceIcon(thingCategory ?? ''),
       height: 19,
       fit: BoxFit.fitHeight,
-      placeholder: (context, url) => defaultWidget,
-      errorWidget: (context, url, error) => defaultWidget,
+      errorBuilder: IconHelper.iconErrorWidgetBuilder(height: 19),
     );
   }
 

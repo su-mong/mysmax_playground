@@ -5,13 +5,13 @@ import 'package:mysmax_playground/app_text_styles.dart';
 import 'package:mysmax_playground/core/scenario_code_parser/block.dart';
 import 'package:mysmax_playground/core/scenario_code_parser/enums.dart';
 import 'package:mysmax_playground/core/scenario_code_parser/expression.dart';
-import 'package:mysmax_playground/helper/date_time_helper.dart';
-import 'package:mysmax_playground/scenario_editor/widgets/editor_date_button.dart';
 import 'package:mysmax_playground/scenario_editor/widgets/editor_number_text_field.dart';
-import 'package:mysmax_playground/scenario_editor/widgets/editor_select_time_widget.dart';
+import 'package:mysmax_playground/scenario_editor/widgets/editor_select_date_time_widget.dart';
 import 'package:mysmax_playground/widgets/custom_drop_down.dart';
 
+/// TODO: '매주'에서 조건문에 ()를 못 붙이는 상태.
 class ScenarioEditorLoopCardView extends StatefulWidget {
+  final bool editMode;
   final LoopBlock item;
   final Function(LoopBlock) onChanged;
   final DateTime? startDateTime;
@@ -20,6 +20,7 @@ class ScenarioEditorLoopCardView extends StatefulWidget {
   const ScenarioEditorLoopCardView(
     this.item, {
     super.key,
+    required this.editMode,
     this.startDateTime,
     this.endDateTime,
     required this.onChanged,
@@ -30,8 +31,6 @@ class ScenarioEditorLoopCardView extends StatefulWidget {
 }
 
 class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView> {
-  static final DateTime _lastDate = DateTime(2099, 12, 31);
-
   bool _isExpanded = true;
 
   LoopMode _loopMode = LoopMode.MANUAL;
@@ -43,31 +42,24 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
   List<DateTime?> _timeBoundCustom = [null, null];
   bool _enableStartDateTimeCustom = false;
   bool _enableEndDateTimeCustom = false;
+  /// 초기값으로 1 넣어줌
   final TextEditingController _customDurationNumberController = TextEditingController();
-  final TextEditingController _customStartHourController = TextEditingController();
-  final TextEditingController _customStartMinuteController = TextEditingController();
-  final TextEditingController _customEndHourController = TextEditingController();
-  final TextEditingController _customEndMinuteController = TextEditingController();
 
   List<DateTime?> _timeBoundEveryDay = [null, null];
   bool _enableStartDateTimeEveryDay = false;
   bool _enableEndDateTimeEveryDay = false;
-  final TextEditingController _everydayStartHourController = TextEditingController();
-  final TextEditingController _everydayStartMinuteController = TextEditingController();
-  final TextEditingController _everydayEndHourController = TextEditingController();
-  final TextEditingController _everydayEndMinuteController = TextEditingController();
 
   List<DateTime?> _timeBoundEveryWeek = [null, null];
   DateTime? _timeEveryWeek;  /// '매주' 반복의 시간 설정 용도. date 부분은 임의로 설정해두고, 실제로 사용하진 않음.
   List<WeekDay> _weekdays = [];
   bool _enableStartDateEveryWeek = false;
   bool _enableEndDateEveryWeek = false;
-  final TextEditingController _everyWeekHourController = TextEditingController();
-  final TextEditingController _everyWeekMinuteController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    /// 일단 '사용자설정' 상태일 때의 초기값 넣어줌
+    _customDurationNumberController.text = _period.period.valueString;
 
     if(widget.item.loopMode == LoopMode.UNDEFINED) {
       throw Exception('Wrong loopMode (UNDEFINED)');
@@ -87,19 +79,7 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
 
       _enableStartDateTimeCustom = _timeBoundCustom[0] != null;
       _customDurationNumberController.text = _period.period.value.toString();
-      _customStartHourController.text = _timeBoundCustom[0] != null
-          ? DateFormat('hh').format(_timeBoundCustom[0]!)
-          : '';
-      _customStartMinuteController.text = _timeBoundCustom[0] != null
-          ? DateFormat('mm').format(_timeBoundCustom[0]!)
-          : '';
       _enableEndDateTimeCustom = _timeBoundCustom[1] != null;
-      _customEndHourController.text = _timeBoundCustom[1] != null
-          ? DateFormat('hh').format(_timeBoundCustom[1]!)
-          : '';
-      _customEndMinuteController.text = _timeBoundCustom[0] != null
-          ? DateFormat('mm').format(_timeBoundCustom[1]!)
-          : '';
     }
 
     else if(_loopMode == LoopMode.DAILY) {
@@ -110,19 +90,7 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
           : widget.item.timeBound;
 
       _enableStartDateTimeEveryDay = _timeBoundEveryDay[0] != null;
-      _everydayStartHourController.text = _timeBoundEveryDay[0] != null
-          ? DateFormat('hh').format(_timeBoundEveryDay[0]!)
-          : '';
-      _everydayStartMinuteController.text = _timeBoundEveryDay[0] != null
-          ? DateFormat('mm').format(_timeBoundEveryDay[0]!)
-          : '';
       _enableEndDateTimeEveryDay = _timeBoundEveryDay[1] != null;
-      _everydayEndHourController.text = _timeBoundEveryDay[1] != null
-          ? DateFormat('hh').format(_timeBoundEveryDay[1]!)
-          : '';
-      _everydayEndMinuteController.text = _timeBoundEveryDay[1] != null
-          ? DateFormat('mm').format(_timeBoundEveryDay[1]!)
-          : '';
     }
 
     else if(_loopMode == LoopMode.WEEKDAYSELECT) {
@@ -136,13 +104,6 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
 
       _enableStartDateEveryWeek = _timeBoundEveryWeek[0] != null;
       _enableEndDateEveryWeek = _timeBoundEveryWeek[1] != null;
-
-      _everyWeekHourController.text = _timeBoundEveryWeek[0] != null
-          ? DateFormat('hh').format(_timeBoundEveryWeek[0]!)
-          : '';
-      _everyWeekMinuteController.text = _timeBoundEveryWeek[0] != null
-          ? DateFormat('mm').format(_timeBoundEveryWeek[0]!)
-          : '';
     }
   }
 
@@ -188,16 +149,20 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
               ? Padding(
             padding: const EdgeInsets.symmetric(vertical: 24),
             child: _dateTimeWidget(
-              startDateTime: _loopMode == LoopMode.MANUAL
+              startDateTime: _loopMode == LoopMode.MANUAL && _enableStartDateTimeCustom
                   ? _timeBoundCustom[0]
-                  : _loopMode == LoopMode.DAILY
+                  : _loopMode == LoopMode.DAILY && _enableStartDateTimeEveryDay
                   ? _timeBoundEveryDay[0]
-                  : _timeBoundEveryWeek[0],
-              endDateTime: _loopMode == LoopMode.MANUAL
+                  : _enableStartDateEveryWeek
+                  ? _timeBoundEveryWeek[0]
+                  : null,
+              endDateTime: _loopMode == LoopMode.MANUAL && _enableEndDateTimeCustom
                   ? _timeBoundCustom[1]
-                  : _loopMode == LoopMode.DAILY
+                  : _loopMode == LoopMode.DAILY && _enableEndDateTimeEveryDay
                   ? _timeBoundEveryDay[1]
-                  : _timeBoundEveryWeek[1],
+                  : _enableEndDateEveryWeek
+                  ? _timeBoundEveryWeek[1]
+                  : null,
             ),
           ) : const SizedBox.shrink(),
           trailing: SvgPicture.asset(
@@ -215,10 +180,12 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
                   width: 75,
                   isSelected: _loopMode == LoopMode.MANUAL,
                   onClick: () {
-                    setState(() {
-                      _loopMode = LoopMode.MANUAL;
-                    });
-                    setData();
+                    if(widget.editMode) {
+                      setState(() {
+                        _loopMode = LoopMode.MANUAL;
+                      });
+                      setData();
+                    }
                   },
                 ),
                 const SizedBox(width: 10),
@@ -227,10 +194,12 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
                   width: 51,
                   isSelected: _loopMode == LoopMode.DAILY,
                   onClick: () {
-                    setState(() {
-                      _loopMode = LoopMode.DAILY;
-                    });
-                    setData();
+                    if(widget.editMode) {
+                      setState(() {
+                        _loopMode = LoopMode.DAILY;
+                      });
+                      setData();
+                    }
                   },
                 ),
                 const SizedBox(width: 10),
@@ -239,10 +208,12 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
                   width: 51,
                   isSelected: _loopMode == LoopMode.WEEKDAYSELECT,
                   onClick: () {
-                    setState(() {
-                      _loopMode = LoopMode.WEEKDAYSELECT;
-                    });
-                    setData();
+                    if(widget.editMode) {
+                      setState(() {
+                        _loopMode = LoopMode.WEEKDAYSELECT;
+                      });
+                      setData();
+                    }
                   },
                 ),
               ],
@@ -339,18 +310,16 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
               Text(
                 (_loopMode == LoopMode.DAILY)
                     ? '매일'
-                    : _timeBoundEveryWeek[0] != null
-                    ? DateFormat('aa hh:mm', 'ko').format(_timeBoundEveryWeek[0]!)
                     : '',
-                style: AppTextStyles.size8Medium.copyWith(
+                style: AppTextStyles.size10Medium.copyWith(
                   color: const Color(0xFF5D7CFF),
-                  height: 20 / 8,
+                  height: 20 / 10,
                 ),
               ),
               Text(
                 ' 마다',
-                style: AppTextStyles.size8Medium.copyWith(
-                  height: 20 / 8,
+                style: AppTextStyles.size10Medium.copyWith(
+                  height: 20 / 10,
                 ),
               ),
             ],
@@ -361,14 +330,14 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
             children: [
               Text(
                 '${_period.period.valueString}${_period.periodType}',
-                style: AppTextStyles.size8Medium.copyWith(
+                style: AppTextStyles.size10Medium.copyWith(
                   color: const Color(0xFF5D7CFF),
                   height: 20 / 8,
                 ),
               ),
               Text(
                 ' 마다',
-                style: AppTextStyles.size8Medium.copyWith(
+                style: AppTextStyles.size10Medium.copyWith(
                   height: 20 / 8,
                 ),
               ),
@@ -404,7 +373,7 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             EditorNumberTextField(
-              enabled: true,
+              enabled: widget.editMode,
               controller: _customDurationNumberController,
               min: 1,
               max: 99,
@@ -420,6 +389,7 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
             ),
             const SizedBox(width: 8),
             CustomDropDown<PeriodType>(
+              enabled: widget.editMode,
               selectedValue: _period.periodType,
               onChanged: (periodType) {
                 if(periodType != null) {
@@ -454,54 +424,22 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
           width: 65,
           isSelected: _enableStartDateTimeCustom,
           onClick: () {
-            setState(() {
-              _enableStartDateTimeCustom = !_enableStartDateTimeCustom;
-            });
-            setData();
+            if(widget.editMode) {
+              setState(() {
+                _enableStartDateTimeCustom = !_enableStartDateTimeCustom;
+              });
+              setData();
+            }
           }
         ),
 
         const SizedBox(height: 12),
-        EditorDateButton(
-          _timeBoundCustom[0],
-          enabled: _enableStartDateTimeCustom,
-          onClick: () async {
-            final DateTime? selectedDateTime = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime.now(),
-              lastDate: _lastDate,
-            );
+        EditorSelectDateTimeWidget(
+          enabled: widget.editMode && _enableStartDateTimeCustom,
+          initialDateTime: _timeBoundCustom[0],
+          onChangeDateTime: (dateTime) {
             setState(() {
-              _timeBoundCustom[0] = selectedDateTime;
-            });
-            setData();
-          },
-        ),
-
-        const SizedBox(height: 6),
-        EditorSelectTimeWidget(
-          enabled: _enableStartDateTimeCustom && _timeBoundCustom[0] != null,
-          selectedTimePrefix: _timeBoundCustom[0]?.getAmPm ?? AmPm.am,
-          onChangedTimePrefix: (amPm) {
-            if(amPm != null) {
-              setState(() {
-                _timeBoundCustom[0] = _timeBoundCustom[0]!.copyWithAmPm(amPm);
-              });
-              setData();
-            }
-          },
-          hourController: _customStartHourController,
-          onChangedHour: (hour) {
-            setState(() {
-              _timeBoundCustom[0] = _timeBoundCustom[0]!.copyWith(hour: hour);
-            });
-            setData();
-          },
-          minuteController: _customStartMinuteController,
-          onChangedMinute: (minute) {
-            setState(() {
-              _timeBoundCustom[0] = _timeBoundCustom[0]!.copyWith(minute: minute);
+              _timeBoundCustom[0] = dateTime;
             });
             setData();
           },
@@ -513,55 +451,22 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
           width: 65,
           isSelected: _enableEndDateTimeCustom,
           onClick: () {
-            setState(() {
-              _enableEndDateTimeCustom = !_enableEndDateTimeCustom;
-            });
-            setData();
+            if(widget.editMode) {
+              setState(() {
+                _enableEndDateTimeCustom = !_enableEndDateTimeCustom;
+              });
+              setData();
+            }
           }
         ),
 
         const SizedBox(height: 12),
-        EditorDateButton(
-          _timeBoundCustom[1],
-          enabled: _enableEndDateTimeCustom,
-          onClick: () async {
-            final DateTime? selectedDateTime = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime.now(),
-              lastDate: _lastDate,
-            );
-
+        EditorSelectDateTimeWidget(
+          enabled: widget.editMode && _enableEndDateTimeCustom,
+          initialDateTime: _timeBoundCustom[1],
+          onChangeDateTime: (dateTime) {
             setState(() {
-              _timeBoundCustom[1] = selectedDateTime;
-            });
-            setData();
-          },
-        ),
-
-        const SizedBox(height: 6),
-        EditorSelectTimeWidget(
-          enabled: _enableEndDateTimeCustom && _timeBoundCustom[1] != null,
-          selectedTimePrefix: _timeBoundCustom[1]?.getAmPm ?? AmPm.am,
-          onChangedTimePrefix: (amPm) {
-            if(amPm != null) {
-              setState(() {
-                _timeBoundCustom[1] = _timeBoundCustom[1]!.copyWithAmPm(amPm);
-              });
-              setData();
-            }
-          },
-          hourController: _customEndHourController,
-          onChangedHour: (hour) {
-            setState(() {
-              _timeBoundCustom[1] = _timeBoundCustom[1]!.copyWith(hour: hour);
-            });
-            setData();
-          },
-          minuteController: _customEndMinuteController,
-          onChangedMinute: (minute) {
-            setState(() {
-              _timeBoundCustom[1] = _timeBoundCustom[1]!.copyWith(minute: minute);
+              _timeBoundCustom[1] = dateTime;
             });
             setData();
           },
@@ -586,55 +491,22 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
           width: 65,
           isSelected: _enableStartDateTimeEveryDay,
           onClick: () {
-            setState(() {
-              _enableStartDateTimeEveryDay = !_enableStartDateTimeEveryDay;
-            });
-            setData();
+            if(widget.editMode) {
+              setState(() {
+                _enableStartDateTimeEveryDay = !_enableStartDateTimeEveryDay;
+              });
+              setData();
+            }
           }
         ),
 
         const SizedBox(height: 12),
-        EditorDateButton(
-          _timeBoundEveryDay[0],
-          enabled: _enableStartDateTimeEveryDay,
-          onClick: () async {
-            final DateTime? selectedDateTime = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime.now(),
-              lastDate: _lastDate,
-            );
-
+        EditorSelectDateTimeWidget(
+          enabled: widget.editMode && _enableStartDateTimeEveryDay,
+          initialDateTime: _timeBoundEveryDay[0],
+          onChangeDateTime: (dateTime) {
             setState(() {
-              _timeBoundEveryDay[0] = selectedDateTime;
-            });
-            setData();
-          },
-        ),
-
-        const SizedBox(height: 6),
-        EditorSelectTimeWidget(
-          enabled: _enableStartDateTimeEveryDay && _timeBoundEveryDay[0] != null,
-          selectedTimePrefix: _timeBoundEveryDay[0]?.getAmPm ?? AmPm.am,
-          onChangedTimePrefix: (amPm) {
-            if(amPm != null) {
-              setState(() {
-                _timeBoundEveryDay[0] = _timeBoundEveryDay[0]!.copyWithAmPm(amPm);
-              });
-              setData();
-            }
-          },
-          hourController: _everydayStartHourController,
-          onChangedHour: (hour) {
-            setState(() {
-              _timeBoundEveryDay[0] = _timeBoundEveryDay[0]!.copyWith(hour: hour);
-            });
-            setData();
-          },
-          minuteController: _everydayStartMinuteController,
-          onChangedMinute: (minute) {
-            setState(() {
-              _timeBoundEveryDay[0] = _timeBoundEveryDay[0]!.copyWith(minute: minute);
+              _timeBoundEveryDay[0] = dateTime;
             });
             setData();
           },
@@ -646,57 +518,26 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
           width: 65,
           isSelected: _enableEndDateTimeEveryDay,
           onClick: () {
-            setState(() {
-              _enableEndDateTimeEveryDay = !_enableEndDateTimeEveryDay;
-            });
-            setData();
+            if(widget.editMode) {
+              setState(() {
+                _enableEndDateTimeEveryDay = !_enableEndDateTimeEveryDay;
+              });
+              setData();
+            }
           }
         ),
 
         const SizedBox(height: 12),
-        EditorDateButton(
-          _timeBoundEveryDay[1],
-          enabled: _enableEndDateTimeEveryDay,
-          onClick: () async {
-            final DateTime? selectedDateTime = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime.now(),
-              lastDate: _lastDate,
-            );
-
-            setState(() {
-              _timeBoundEveryDay[1] = selectedDateTime;
-            });
-            setData();
-          },
-        ),
-
-        const SizedBox(height: 6),
-        EditorSelectTimeWidget(
-          enabled: _enableEndDateTimeEveryDay && _timeBoundEveryDay[1] != null,
-          selectedTimePrefix: _timeBoundEveryDay[1]?.getAmPm ?? AmPm.am,
-          onChangedTimePrefix: (amPm) {
-            if(amPm != null) {
+        EditorSelectDateTimeWidget(
+          enabled: widget.editMode && _enableEndDateTimeEveryDay,
+          initialDateTime: _timeBoundEveryDay[1],
+          onChangeDateTime: (dateTime) {
+            if(widget.editMode) {
               setState(() {
-                _timeBoundEveryDay[1] = _timeBoundEveryDay[1]!.copyWithAmPm(amPm);
+                _timeBoundEveryDay[1] = dateTime;
               });
               setData();
             }
-          },
-          hourController: _everydayEndHourController,
-          onChangedHour: (hour) {
-            setState(() {
-              _timeBoundEveryDay[1] = _timeBoundEveryDay[1]!.copyWith(hour: hour);
-            });
-            setData();
-          },
-          minuteController: _everydayEndMinuteController,
-          onChangedMinute: (minute) {
-            setState(() {
-              _timeBoundEveryDay[1] = _timeBoundEveryDay[1]!.copyWith(minute: minute);
-            });
-            setData();
           },
         ),
       ],
@@ -716,44 +557,18 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
         const SizedBox(height: 12),
         _SelectDayWidget(
           selectWeekDay: (weekDay) {
-            setState(() {
-              if(_weekdays.contains(weekDay)) {
-                _weekdays.remove(weekDay);
-              } else {
-                _weekdays.add(weekDay);
-              }
-            });
-            setData();
-          },
-          selectedWeekdays: _weekdays,
-        ),
-
-        const SizedBox(height: 16),
-        EditorSelectTimeWidget(
-          enabled: true,
-          selectedTimePrefix: _timeEveryWeek?.getAmPm ?? AmPm.am,
-          onChangedTimePrefix: (amPm) {
-            if(amPm != null) {
+            if(widget.editMode) {
               setState(() {
-                _timeEveryWeek = _timeEveryWeek?.copyWithAmPm(amPm) ?? DateTime.now();
+                if (_weekdays.contains(weekDay)) {
+                  _weekdays.remove(weekDay);
+                } else {
+                  _weekdays.add(weekDay);
+                }
               });
               setData();
             }
           },
-          hourController: _everyWeekHourController,
-          onChangedHour: (hour) {
-            setState(() {
-              _timeEveryWeek = _timeEveryWeek?.copyWith(hour: hour) ?? DateTime.now();
-            });
-            setData();
-          },
-          minuteController: _everyWeekMinuteController,
-          onChangedMinute: (minute) {
-            setState(() {
-              _timeEveryWeek = _timeEveryWeek?.copyWith(minute: minute) ?? DateTime.now();
-            });
-            setData();
-          },
+          selectedWeekdays: _weekdays,
         ),
 
         const SizedBox(height: 30),
@@ -768,27 +583,22 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
           width: 65,
           isSelected: _enableStartDateEveryWeek,
           onClick: () {
-            setState(() {
-              _enableStartDateEveryWeek = !_enableStartDateEveryWeek;
-            });
-            setData();
+            if(widget.editMode) {
+              setState(() {
+                _enableStartDateEveryWeek = !_enableStartDateEveryWeek;
+              });
+              setData();
+            }
           }
         ),
 
         const SizedBox(height: 12),
-        EditorDateButton(
-          _timeBoundEveryWeek[0],
-          enabled: _enableStartDateEveryWeek,
-          onClick: () async {
-            final DateTime? selectedDateTime = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime.now(),
-              lastDate: _lastDate,
-            );
-
+        EditorSelectDateTimeWidget(
+          enabled: widget.editMode && _enableStartDateEveryWeek,
+          initialDateTime: _timeBoundEveryWeek[0],
+          onChangeDateTime: (dateTime) {
             setState(() {
-              _timeBoundEveryWeek[0] = selectedDateTime;
+              _timeBoundEveryWeek[0] = dateTime;
             });
             setData();
           },
@@ -800,27 +610,22 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
           width: 65,
           isSelected: _enableEndDateEveryWeek,
           onClick: () {
-            setState(() {
-              _enableEndDateEveryWeek = !_enableEndDateEveryWeek;
-            });
-            setData();
+            if(widget.editMode) {
+              setState(() {
+                _enableEndDateEveryWeek = !_enableEndDateEveryWeek;
+              });
+              setData();
+            }
           }
         ),
 
         const SizedBox(height: 12),
-        EditorDateButton(
-          _timeBoundEveryWeek[1],
-          enabled: _enableEndDateEveryWeek,
-          onClick: () async {
-            final DateTime? selectedDateTime = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime.now(),
-              lastDate: _lastDate,
-            );
-
+        EditorSelectDateTimeWidget(
+          enabled: widget.editMode && _enableEndDateEveryWeek,
+          initialDateTime: _timeBoundEveryWeek[1],
+          onChangeDateTime: (dateTime) {
             setState(() {
-              _timeBoundEveryWeek[1] = selectedDateTime;
+              _timeBoundEveryWeek[1] = dateTime;
             });
             setData();
           },
@@ -880,7 +685,7 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
           week,
           style: AppTextStyles.custom(
             fontWeight: FontWeight.w500,
-            fontSize: 6.63,
+            fontSize: 8,
             color: isSelected ? const Color(0xFF5D7CFF) : const Color(0xFF3F424B),
           ),
         ),
@@ -902,7 +707,7 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
         if(_timeBoundCustom[0] != null) {
           conditionExpression = ConditionExpression(
             ValueServiceExpression('datetime', ['Clock'], RangeType.AUTO),
-            LiteralExpression(_timeBoundCustom[0]!.millisecondsSinceEpoch ~/ 1000, literalType: LiteralType.INTEGER),
+            LiteralExpression(DateFormat('yyyyMMddHHmm').format(_timeBoundCustom[0]!), literalType: LiteralType.INTEGER),
             false,
             Operator.GREATER_THAN,
           );
@@ -916,7 +721,7 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
         if(_timeBoundCustom[1] != null) {
           final rightExpression = ConditionExpression(
             ValueServiceExpression('datetime', ['Clock'], RangeType.AUTO),
-            LiteralExpression(_timeBoundCustom[1]!.millisecondsSinceEpoch ~/ 1000, literalType: LiteralType.INTEGER),
+            LiteralExpression(DateFormat('yyyyMMddHHmm').format(_timeBoundCustom[1]!), literalType: LiteralType.INTEGER),
             false,
             Operator.LESS_THAN,
           );
@@ -949,7 +754,7 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
         if(_timeBoundEveryDay[0] != null) {
           conditionExpression = ConditionExpression(
             ValueServiceExpression('datetime', ['Clock'], RangeType.AUTO),
-            LiteralExpression(_timeBoundEveryDay[0]!.millisecondsSinceEpoch ~/ 1000, literalType: LiteralType.INTEGER),
+            LiteralExpression(DateFormat('yyyyMMddHHmm').format(_timeBoundEveryDay[0]!), literalType: LiteralType.INTEGER),
             false,
             Operator.GREATER_THAN,
           );
@@ -963,7 +768,7 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
         if(_timeBoundEveryDay[1] != null) {
           final rightExpression = ConditionExpression(
             ValueServiceExpression('datetime', ['Clock'], RangeType.AUTO),
-            LiteralExpression(_timeBoundEveryDay[1]!.millisecondsSinceEpoch ~/ 1000, literalType: LiteralType.INTEGER),
+            LiteralExpression(DateFormat('yyyyMMddHHmm').format(_timeBoundEveryDay[1]!), literalType: LiteralType.INTEGER),
             false,
             Operator.LESS_THAN,
           );
@@ -998,7 +803,7 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
         if(_timeBoundEveryWeek[0] != null) {
           conditionExpression = ConditionExpression(
             ValueServiceExpression('datetime', ['Clock'], RangeType.AUTO),
-            LiteralExpression(_timeBoundEveryWeek[0]!.millisecondsSinceEpoch ~/ 1000, literalType: LiteralType.INTEGER),
+            LiteralExpression(int.parse(DateFormat('yyyyMMddHHmm').format(_timeBoundEveryWeek[0]!)), literalType: LiteralType.INTEGER),
             false,
             Operator.GREATER_THAN,
           );
@@ -1012,7 +817,7 @@ class _ScenarioEditorLoopCardViewState extends State<ScenarioEditorLoopCardView>
         if(_timeBoundEveryWeek[1] != null) {
           final rightExpression = ConditionExpression(
             ValueServiceExpression('datetime', ['Clock'], RangeType.AUTO),
-            LiteralExpression(_timeBoundEveryWeek[1]!.millisecondsSinceEpoch ~/ 1000, literalType: LiteralType.INTEGER),
+            LiteralExpression(int.parse(DateFormat('yyyyMMddHHmm').format(_timeBoundEveryWeek[1]!)), literalType: LiteralType.INTEGER),
             false,
             Operator.LESS_THAN,
           );

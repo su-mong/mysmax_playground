@@ -1,8 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:mysmax_playground/add_scenario/widgets/literal_block_widget.dart';
 import 'package:mysmax_playground/add_scenario/widgets/value_service_block_widget.dart';
 import 'package:mysmax_playground/app_text_styles.dart';
 import 'package:mysmax_playground/core/scenario_code_parser/block.dart';
@@ -10,14 +8,12 @@ import 'package:mysmax_playground/core/scenario_code_parser/enums.dart';
 import 'package:mysmax_playground/core/scenario_code_parser/expression.dart';
 import 'package:mysmax_playground/core/scenario_code_parser/variable.dart';
 import 'package:mysmax_playground/core/viewmodels/mqtt_view_model.dart';
-import 'package:mysmax_playground/helper/date_time_helper.dart';
 import 'package:mysmax_playground/helper/icon_helper.dart';
 import 'package:mysmax_playground/models/condition_item.dart';
 import 'package:mysmax_playground/models/enums/weather_state.dart';
 import 'package:mysmax_playground/models/thing_value.dart';
-import 'package:mysmax_playground/scenario_editor/widgets/editor_date_button.dart';
 import 'package:mysmax_playground/scenario_editor/widgets/editor_number_text_field.dart';
-import 'package:mysmax_playground/scenario_editor/widgets/editor_select_time_widget.dart';
+import 'package:mysmax_playground/scenario_editor/widgets/editor_select_date_time_widget.dart';
 import 'package:mysmax_playground/scenario_editor/widgets/editor_variable_list_widget.dart';
 import 'package:mysmax_playground/widgets/custom_drop_down.dart';
 import 'package:mysmax_playground/widgets/radio_text_button.dart';
@@ -99,12 +95,6 @@ class _ScenarioCreatorConditionsCardViewState
       TextEditingController();
   final TextEditingController _constantStringController =
       TextEditingController();
-  final TextEditingController _constantHourController = TextEditingController();
-  final TextEditingController _constantMinuteController =
-      TextEditingController();
-
-  final TextEditingController _hourController = TextEditingController();
-  final TextEditingController _minuteController = TextEditingController();
 
   /// TODO| 'ELSE'구문 추가용
   bool _isSelectedElse = false;
@@ -125,10 +115,6 @@ class _ScenarioCreatorConditionsCardViewState
   final TextEditingController _untilConstantNumberController =
       TextEditingController();
   final TextEditingController _untilConstantStringController =
-      TextEditingController();
-  final TextEditingController _untilConstantHourController =
-      TextEditingController();
-  final TextEditingController _untilConstantMinuteController =
       TextEditingController();
 
   final TextEditingController _periodNumberController = TextEditingController();
@@ -366,8 +352,6 @@ class _ScenarioCreatorConditionsCardViewState
                         .toList(),
                 constantNumberController: _constantNumberController,
                 constantStringController: _constantStringController,
-                constantHourController: _constantHourController,
-                constantMinuteController: _constantMinuteController,
                 isSelectedElse: _isSelectedElse,
                 changeSelectedElse: (isSelected) {
                   setState(() {
@@ -376,8 +360,6 @@ class _ScenarioCreatorConditionsCardViewState
                   setData();
                   setElseOrNot();
                 },
-                hourController: _hourController,
-                minuteController: _minuteController,
                 variableListByType: (variable) => [],
               )
             else if (_state == ConditionBlockState.waitUntil)
@@ -464,8 +446,6 @@ class _ScenarioCreatorConditionsCardViewState
                         .toList(),
                 constantNumberController: _untilConstantNumberController,
                 constantStringController: _untilConstantStringController,
-                constantHourController: _untilConstantHourController,
-                constantMinuteController: _untilConstantMinuteController,
                 variableListByType: (variable) => [],
                 periodNumberController: _periodNumberController,
                 onChangePeriodNumber: (periodValue) {
@@ -709,14 +689,9 @@ class _IfElsePage extends StatelessWidget {
   final List<ThingValue> constantThingValueList;
   final TextEditingController constantNumberController;
   final TextEditingController constantStringController;
-  final TextEditingController constantHourController;
-  final TextEditingController constantMinuteController;
 
   final bool isSelectedElse;
   final void Function(bool) changeSelectedElse;
-
-  final TextEditingController hourController;
-  final TextEditingController minuteController;
 
   final List<Variable> Function(String) variableListByType;
 
@@ -749,10 +724,6 @@ class _IfElsePage extends StatelessWidget {
     required this.constantThingValueList,
     required this.constantNumberController,
     required this.constantStringController,
-    required this.constantHourController,
-    required this.constantMinuteController,
-    required this.hourController,
-    required this.minuteController,
     required this.variableListByType,
   });
 
@@ -910,8 +881,6 @@ class _IfElsePage extends StatelessWidget {
                       );
                     }
                   },
-                  hourController: hourController,
-                  minuteController: minuteController,
                 )
               else if (index < thingValueTypes.length)
                 _ConstantStatusWidget(
@@ -929,8 +898,6 @@ class _IfElsePage extends StatelessWidget {
                       .toList(),
                   numberController: constantNumberController,
                   stringController: constantStringController,
-                  hourController: constantHourController,
-                  minuteController: constantMinuteController,
                   variableListByType: variableListByType,
                   setLastValue: (ThingValue thingValue) {
                     setNewLastValue(
@@ -1065,8 +1032,6 @@ class _UntilPage extends StatelessWidget {
   final List<ThingValue> constantThingValueList;
   final TextEditingController constantNumberController;
   final TextEditingController constantStringController;
-  final TextEditingController constantHourController;
-  final TextEditingController constantMinuteController;
 
   final List<Variable> Function(String) variableListByType;
 
@@ -1101,8 +1066,6 @@ class _UntilPage extends StatelessWidget {
     required this.constantThingValueList,
     required this.constantNumberController,
     required this.constantStringController,
-    required this.constantHourController,
-    required this.constantMinuteController,
     required this.variableListByType,
     required this.periodNumberController,
     required this.onChangePeriodNumber,
@@ -1192,8 +1155,6 @@ class _UntilPage extends StatelessWidget {
             thingValueList: constantThingValueList,
             numberController: constantNumberController,
             stringController: constantStringController,
-            hourController: constantHourController,
-            minuteController: constantMinuteController,
             variableListByType: variableListByType,
             setLastValue: (ThingValue thingValue) {
               setNewLastValue(
@@ -1433,19 +1394,14 @@ class _VariableStatusWidget extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(2, 16, 0, 16),
                     child: Row(
                       children: [
-                        CachedNetworkImage(
-                          imageUrl: IconHelper.getServiceIcon(
+                        Image.asset(
+                          IconHelper.getServiceIcon(
                               thingValueListExceptWeatherAndTimestamp[index]
                                       .category ??
                                   ''),
                           height: 19,
                           fit: BoxFit.fitHeight,
-                          errorWidget: (context, url, error) =>
-                              CachedNetworkImage(
-                            imageUrl: IconHelper.getServiceIcon('undefined'),
-                            height: 19,
-                            fit: BoxFit.fitHeight,
-                          ),
+                          errorBuilder: IconHelper.iconErrorWidgetBuilder(height: 19),
                         ),
                         const SizedBox(width: 16),
                         Text(
@@ -1613,9 +1569,6 @@ class _ConstantStatusWidget extends StatelessWidget {
   final Function(ValueServiceBlock block) onBlockChanged;
   final Function(LiteralExpression expression) onLiteralExpressionChanged;
 
-  final TextEditingController hourController;
-  final TextEditingController minuteController;
-
   final List<Variable> Function(String type) variableListByType;
 
   const _ConstantStatusWidget(
@@ -1633,8 +1586,6 @@ class _ConstantStatusWidget extends StatelessWidget {
     required this.setLastValueByExpression,
     required this.onBlockChanged,
     required this.onLiteralExpressionChanged,
-    required this.hourController,
-    required this.minuteController,
     required this.variableListByType,
   });
 
@@ -1820,8 +1771,6 @@ class _ConstantStatusWidget extends StatelessWidget {
                     );
                   }
                 },
-                hourController: hourController,
-                minuteController: minuteController,
               ),
 
             /// 숫자
@@ -1874,6 +1823,7 @@ class _ConstantStatusWidget extends StatelessWidget {
 
             /// 변수값
             EditorVariableListWidget(
+              editMode: true,
               isVariableForLeftSide: false,
               variableList: variableListByType(thingValueType)
                   .map((variable) => variable.name)
@@ -2156,19 +2106,12 @@ class _ConstantWeatherWidget extends StatelessWidget {
 }
 
 class _ConstantDateTimeWidget extends StatelessWidget {
-  static final DateTime _lastDate = DateTime(2099, 12, 31);
-
   final DateTime? dateTime;
   final void Function(DateTime?) onChange;
-
-  final TextEditingController hourController;
-  final TextEditingController minuteController;
 
   const _ConstantDateTimeWidget({
     required this.dateTime,
     required this.onChange,
-    required this.hourController,
-    required this.minuteController,
   });
 
   @override
@@ -2202,34 +2145,10 @@ class _ConstantDateTimeWidget extends StatelessWidget {
           childrenPadding: const EdgeInsets.symmetric(horizontal: 12),
           expandedCrossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            EditorDateButton(
+            EditorSelectDateTimeWidget(
               enabled: true,
-              dateTime,
-              onClick: () async {
-                final DateTime? selectedDateTime = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: _lastDate,
-                );
-
-                onChange(selectedDateTime);
-              },
-            ),
-            const SizedBox(height: 6),
-            EditorSelectTimeWidget(
-              enabled: dateTime != null,
-              selectedTimePrefix: dateTime?.getAmPm ?? AmPm.am,
-              onChangedTimePrefix: (amPm) {
-                if (amPm != null) {
-                  onChange(dateTime?.copyWithAmPm(amPm));
-                }
-              },
-              hourController: hourController,
-              onChangedHour: (hour) => onChange(dateTime?.copyWith(hour: hour)),
-              minuteController: minuteController,
-              onChangedMinute: (minute) =>
-                  onChange(dateTime?.copyWith(minute: minute)),
+              initialDateTime: dateTime,
+              onChangeDateTime: onChange,
             ),
             const SizedBox(height: 12),
           ],

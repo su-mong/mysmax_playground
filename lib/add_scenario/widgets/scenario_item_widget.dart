@@ -14,6 +14,7 @@ import 'package:mysmax_playground/helper/date_time_helper.dart';
 import 'package:mysmax_playground/models/enums/scenario_item_type.dart';
 import 'package:mysmax_playground/models/tag.dart';
 import 'package:mysmax_playground/models/thing.dart';
+import 'package:mysmax_playground/scenario_editor/cards/scenario_editor_else_view.dart';
 import 'package:mysmax_playground/scenario_mixin.dart';
 import 'package:mysmax_playground/widgets/radio_toggle.dart';
 import 'package:mysmax_playground/widgets/tag_list_widget.dart';
@@ -80,7 +81,7 @@ class _ScenarioItemWidgetState<T extends Block>
               } else if (widget.item is WaitUntilBlock) {
                 return _buildScenarioUntil(widget.item as WaitUntilBlock);
               } else if (widget.item is ElseBlock) {
-                return _buildScenarioType("else");
+                return const ScenarioEditorElseView();
               } else {
                 return Container();
               }

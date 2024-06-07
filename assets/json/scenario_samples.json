@@ -1,84 +1,188 @@
 {
     "samples": [
         {
+            "category": "스마트오피스",
+            "category_description": "사무실 환경을 스마트하게 관리할 수 있는 시나리오를 소개합니다.",
+            "scenarios": [
+                {
+                    "name": "사무실 공기 관리",
+                    "intro": "사무실 공기 환경을 자동으로 조절해보세요.",
+                    "description": "사무실 공기 환경을 자동으로 으로 관리할 수 있습니다. 온도 및 공기질을 자동으로 조절합니다.",
+                    "requirements": [
+                        {
+                            "thing": "Clock",
+                            "service": "weekday"
+                        },
+                        {
+                            "thing": "PresenceSensor",
+                            "service": "presence"
+                        },
+                        {
+                            "thing": "AirQualityDetector",
+                            "service": "dustLevel"
+                        },
+                        {
+                            "thing": "AirQualityDetector",
+                            "service": "fineDustLevel"
+                        },
+                        {
+                            "thing": "AirQualityDetector",
+                            "service": "veryFineDustLevel"
+                        },
+                        {
+                            "thing": "AirPurifier",
+                            "service": "on"
+                        },
+                        {
+                            "thing": "AirPurifier",
+                            "service": "setAirPurifierFanMode"
+                        },
+                        {
+                            "thing": "AirConditioner",
+                            "service": "switch"
+                        },
+                        {
+                            "thing": "AirConditioner",
+                            "service": "on"
+                        },
+                        {
+                            "thing": "AirQualityDetector",
+                            "service": "temperature"
+                        },
+                        {
+                            "thing": "AirQualityDetector",
+                            "service": "humidity"
+                        },
+                        {
+                            "thing": "AirConditioner",
+                            "service": "setAirConditionerMode"
+                        },
+                        {
+                            "thing": "AirConditioner",
+                            "service": "setTemperature"
+                        }
+                    ],
+                    "scenario_code": "loop(1 DAY,(#Clock).weekday == \"Monday\" or (#Clock).weekday == \"Tuesday\" or (#Clock).weekday == \"Wednesday\" or (#Clock).weekday == \"Thursday\" or (#Clock).weekday == \"Friday\"){if(any(#PresenceSensor).presence == \"present\"){if((#AirQualityDetector).dustLevel > 50 or (#AirQualityDetector).fineDustLevel > 25 or (#AirQualityDetector).veryFineDustLevel > 10){all(#AirPurifier).on();all(#AirPurifier).setAirPurifierFanMode(\"auto\");}if(any(#AirConditioner).switch == \"off\"){all(#AirConditioner).on();}if((#AirQualityDetector).temperature > 27 and (#AirQualityDetector).humidity > 50){all(#AirConditioner).setAirConditionerMode(\"cool\");all(#AirConditioner).setTemperature(24);}else{if((#AirQualityDetector).temperature < 20){all(#AirConditioner).setAirConditionerMode(\"heat\");all(#AirConditioner).setTemperature(21);}}}}"
+                }
+            ]
+        },
+        {
+            "category": "스마트팜",
+            "category_description": "스마트팜과 관련된 다양한 시나리오를 소개합니다.",
+            "scenarios": [
+                {
+                    "name": "스마트팜 관리",
+                    "intro": "나만의 텃밭을 스마트하게 관리해보세요.",
+                    "description": "나만의 텃밭을 가꿀 수 있는 시나리오입니다. 관개 주기, 토양 온도, 습도에 따라 작물을 관리할 수 있습니다.",
+                    "requirements": [
+                        {
+                            "thing": "Clock",
+                            "service": "weekday"
+                        },
+                        {
+                            "thing": "EmailProvider",
+                            "service": "sendMail"
+                        },
+                        {
+                            "thing": "Button",
+                            "service": "button"
+                        },
+                        {
+                            "thing": "Irrigator",
+                            "service": "on"
+                        },
+                        {
+                            "thing": "SoilMoistureSensor",
+                            "service": "soilHumidity"
+                        },
+                        {
+                            "thing": "Irrigator",
+                            "service": "setWaterPortion"
+                        },
+                        {
+                            "thing": "Irrigator",
+                            "service": "startWatering"
+                        },
+                        {
+                            "thing": "Camera",
+                            "service": "take"
+                        },
+                        {
+                            "thing": "EmailProvider",
+                            "service": "sendMailWithFile"
+                        }
+                    ],
+                    "scenario_code": "loop(1 HOUR,(#Clock).weekday == \"Saturday\"){(#EmailProvider).sendMail(\"example@gmail.com\",\"스마트팜 알람\",\"버튼을 눌러 텃밭에 물을 주세요.\");wait until((#Button #물주기).button == \"pushed\");(#Irrigator #스마트팜).on();if((#SoilMoistureSensor #스파티필름).soilHumidity < 10){(#Irrigator #스파티필름).setWaterPortion(15.0,\"ounces\");(#Irrigator #스파티필름).startWatering();}if((#SoilMoistureSensor #몬스테라).soilHumidity < 20){(#Irrigator #몬스테라).setWaterPortion(25.0,\"ounces\");(#Irrigator #몬스테라).startWatering();}if((#SoilMoistureSensor #아레카야자).soilHumidity < 30){(#Irrigator #아레카야자).setWaterPortion(20.0,\"ounces\");(#Irrigator #아레카야자).startWatering();}if((#SoilMoistureSensor #피토니아).soilHumidity < 40){(#Irrigator #피토니아).setWaterPortion(25.0,\"ounces\");(#Irrigator #피토니아).startWatering();}if((#SoilMoistureSensor #드라세나).soilHumidity < 50){(#Irrigator #드라세나).setWaterPortion(55.0,\"ounces\");(#Irrigator #드라세나).startWatering();}image = (#Camera).take();(#EmailProvider).sendMailWithFile(\"example@gmail.com\",\"스마트팜 사진 전송 완료\",\"현재 텃밭의 사진을 보내드립니다.\",image);}"
+                }
+            ]
+        },
+        {
             "category": "스마트홈",
             "category_description": "집에서 할 수 있는 시나리오를 소개시켜드려요.",
             "scenarios": [
                 {
-                    "name": "실내 청결 관리",
-                    "intro": "집 청소를 자동화해보세요.",
-                    "description": "다양한 청소 기기를 통해 집안 청소 자동화를 담당합니다.",
+                    "name": "실내 조명 관리 및 보안 감지",
+                    "intro": "집안의 조명을 관리하고, 보안 감지를 설정해보세요.",
+                    "description": "집안의 조명을 관리하고, 보안 감지를 설정할 수 있습니다. 조명을 켜고 끄며, 보안 감지를 설정합니다.",
                     "requirements": [
                         {
-                            "thing": "RobotCleaner",
-                            "service": "on"
+                            "thing": "PresenceSensor",
+                            "service": "presence"
                         },
                         {
-                            "thing": "RobotCleaner",
-                            "service": "off"
-                        },
-                        {
-                            "thing": "RobotCleaner",
-                            "service": "setRobotCleanerCleaningMode"
-                        },
-                        {
-                            "thing": "RobotCleaner",
+                            "thing": "Switch",
                             "service": "switch"
                         },
                         {
-                            "thing": "Speaker",
-                            "service": "play"
-                        }
-                    ],
-                    "scenario_code": "loop (1 HOUR) { if ( (#RobotCleaner).switch == 'off' ) { (#RobotCleaner).setRobotCleanerCleaningMode(); Speaker.play('청소를 시작합니다.'); } else { (#RobotCleaner).off(); (#Speaker).play('청소를 종료합니다.'); } }"
-                }
-            ]
-        },
-        {
-            "category": "엔터테인먼트",
-            "category_description": "집에서 즐길 수 있는 다양한 엔터테인먼트 시나리오를 소개시켜드려요.",
-            "scenarios": [
-                {
-                    "name": "음악 감상",
-                    "intro": "집에서 음악을 즐기세요.",
-                    "description": "집안의 스피커를 통해 음악을 감상합니다.",
-                    "requirements": [
-                        {
-                            "thing": "Speaker",
-                            "service": "play"
-                        }
-                    ],
-                    "scenario_code": "(#Speaker).play('음악을 재생합니다.');"
-                }
-            ]
-        },
-        {
-            "category": "보안",
-            "category_description": "집의 보안을 강화하는 시나리오를 소개시켜드려요.",
-            "scenarios": [
-                {
-                    "name": "외출 모드",
-                    "intro": "집을 비욕할 때 집의 보안을 강화하세요.",
-                    "description": "집안의 모든 장치를 꺼서 외출 모드로 전환합니다.",
-                    "requirements": [
-                        {
-                            "thing": "Light",
+                            "thing": "Switch",
                             "service": "off"
+                        },
+                        {
+                            "thing": "Switch",
+                            "service": "on"
+                        },
+                        {
+                            "thing": "Television",
+                            "service": "switch"
+                        },
+                        {
+                            "thing": "Television",
+                            "service": "off"
+                        },
+                        {
+                            "thing": "AirConditioner",
+                            "service": "switch"
                         },
                         {
                             "thing": "AirConditioner",
                             "service": "off"
                         },
                         {
-                            "thing": "DoorLock",
-                            "service": "open"
+                            "thing": "MotionSensor",
+                            "service": "motion"
                         },
                         {
-                            "thing": "DoorLock",
-                            "service": "close"
+                            "thing": "ContactSensor",
+                            "service": "contact"
+                        },
+                        {
+                            "thing": "Speaker",
+                            "service": "speak"
+                        },
+                        {
+                            "thing": "EmailProvider",
+                            "service": "sendMail"
+                        },
+                        {
+                            "thing": "Light",
+                            "service": "switch"
+                        },
+                        {
+                            "thing": "Light",
+                            "service": "on"
                         }
                     ],
-                    "scenario_code": "(#Light).off(); (#AirConditioner).off(); (#DoorLock).close();"
+                    "scenario_code": "loop(1 SEC){if((#PresenceSensor #침실).presence == \"not_present\" and (#PresenceSensor #복도).presence == \"not_present\" and (#PresenceSensor #아이방).presence == \"not_present\" and (#PresenceSensor #거실).presence == \"not_present\"){if(any(#Switch #전등).switch == \"on\"){all(#Switch #전등).off();}if((#Television).switch == \"on\"){(#Television).off();}if((#AirConditioner).switch == \"on\"){(#AirConditioner).off();}wait until((#MotionSensor #뒷문).motion == \"active\" and (#ContactSensor #뒷문).contact == \"open\");(#Speaker).speak(\"도둑이 침입하였습니다!\");(#EmailProvider).sendMail(\"example@gmail.com\",\"실내에 침입자 알림\",\"뒷문으로 거수자가 침입하였습니다.\");}else{if((#MotionSensor #침실).motion == \"active\"){if((#Light #침실).switch == \"off\"){(#Light #침실).on();}if((#Light #복도).switch == \"off\"){(#Light#복도).on();}if((#Light #아이방).switch == \"off\"){(#Light #아이방).on();}if((#Light #거실).switch == \"off\"){(#Light #거실).on();}}}}"
                 }
             ]
         }

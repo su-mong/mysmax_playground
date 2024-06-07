@@ -530,6 +530,7 @@ class _ScenarioServiceItemState extends State<ScenarioServiceItem> {
                         value: argument.value,
                       );
                       return ArgumentWidget(loadedArgument,
+                          editMode: true,
                           onChanged: (value) async {
                         setState(() {
                           function = function?.copyWith(
@@ -598,27 +599,11 @@ class _ScenarioServiceItemState extends State<ScenarioServiceItem> {
   }
 
   Widget _buildIcon(String? category) {
-    var defaultWidget = Container(
-      width: 19,
-      height: 19,
-      decoration: const ShapeDecoration(
-        gradient: LinearGradient(
-          begin: Alignment(-0.68, 0.74),
-          end: Alignment(0.68, -0.74),
-          colors: [Color(0xFF8198F5), Color(0xFF83CDF6)],
-        ),
-        shape: OvalBorder(),
-      ),
-    );
-
-    if (category == null) return defaultWidget;
-
-    return CachedNetworkImage(
-      imageUrl: IconHelper.getServiceIcon(category),
+    return Image.asset(
+      IconHelper.getServiceIcon(category ?? 'undefined'),
       height: 19,
       fit: BoxFit.fitHeight,
-      errorWidget: (context, url, error) => defaultWidget,
-      placeholder: (context, url) => defaultWidget,
+      errorBuilder: IconHelper.iconErrorWidgetBuilder(height: 19),
     );
   }
 

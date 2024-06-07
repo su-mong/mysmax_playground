@@ -14,6 +14,9 @@ abstract class Block with FastEquatable {
   bool isNestable;
   List<Block> blocks = [];
   int level = 0;
+  /// block의 border 두께를 계산하기 위한 값.
+  /// (부모로 존재하는 IfBlock의 갯수) - 1로 계산.
+  int borderLevel = 0;
 
   Block(this.blockType, this.isNestable, {blocks}) {
     if (blocks != null) {
@@ -21,10 +24,16 @@ abstract class Block with FastEquatable {
     }
   }
 
-  void searchLevel(int level) {
+  void searchLevel(int level, int borderLevel) {
     this.level = level;
+    this.borderLevel = borderLevel;
+
     for (Block block in blocks) {
-      block.searchLevel(level + 1);
+      if(this is ConditionBlock && (this as ConditionBlock).state == ConditionBlockState.ifElse) {
+        block.searchLevel(level + 1, borderLevel + 1);
+      } else {
+        block.searchLevel(level + 1, borderLevel);
+      }
     }
   }
 
@@ -182,14 +191,16 @@ extension BlockExtension on Block {
   Color getColor() =>
       const Color(0xFF5D7CFF); // colorDepth[(level - 1) % colorDepth.length];
   int getLeftPadding() => level < 1 ? 0 : 2 + 4 * (level - 1);
-  Border? get blockBorder => level < 2
+
+  /// 부모로 존재하는 IfBlock의 갯수로 계산.
+  Border? get blockBorder => (borderLevel == 0 || this is ElseBlock)
       ? null
       : Border(
-          left: BorderSide(
-            width: 2 + 4 * (level - 2),
-            color: const Color(0xFF5D7CFF),
-          ),
-        );
+    left: BorderSide(
+      width: (4 * borderLevel - 2).toDouble(),
+      color: const Color(0xFF5D7CFF),
+    ),
+  );
 }
 
 class RootBlock extends Block {
@@ -470,10 +481,11 @@ class LoopBlock extends Block {
             condExpr.leftExpression is ValueServiceExpression &&
                 ((condExpr.leftExpression as ValueServiceExpression)
                     .tags
+                    .map((e) => e.toLowerCase())
                     .contains('clock'));
         bool isLiteral = condExpr.rightExpression is LiteralExpression;
 
-        if ((isValueService && isLiteral) || (isValueService && isLiteral)) {
+        if (isValueService && isLiteral) {
           timeBounds.add(condExpr);
         }
       }
@@ -517,9 +529,9 @@ class LoopBlock extends Block {
     List<ConditionExpression> endConditions = [];
 
     for (ConditionExpression cond in timeBounds) {
-      if (cond.operator == Operator.GREATER_THAN_OR_EQUAL) {
+      if (cond.operator == Operator.GREATER_THAN_OR_EQUAL || cond.operator == Operator.GREATER_THAN) {
         startConditions.add(cond);
-      } else if (cond.operator == Operator.LESS_THAN_OR_EQUAL) {
+      } else if (cond.operator == Operator.LESS_THAN_OR_EQUAL || cond.operator == Operator.LESS_THAN) {
         endConditions.add(cond);
       }
     }
@@ -542,6 +554,10 @@ class LoopBlock extends Block {
       } else {
         expression as ConditionExpression;
       }
+      print('🤬🤬🤬 weekdays : ${expression.leftExpressionString}');
+      print('🤬🤬🤬 weekdays : ${expression.operator}');
+      print('🤬🤬🤬 weekdays : ${expression.rightExpressionString}');
+      print('🤬🤬🤬');
 
       if ((expression.leftExpression is ValueServiceExpression &&
               (expression.leftExpression as ValueServiceExpression)

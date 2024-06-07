@@ -223,6 +223,7 @@ class _AddScenarioScreenState extends State<AddScenarioScreen> {
           child: ScenarioItemWidget(
             viewModel.rootBlock,
             editMode: true,
+            parentContext: context,
           ),
         ),
       ),

@@ -115,25 +115,11 @@ class _ServiceListViewState extends State<ServiceListView> {
   }
 
   Widget _buildIcon(ThingFunction function) {
-    var defaultWidget = Container(
-      width: 19,
-      height: 19,
-      decoration: const ShapeDecoration(
-        gradient: LinearGradient(
-          begin: Alignment(-0.68, 0.74),
-          end: Alignment(0.68, -0.74),
-          colors: [Color(0xFF8198F5), Color(0xFF83CDF6)],
-        ),
-        shape: OvalBorder(),
-      ),
-    );
-
-    return CachedNetworkImage(
-      imageUrl: IconHelper.getServiceIcon(function.category),
+    return Image.asset(
+      IconHelper.getServiceIcon(function.category),
       height: 19,
       fit: BoxFit.fitHeight,
-      placeholder: (context, url) => defaultWidget,
-      errorWidget: (context, url, error) => defaultWidget,
+      errorBuilder: IconHelper.iconErrorWidgetBuilder(height: 19),
     );
   }
 }

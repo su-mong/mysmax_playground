@@ -11,6 +11,7 @@ import 'package:mysmax_playground/app_text_styles.dart';
 /// NOTE| 1. variableList에는 좌변(firstValue)에 선택한 ThingValue의 type과 같은 variable만 들어온다.
 /// NOTE| 2. 이 중 하나를 유저가 선택하면, 해당 변수값이 우변(lastValue)에 적용된다.
 class EditorVariableListWidget extends StatefulWidget {
+  final bool editMode;
   final List<String> variableList;
   final String? initialSelectedVariable;
 
@@ -23,6 +24,7 @@ class EditorVariableListWidget extends StatefulWidget {
 
   const EditorVariableListWidget({
     super.key,
+    required this.editMode,
     required this.isVariableForLeftSide,
     required this.variableList,
     required this.initialSelectedVariable,

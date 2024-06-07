@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mysmax_playground/app_text_styles.dart';
 
-/// TODO: validator 필요함
+/// TODO: 빈값이 들어갈 때 오류 처리
 class EditorNumberTextField extends StatelessWidget {
   final TextEditingController controller;
   final int min;
@@ -47,8 +47,31 @@ class EditorNumberTextField extends StatelessWidget {
                 maxLines: 1,
                 maxLength: max.toString().length,
                 onChanged: (strValue) {
-                  if(int.tryParse(strValue) != null && onChanged != null) {
-                    onChanged!(int.parse(strValue));
+                  if(strValue == '') {
+                    if(onChanged != null) {
+                      onChanged!(min);
+                    }
+                    return;
+                  }
+
+                  if(int.tryParse(strValue) != null) {
+                    int num = int.parse(strValue);
+                    if(num > max) {
+                      num = max;
+                      controller.text = max.toString();
+                    } else if(num < min) {
+                      num = min;
+                      controller.text = min.toString();
+                    }
+
+                    if(onChanged != null) {
+                      onChanged!(num);
+                    }
+                  } else {
+                    controller.text = '$min';
+                    if(onChanged != null) {
+                      onChanged!(min);
+                    }
                   }
                 },
                 style: AppTextStyles.size12Regular.copyWith(height: 15 / 12),
@@ -77,6 +100,11 @@ class EditorNumberTextField extends StatelessWidget {
                       if(onChanged != null) {
                         onChanged!(currentNum + 1);
                       }
+                    } else {
+                      controller.text = '$max';
+                      if(onChanged != null) {
+                        onChanged!(max);
+                      }
                     }
                   }
                 },
@@ -98,6 +126,11 @@ class EditorNumberTextField extends StatelessWidget {
 
                       if(onChanged != null) {
                         onChanged!(currentNum - 1);
+                      }
+                    } else {
+                      controller.text = '$min';
+                      if(onChanged != null) {
+                        onChanged!(min);
                       }
                     }
                   }
